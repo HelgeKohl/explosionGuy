@@ -2,6 +2,7 @@
 \IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
+\usepackage{float}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
@@ -50,7 +51,7 @@
 \maketitle
 
 \begin{abstract}
-	Ziel des Papers ist es ein Spiel zu entwickeln bei dem mehrere Spieler in Echtzeit in ihrem Browser gegeneinander antreten können. Das Spielprinzip soll dem Spiel \glqq Bomberman\grqq ähneln.
+	Ziel des Papers ist es ein Spiel zu entwickeln bei dem mehrere Spieler in Echtzeit in ihrem Browser gegeneinander antreten können. Das Spielprinzip soll dem Spiel \glqq Bomberman\grqq{} ähneln.
 \end{abstract}
 
 \section{Einführung}
@@ -68,10 +69,34 @@ Im Rahmen der Vorlesung Big Data und Cloud-basiertes Computing soll nun cloudbas
 
 \section{Verwandte Arbeiten}
 
-Nachdem in der Einleitung bereits die Motivation erläutert wurde, werden hier verwandte Arbeiten und Systeme vorgestellt. Bei der Recherche wurden einige Bomberman inspirierte Online-Spiele gefunden, die auch kostenlos verfügbar sind. Spiel \cite{bomberfriends}, Bomber-Friends, stellt dabei eine komplexe Variante des Spiels dar, aufgrund von RPG-Elementen, die den klassischen Spielstil mit der Möglichkeit erweitert, aus zerstörten Boxen Edelsteine zu gewinnen, mit denen sich Verbesserungen freischalten lassen. Power-Ups sind ebenfalls erhältlich.
+Nachdem in der Einleitung bereits die Motivation erläutert wurde, werden hier verwandte Arbeiten und Systeme vorgestellt. Bei der Recherche wurden einige Bomberman inspirierte Online-Spiele gefunden, die auch kostenlos verfügbar sind. Spiel \cite{bombe-friends}, Bomber-Friends, stellt dabei eine komplexe Variante des Spiels dar, aufgrund von RPG-Elementen, die den klassischen Spielstil mit der Möglichkeit erweitert, aus zerstörten Boxen Edelsteine zu gewinnen, mit denen sich Verbesserungen freischalten lassen. Power-Ups sind ebenfalls erhältlich. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{res/bomberfriends.png}
+    \caption{Bomber-Friends}
+\end{figure}
+
 Bomber-Mouse \cite{bombermouse} hingegen ist eine simplere Version, in der sich der Charakter nur sehr langsam fortbewegt, was möglicherweise nicht beabsichtigt ist. Auch die Fenstergröße passt sich nicht automatisch an und das Game Design weist allgemein deutliche Mängel auf.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{res/bombermouse.png}
+    \caption{Bomber Mouse}
+\end{figure}
+
 Playing with Fire 2 \cite{playingwithfire} weist die meisten Individualisierungsmöglichkeiten in der Lobby auf. So kann die Anzahl der Spieler und die der Gegner festgelegt werden sowie die Auswahl des Levels. Zusätzlich läuft ein Timer ab, der die Schwierigkeit erhöht. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{res/playing-with-fire.png}
+    \caption{Playing with Fire}
+\end{figure}
+
+
 Allstar-Blast \cite{allstarblast} ist eine MMO-Variante von Ubisoft, in der in der Probe 78 Spieler gleichzeitig gegeneinander antraten. Die Besonderheit hierbei ist, dass das Spielfeld mit der Zeit schrumpft. Power-Ups sind hier ebenfalls verfügbar.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\textwidth]{res/all-star-blast.png}
+    \caption{Allstar-Blast}
+\end{figure}
 
 
 \section{Anforderungen}
