@@ -1,4 +1,5 @@
 \documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
 \IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
@@ -51,42 +52,36 @@
 \maketitle
 
 \begin{abstract}
-	Ziel des Papers ist es ein Spiel zu entwickeln bei dem mehrere Spieler in Echtzeit in ihrem Browser gegeneinander antreten können. Das Spielprinzip soll dem Spiel \glqq Bomberman\grqq{} ähneln.
+	Online-Spiele erfreuen sich coronabedingt immer größerer Beliebtheit. Dies könnte vor allem aus der unkomplizierten Zugangsmöglichkeit der Online-Spiele resultieren, aber auch der sich als redundant erweisenden Softwareinstallation. Die 
+	Online-Spiele wurden damals mit der Adobe Software 'Flash' realisiert. Aufgrund der Risiken auf der Sicherheitsebene wurde die Unterstützung der Software eingestellt. Heutzutage bedient man sich verschiedener Webtechnologien, die im Kapitel IV näher beleuchtet werden.
+	Darin begründet liegt die Motivation hinter dieser Arbeit, denn 
+	die Spieleentwicklung ermöglicht eine intensive Auseinandersetzung mit diesen Webtechnologien, aber auch der Kreativität seinen freien Lauf zu lassen.
+	Der Fokus dieser Arbeit liegt in der Entwicklung eines cloudbasiertes Online-Multiplayer-Spiels. Als Inspiration dient an erster Stelle der zeitlose Klassiker "Bomberman".
 \end{abstract}
 
 \section{Einführung}
-
-
-
-Bereits 1983 kam das labyrinthartig aufgebaute Computerspiel Bomberman, das vom japanischen Hersteller Hudson Soft (wurde 2012 von Konami übernommen) entwickelt wurde, auf den Markt. Seitdem erschienen bis heute zahlreiche offizielle und daran angelehnte Spiele. Dabei hat sich das grundsätzliche Spielprinzip nie verändert.
-Ein beliebter Spielmodus ist dabei der Multiplayer-Modus, in welchem alle Mitspieler besiegt werden müssen.
-Im Rahmen der Vorlesung Big Data und Cloud-basiertes Computing soll nun cloudbasiert ein Online-Multiplayer-Spiel, das dem zeitlosen Klassiker Bomberman ähnelt, entwickelt werden.
-
-
-
+Bereits 1983 kam das labyrinthartig aufgebaute Computerspiel "Bomberman", das vom japanischen Hersteller Hudson Soft (wurde 2012 von Konami übernommen) entwickelt wurde, auf den Markt. Seitdem erschienen bis heute zahlreiche, offizielle und daran angelehnte Spiele. Dabei hat sich das grundsätzliche Spielprinzip nie verändert. Das Spielfeld besteht aus zerstörbaren und unzerstörbaren Wänden. Strategisch legt der Spieler Bomben und bringt damit die zerstörbaren Wände zum Einsturz, um sich den Weg freizumachen. Durch die Zerstörung können versteckte Items in Erscheinung treten, die dem Spieler sehr nützlich sein können. Insbesondere der Multiplayer-Modus ist bei der Community sehr beliebt. Dieser verleitet dazu seine Mitspieler durch das Wegsprengen zu beseitigen. Ein Levelaufstieg finden statt, sobald alle Gegner exterminiert wurden.  
 
 
 
 \section{Verwandte Arbeiten}
-
-Nachdem in der Einleitung bereits die Motivation erläutert wurde, werden hier verwandte Arbeiten und Systeme vorgestellt. Bei der Recherche wurden einige Bomberman inspirierte Online-Spiele gefunden, die auch kostenlos verfügbar sind. Spiel \cite{bombe-friends}, Bomber-Friends, stellt dabei eine komplexe Variante des Spiels dar, aufgrund von RPG-Elementen, die den klassischen Spielstil mit der Möglichkeit erweitert, aus zerstörten Boxen Edelsteine zu gewinnen, mit denen sich Verbesserungen freischalten lassen. Power-Ups sind ebenfalls erhältlich. 
+Nachdem in der Zusammenfassung bereits die Motivation erläutert wurde, werden hier verwandte Arbeiten und Systeme vorgestellt. Bei der Recherche wurden einige Bomberman inspirierte Online-Spiele gefunden, die auch kostenlos verfügbar sind. Spiel \cite{bombe-friends}, Bomber-Friends, stellt dabei eine komplexe Variante des Spiels dar, aufgrund von RPG-Elementen, die den klassischen Spielstil mit der Möglichkeit erweitert, aus zerstörten Boxen Edelsteine zu gewinnen, mit denen sich Verbesserungen freischalten lassen. Power-Ups sind ebenfalls erhältlich. 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{res/bomberfriends.png}
+    \includegraphics[width=0.45\textwidth]{res/bomberfriends.png}
     \caption{Bomber-Friends}
 \end{figure}
 
 Bomber-Mouse \cite{bombermouse} hingegen ist eine simplere Version, in der sich der Charakter nur sehr langsam fortbewegt, was möglicherweise nicht beabsichtigt ist. Auch die Fenstergröße passt sich nicht automatisch an und das Game Design weist allgemein deutliche Mängel auf.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{res/bombermouse.png}
+    \includegraphics[width=0.45\textwidth]{res/bombermouse.png}
     \caption{Bomber Mouse}
 \end{figure}
-
 Playing with Fire 2 \cite{playingwithfire} weist die meisten Individualisierungsmöglichkeiten in der Lobby auf. So kann die Anzahl der Spieler und die der Gegner festgelegt werden sowie die Auswahl des Levels. Zusätzlich läuft ein Timer ab, der die Schwierigkeit erhöht. 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{res/playing-with-fire.png}
+    \includegraphics[width=0.45\textwidth]{res/playing-with-fire.png}
     \caption{Playing with Fire}
 \end{figure}
 
@@ -94,7 +89,7 @@ Playing with Fire 2 \cite{playingwithfire} weist die meisten Individualisierungs
 Allstar-Blast \cite{allstarblast} ist eine MMO-Variante von Ubisoft, in der bis zu 100 Spieler gleichzeitig gegeneinander antreten. Die Besonderheit hierbei ist, dass das Spielfeld mit der Zeit schrumpft. Power-Ups sind hier ebenfalls verfügbar.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.4\textwidth]{res/all-star-blast.png}
+    \includegraphics[width=0.45\textwidth]{res/all-star-blast.png}
     \caption{Allstar-Blast}
 \end{figure}
 
@@ -158,21 +153,23 @@ Als Spieler möchte ich meine Spielfigur personalisieren können, um meine Figur
 Als Spieler möchte ich Power-Ups einsammeln können, um das Spielerlebnis aufzuwerten.
 
 \section{Methoden}
+Die Spieldaten werden in einer Datenbank gespeichert. Diese beinhalten Informationen, beispielsweise zu den Spieleinstellungen, Gegnern, Spielstatus oder das Inventar der Spielers. 
+Die Verwaltung der Spieldaten und Logik soll im Hintergrund über einen oder mehrere Amazon S3 Buckets geregelt werden und dadurch auch eine Skalierbarkeit ermöglichen. Wird ein neues Spiel eröffnet, so kann beispielsweise dafür ein neuer Bucket initialisiert werden. Eine Alternative dazu wäre das Erstellen von Docker-Containern, da diese auf jeder Hardware umsetzbar sind und auf Anfrage weitere davon zugeschaltet werden könnten. Die Umgebung innerhalb des Servers wird mit NodeJS umgesetzt werden, da dies das Bereitstellen von Dateien und Websockets für die User ermöglicht. 
+Die Game Engine, die der Nutzer zu sehen bekommen wird mit HTML5 implementiert. Des Weiteren wird das Framework 'Phaser' verwendet, um dem Nutzer grafische Ausgaben zu liefern und die Eingaben des Nutzers an das Spiel zu verarbeiten.
+Da Cheating ein große Problematik, insbesondere beim Multiplayer-Spiel, darstellt, werden alle empfangenen Daten auf dem Server validiert. Dies löst zwar das Problem nicht vollständig, sollte jedoch kleine Angriffe abwehren. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{res/game_arch.png}
+    \caption{Spiel Architektur}
+\end{figure}
 
-\subsection*{Todo}
-
-\subsection*{Über die Daten}
-
-In einer lokalen Graphdatenbank werden die aktuellen Filme und Serien diverser Streaminganbieter (Netflix, Amazon Prime, Hulu, Disney+) abgespeichert. Außerdem werden diese durch Informationen aus der IMDB (Internet Movie Database) ergänzt. Mithilfe dieses Datenbestandes soll es möglich sein, komplexe Abfragen zu formulieren. Durch den SPARQL-Endpoint der DBpedia ist der Zugriff auf weitere Details möglich.
-
-\subsection*{Backend}
-
-Als Backend wird ASP.NET Core verwendet. Dieses von Microsoft entwickelte Framework hat sich in der Welt der Microservices in den letzten Jahren etabliert. Über noch nicht definierte Graph Query Languages soll auf die verwendete Graphdatenbank bzw. DBpedia zugegriffen werden können, um Informationen zu den Filmen und Schauspielern auszulesen.
-
-\subsection*{Frontend}
-
-Für die Interaktion mit dem Benutzer wird React verwendet. Über eine REST-Schnittstelle des Backends kann auf benötigte Informationen zugegriffen werden.
-
+\section{Graphischer Prototyp}
+Die grafische Oberfläche des Spiels teilt sich in zwei verschiedene Bereiche auf. Im oberen Fenster befinden sich aktuelle Informationen zum Spiel. So wird Name und das Avatarbild des Spielers und des Mitspielers angezeigt, sowie die Anzahl der, sich im Inventar befindenden, Bomben. Das Spielfeld nimmt den restlichen Platz ein. Das Spielfeld besteht aus folgenden Spielelementen: zerstörbare und unzerstörbare Wände, die sich optisch voneinander unterschieden. Damit wird dem Spieler die Differenzierung zwischen beiden visuell ermöglicht. Des Weiteren kommen zwei Arten von Gegnern vor: der Mitspieler sowie die vom Spiel generierten Enemys. Die Elementen mit der höchsten Relevanz sind jedoch der Spieler selbst sowie die Bomben. Weitere Bestandteile, die nicht in der Abbildung 6 dargestellt wurden, sind: Items aus der Wandzerstörung, sowie Spielmenü-Elemente. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{res/prototyp.png}
+    \caption{Prototyp des Spiels}
+\end{figure}
 %\section*{Referenzen}
 
 \nocite{space-invaders}
