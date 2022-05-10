@@ -159,7 +159,7 @@ Diese beinhalten Informationen, beispielsweise zu den Spieleinstellungen, Gegner
 Die Verwaltung der Spieldaten und Logik soll im Hintergrund über einen oder mehrere Amazon S3 Buckets geregelt werden und dadurch auch eine Skalierbarkeit ermöglichen. Wird ein neues Spiel eröffnet, so kann beispielsweise dafür ein neuer Bucket initialisiert werden. 
 % Die Buckets können Container enthalten.
 Eine Alternative dazu wäre das Erstellen von Docker-Containern, da diese auf jeder Hardware umsetzbar sind und auf Anfrage weitere davon zugeschaltet werden könnten. Die Umgebung innerhalb des Servers wird mit NodeJS umgesetzt werden, da dies das Bereitstellen von Assets für die User ermöglicht. Um den Spielstand zwischen den Spielern zu synchronisieren, sollen diese eine Verbindung über Websockets mit dem Spielserver aufbauen.
-Die Game Engine, 
+Die , 
 % HTML5 ist doch nicht die Gameengine?
 die der Nutzer zu sehen bekommt, wird mit HTML5 implementiert. Des Weiteren wird das Framework 'Phaser' verwendet, um dem Nutzer grafische Ausgaben zu liefern und die Eingaben des Nutzers an das Spiel zu verarbeiten.
 Da Cheating ein große Problematik, insbesondere beim Multiplayer-Spiel darstellt, werden alle empfangenen Daten auf dem Server validiert. Dies löst zwar das Problem nicht vollständig, sollte jedoch kleine Angriffe abwehren. 
