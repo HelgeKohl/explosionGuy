@@ -96,16 +96,16 @@ Allstar-Blast \cite{allstarblast} ist eine MMO-Variante von Ubisoft, in der bis 
 
 \section{Anforderungen}
 
-\subsection{Anforderung 1} (mvp)
+\subsection{Anforderung 1}
 Als Spieler möchte ich ein Spiel eröffnen können, um ein Spiel spielen zu können.
 
-\subsection{Anforderung 2} (mvp)
+\subsection{Anforderung 2}
 Als Spieler möchte ich mich auf dem Spielfeld bewegen können, um mit der Umgebung zu interagieren.
 
-\subsection{Anforderung 3} (mvp)
+\subsection{Anforderung 3}
 Als Spieler möchte ich Bomben legen können, damit sie später explodieren können.
 
-\subsection{Anforderung 4} (mvp)
+\subsection{Anforderung 4}
 Als Spieler möchte ich, dass die Bomben explodieren und verschwinden, um ihren Effekt visuell zu erleben (und das Spiel zu gewinnen).
 
 % next
@@ -154,14 +154,10 @@ Als Spieler möchte ich Power-Ups einsammeln können, um das Spielerlebnis aufzu
 
 \section{Methoden}
 Die Spieldaten werden in einer Datenbank gespeichert.
-% Spielstatus selbst wird nicht in einer DB gespeichert, eher in einem Objekt gehalten.
-Diese beinhalten Informationen, beispielsweise zu den Spieleinstellungen, Gegnern, Spielstatus oder dem Inventar der Spielers. 
+Diese beinhaltet Informationen zu den Spieleinstellungen, Spielerprofile und Spielstatistiken. 
 Die Verwaltung der Spieldaten und Logik soll im Hintergrund über einen oder mehrere Amazon S3 Buckets geregelt werden und dadurch auch eine Skalierbarkeit ermöglichen. Wird ein neues Spiel eröffnet, so kann beispielsweise dafür ein neuer Bucket initialisiert werden. 
-% Die Buckets können Container enthalten.
-Eine Alternative dazu wäre das Erstellen von Docker-Containern, da diese auf jeder Hardware umsetzbar sind und auf Anfrage weitere davon zugeschaltet werden könnten. Die Umgebung innerhalb des Servers wird mit NodeJS umgesetzt werden, da dies das Bereitstellen von Assets für die User ermöglicht. Um den Spielstand zwischen den Spielern zu synchronisieren, sollen diese eine Verbindung über Websockets mit dem Spielserver aufbauen.
-Die Game Engine, 
-% HTML5 ist doch nicht die Gameengine?
-die der Nutzer zu sehen bekommt, wird mit HTML5 implementiert. Des Weiteren wird das Framework 'Phaser' verwendet, um dem Nutzer grafische Ausgaben zu liefern und die Eingaben des Nutzers an das Spiel zu verarbeiten.
+Die Umgebung innerhalb des Servers wird mit NodeJS umgesetzt werden, da dies das Bereitstellen von Assets für die User ermöglicht. Um den Spielstand zwischen den Spielern zu synchronisieren, sollen diese eine Verbindung über Websockets mit dem Spielserver aufbauen.
+Die Spielumgebung, die der Nutzer zu sehen bekommt, wird mit HTML5 und Javascript implementiert. Des Weiteren wird das Framework 'Phaser' verwendet, um dem Nutzer grafische Ausgaben zu liefern und die Eingaben des Nutzers an das Spiel zu verarbeiten.
 Da Cheating ein große Problematik, insbesondere beim Multiplayer-Spiel darstellt, werden alle empfangenen Daten auf dem Server validiert. Dies löst zwar das Problem nicht vollständig, sollte jedoch kleine Angriffe abwehren. 
 \begin{figure}[H]
     \centering
@@ -170,9 +166,7 @@ Da Cheating ein große Problematik, insbesondere beim Multiplayer-Spiel darstell
 \end{figure}
 
 \section{Graphischer Prototyp}
-Die grafische Oberfläche des Spiels teilt sich in zwei verschiedene Bereiche auf. Im oberen Teil des Fensters befinden sich aktuelle Informationen zum Spiel. So wird der Name und das Avatarbild des Spielers und des Mitspielers angezeigt, sowie die Anzahl der, sich im Inventar befindenden, Bomben. Der restliche Platz ist mit dem Spielfeld belegt. Das Spielfeld besteht aus zerstörbaren und unzerstörbaren Wänden, die sich optisch voneinander unterschieden. Damit wird dem Spieler die Differenzierung zwischen beiden visuell ermöglicht. Des Weiteren kommen zwei Arten von Gegnern vor: der Mitspieler sowie die vom Spiel generierten Enemys.
-%haben wir vom Spiel generierte Enemys? Ich würde das auf Multiplayer beschränken
-Die Elemente mit der höchsten Relevanz sind jedoch der Spieler selbst sowie die Bomben. Weitere Bestandteile, die nicht in der Abbildung 6 dargestellt wurden, sind: Items aus der Wandzerstörung, sowie Spielmenü-Elemente. 
+Die grafische Oberfläche des Spiels teilt sich in zwei verschiedene Bereiche auf. Im oberen Teil des Fensters befinden sich aktuelle Informationen zum Spiel. So wird der Name und das Avatarbild des Spielers und des Mitspielers angezeigt, sowie die Anzahl der, sich im Inventar befindenden, Bomben. Der restliche Platz ist mit dem Spielfeld belegt. Das Spielfeld besteht aus zerstörbaren und unzerstörbaren Wänden, die sich optisch voneinander unterschieden. Damit wird dem Spieler die Differenzierung zwischen beiden visuell ermöglicht. Die Elemente mit der höchsten Relevanz sind jedoch der Spieler selbst sowie die Bomben. Weitere Bestandteile, die nicht in der Abbildung 6 dargestellt wurden, sind: Items aus der Wandzerstörung, sowie Spielmenü-Elemente. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{res/prototyp.png}
