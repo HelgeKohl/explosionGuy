@@ -65,14 +65,14 @@ Bereits 1983 kam das labyrinthartig aufgebaute Computerspiel \glqq Bomberman\grq
 
 
 \section{Verwandte Arbeiten}
-Nachdem in der Zusammenfassung bereits die Motivation erläutert wurde, werden hier verwandte Arbeiten und Systeme vorgestellt. Bei der Recherche wurden einige Bomberman inspirierte Online-Spiele gefunden, die auch kostenlos verfügbar sind. Spiel \cite{bombe-friends}, Bomber-Friends, stellt dabei eine komplexe Variante des Spiels dar, aufgrund von RPG-Elementen, die den klassischen Spielstil mit der Möglichkeit erweitert, aus zerstörten Boxen Edelsteine zu gewinnen, mit denen sich Verbesserungen freischalten lassen. Power-Ups sind ebenfalls erhältlich. 
+Nachdem in der Zusammenfassung bereits die Motivation erläutert wurde, werden hier verwandte Arbeiten und Systeme vorgestellt. Bei der Recherche wurden einige Bomberman inspirierte Online-Spiele gefunden, die auch kostenlos verfügbar sind. Spiel \cite{bombe-friends}, Bomber-Friends, stellt dabei eine komplexe Variante des Spiels dar, aufgrund von RPG-Elementen. Diese erweitern den klassischen Spielstil mit der Möglichkeit, aus zerstörten Boxen Edelsteine zu gewinnen, mit denen sich Verbesserungen freischalten lassen. Power-Ups sind ebenfalls erhältlich. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.45\textwidth]{res/bomberfriends.png}
     \caption{Bomber-Friends}
 \end{figure}
 
-Bomber-Mouse \cite{bombermouse} hingegen ist eine simplere Version, in der sich der Charakter nur sehr langsam fortbewegt, was möglicherweise nicht beabsichtigt ist. Auch die Fenstergröße passt sich nicht automatisch an und das Game Design weist allgemein deutliche Mängel auf.
+Bomber-Mouse \cite{bombermouse} hingegen ist eine simplere Version, in der sich der Charakter nur sehr langsam fortbewegt, was möglicherweise nicht beabsichtigt ist. Auch die Fenstergröße passt sich nicht automatisch an und das Spiel macht allgmein einen unfertigen Eindruck. Lediglich die Grafik ist im Vergleich zu den Gameplay-Elementen aufwändigergestaltet.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.45\textwidth]{res/bombermouse.png}
@@ -138,7 +138,7 @@ Als Anbieter möchte ich, dass Spiele bei zu langer Spieldauer beendet werden, u
 Als Spieler möchte ich mit mehr als einem weiteren Spieler spielen können, um den Komplexitätsgrad des Spieles zu erhöhen.
 
 \subsection{Anforderung 14}
-Als Spieler möchte ich eine dynamische Spielfeldgröße, um den Umfang des Spiels zu erhöhen (nochmal drübernachdenken).
+Als Spieler möchte ich eine dynamische Spielfeldgröße, um den Umfang des Spiels zu erhöhen (nochmal drüber nachdenken).
 
 \subsection{Anforderung 15}
 Als Spieler möchte ich meinen Spielernamen festlegen können, um einen Wiedererkennungswert zu schaffen.
@@ -155,14 +155,14 @@ Als Spieler möchte ich Power-Ups einsammeln können, um das Spielerlebnis aufzu
 \section{Methoden}
 Die Spieldaten werden in einer Datenbank gespeichert.
 % Spielstatus selbst wird nicht in einer DB gespeichert, eher in einem Objekt gehalten.
-Diese beinhalten Informationen, beispielsweise zu den Spieleinstellungen, Gegnern, Spielstatus oder das Inventar der Spielers. 
+Diese beinhalten Informationen, beispielsweise zu den Spieleinstellungen, Gegnern, Spielstatus oder dem Inventar der Spielers. 
 Die Verwaltung der Spieldaten und Logik soll im Hintergrund über einen oder mehrere Amazon S3 Buckets geregelt werden und dadurch auch eine Skalierbarkeit ermöglichen. Wird ein neues Spiel eröffnet, so kann beispielsweise dafür ein neuer Bucket initialisiert werden. 
 % Die Buckets können Container enthalten.
 Eine Alternative dazu wäre das Erstellen von Docker-Containern, da diese auf jeder Hardware umsetzbar sind und auf Anfrage weitere davon zugeschaltet werden könnten. Die Umgebung innerhalb des Servers wird mit NodeJS umgesetzt werden, da dies das Bereitstellen von Assets für die User ermöglicht. Um den Spielstand zwischen den Spielern zu synchronisieren, sollen diese eine Verbindung über Websockets mit dem Spielserver aufbauen.
 Die Game Engine, 
 % HTML5 ist doch nicht die Gameengine?
-die der Nutzer zu sehen bekommen wird mit HTML5 implementiert. Des Weiteren wird das Framework 'Phaser' verwendet, um dem Nutzer grafische Ausgaben zu liefern und die Eingaben des Nutzers an das Spiel zu verarbeiten.
-Da Cheating ein große Problematik, insbesondere beim Multiplayer-Spiel, darstellt, werden alle empfangenen Daten auf dem Server validiert. Dies löst zwar das Problem nicht vollständig, sollte jedoch kleine Angriffe abwehren. 
+die der Nutzer zu sehen bekommt, wird mit HTML5 implementiert. Des Weiteren wird das Framework 'Phaser' verwendet, um dem Nutzer grafische Ausgaben zu liefern und die Eingaben des Nutzers an das Spiel zu verarbeiten.
+Da Cheating ein große Problematik, insbesondere beim Multiplayer-Spiel darstellt, werden alle empfangenen Daten auf dem Server validiert. Dies löst zwar das Problem nicht vollständig, sollte jedoch kleine Angriffe abwehren. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{res/game_arch.png}
@@ -170,7 +170,7 @@ Da Cheating ein große Problematik, insbesondere beim Multiplayer-Spiel, darstel
 \end{figure}
 
 \section{Graphischer Prototyp}
-Die grafische Oberfläche des Spiels teilt sich in zwei verschiedene Bereiche auf. Im oberen Teil des Fensters befinden sich aktuelle Informationen zum Spiel. So wird der Name und das Avatarbild des Spielers und des Mitspielers angezeigt, sowie die Anzahl der, sich im Inventar befindenden, Bomben. Der restliche Platz wird ist mit dem Spielfeld belegt. Das Spielfeld besteht aus zerstörbaren und unzerstörbaren Wänden, die sich optisch voneinander unterschieden. Damit wird dem Spieler die Differenzierung zwischen beiden visuell ermöglicht. Des Weiteren kommen zwei Arten von Gegnern vor: der Mitspieler sowie die vom Spiel generierten Enemys.
+Die grafische Oberfläche des Spiels teilt sich in zwei verschiedene Bereiche auf. Im oberen Teil des Fensters befinden sich aktuelle Informationen zum Spiel. So wird der Name und das Avatarbild des Spielers und des Mitspielers angezeigt, sowie die Anzahl der, sich im Inventar befindenden, Bomben. Der restliche Platz ist mit dem Spielfeld belegt. Das Spielfeld besteht aus zerstörbaren und unzerstörbaren Wänden, die sich optisch voneinander unterschieden. Damit wird dem Spieler die Differenzierung zwischen beiden visuell ermöglicht. Des Weiteren kommen zwei Arten von Gegnern vor: der Mitspieler sowie die vom Spiel generierten Enemys.
 %haben wir vom Spiel generierte Enemys? Ich würde das auf Multiplayer beschränken
 Die Elemente mit der höchsten Relevanz sind jedoch der Spieler selbst sowie die Bomben. Weitere Bestandteile, die nicht in der Abbildung 6 dargestellt wurden, sind: Items aus der Wandzerstörung, sowie Spielmenü-Elemente. 
 \begin{figure}[H]
