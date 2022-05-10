@@ -52,20 +52,21 @@
 \maketitle
 
 \begin{abstract}
-	Online-Spiele erfreuen sich coronabedingt immer größerer Beliebtheit. Dies könnte vor allem aus der unkomplizierten Zugangsmöglichkeit der Online-Spiele resultieren, aber auch der sich als redundant erweisenden Softwareinstallation. Die 
-	Online-Spiele wurden damals mit der Adobe Software 'Flash' realisiert. Aufgrund der Risiken auf der Sicherheitsebene wurde die Unterstützung der Software eingestellt. Heutzutage bedient man sich verschiedener Webtechnologien, die im Kapitel IV näher beleuchtet werden.
+	Der Bereich des Online-Spiels erfreut sich coronabedingt immer größerer Beliebtheit. Dies könnte vor allem aus der unkomplizierten Zugangsmöglichkeit resultieren, aber auch der sich als redundant erweisenden Softwareinstallation. Damals wurden 
+	diese Art von Games mit Adobes Software 'Flash' realisiert. Aufgrund der Risiken auf der Sicherheitsebene wurde die Unterstützung der Software eingestellt. Heutzutage bedient man sich verschiedener Webtechnologien, die im Kapitel IV näher beleuchtet werden.
 	Darin begründet liegt die Motivation hinter dieser Arbeit, denn 
 	die Spieleentwicklung ermöglicht eine intensive Auseinandersetzung mit diesen Webtechnologien, aber auch der Kreativität seinen freien Lauf zu lassen.
 	Der Fokus dieser Arbeit liegt in der Entwicklung eines cloudbasiertes Online-Multiplayer-Spiels. Als Inspiration dient an erster Stelle der zeitlose Klassiker \glqq Bomberman\grqq{}.
 \end{abstract}
 
 \section{Einführung}
-Bereits 1983 kam das labyrinthartig aufgebaute Computerspiel \glqq Bomberman\grqq{}, das vom japanischen Hersteller Hudson Soft (wurde 2012 von Konami übernommen) entwickelt wurde, auf den Markt. Seitdem erschienen bis heute zahlreiche, offizielle und daran angelehnte Spiele. Dabei hat sich das grundsätzliche Spielprinzip nie verändert. Das Spielfeld besteht aus zerstörbaren und unzerstörbaren Wänden. Strategisch legt der Spieler Bomben und bringt damit die zerstörbaren Wände zum Einsturz, um sich den Weg freizumachen. Durch die Zerstörung können versteckte Items in Erscheinung treten, die dem Spieler sehr nützlich sein können. Insbesondere der Multiplayer-Modus ist bei der Community sehr beliebt. Dieser verleitet dazu seine Mitspieler durch das Wegsprengen zu beseitigen. Ein Levelaufstieg finden statt, sobald alle Gegner exterminiert wurden.  
+Bereits 1983 kam das labyrinthartig aufgebaute Computerspiel \glqq Bomberman\grqq{}, das vom japanischen Hersteller Hudson Soft (wurde 2012 von Konami übernommen) entwickelt wurde, auf den Markt. Seitdem erschienen bis heute zahlreiche, offizielle und daran angelehnte Spiele. Dabei hat sich das grundsätzliche Spielprinzip nie verändert. Das Spielfeld besteht aus zerstörbaren und unzerstörbaren Wänden. Strategisch legt der Spieler Bomben und bringt damit die zerstörbaren Wände zum Einsturz, um sich den Weg freizumachen. Durch die Zerstörung können versteckte Items in Erscheinung treten, die dem Spieler sehr nützlich sein können. Insbesondere der Multiplayer-Modus ist bei der Community sehr beliebt. Dieser verleitet dazu seine Mitspieler durch das Wegsprengen zu beseitigen. Ein Levelaufstieg finden statt, sobald alle Gegner exterminiert wurden. 
 
+Das Spielprinzip soll als Vorlage für das zu entwickelnde Online-Multiplayer-Spiel ``Explosion Guy'' dienen. 
 
 
 \section{Verwandte Arbeiten}
-Nachdem in der Zusammenfassung bereits die Motivation erläutert wurde, werden hier verwandte Arbeiten und Systeme vorgestellt. Bei der Recherche wurden einige Bomberman inspirierte Online-Spiele gefunden, die auch kostenlos verfügbar sind. Spiel \cite{bombe-friends}, Bomber-Friends, stellt dabei eine komplexe Variante des Spiels dar, aufgrund von RPG-Elementen. Diese erweitern den klassischen Spielstil mit der Möglichkeit, aus zerstörten Boxen Edelsteine zu gewinnen, mit denen sich Verbesserungen freischalten lassen. Power-Ups sind ebenfalls erhältlich. 
+Nachdem in der Zusammenfassung bereits die Motivation erläutert wurde, werden hier verwandte Arbeiten und Systeme vorgestellt. Bei der Recherche wurden einige ''Bomberman'' inspirierte Online-Spiele gefunden, die auch kostenlos verfügbar sind. Spiel \cite{bombe-friends}, Bomber-Friends, stellt dabei eine komplexe Variante des Spiels dar, aufgrund von RPG-Elementen. Diese erweitern den klassischen Spielstil mit der Möglichkeit, aus zerstörten Boxen Edelsteine zu gewinnen, mit denen sich Verbesserungen freischalten lassen. Power-Ups sind ebenfalls erhältlich. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.45\textwidth]{res/bomberfriends.png}
@@ -106,7 +107,7 @@ Als Spieler möchte ich mich auf dem Spielfeld bewegen können, um mit der Umgeb
 Als Spieler möchte ich Bomben legen können, damit sie später explodieren können.
 
 \subsection{Anforderung 4}
-Als Spieler möchte ich, dass die Bomben explodieren und verschwinden, um ihren Effekt visuell zu erleben (und das Spiel zu gewinnen).
+Als Spieler möchte ich, dass die Bomben explodieren und verschwinden, um ihren Effekt visuell zu erleben.
 
 % next
 \subsection{Anforderung 5} 
@@ -138,7 +139,7 @@ Als Anbieter möchte ich, dass Spiele bei zu langer Spieldauer beendet werden, u
 Als Spieler möchte ich mit mehr als einem weiteren Spieler spielen können, um den Komplexitätsgrad des Spieles zu erhöhen.
 
 \subsection{Anforderung 14}
-Als Spieler möchte ich eine dynamische Spielfeldgröße, um den Umfang des Spiels zu erhöhen (nochmal drüber nachdenken).
+Als Spieler möchte ich eine dynamische Spielfeldgröße, um den Umfang des Spiels zu erhöhen.
 
 \subsection{Anforderung 15}
 Als Spieler möchte ich meinen Spielernamen festlegen können, um einen Wiedererkennungswert zu schaffen.
@@ -152,15 +153,16 @@ Als Spieler möchte ich meine Spielfigur personalisieren können, um meine Figur
 \subsection{Anforderung 18}
 Als Spieler möchte ich Power-Ups einsammeln können, um das Spielerlebnis aufzuwerten.
 
+\subsection{Anforderung 19}
+Als Spieler möchte ich visualisiert bekommen, wer das Spiel gewonnen hat.
+
 \section{Methoden}
 Die Spieldaten werden in einer Datenbank gespeichert.
-Diese beinhaltet Informationen zu den Spieleinstellungen, Spielerprofile und Spielstatistiken. 
+Diese beinhaltet Informationen zu den Spieleinstellungen, Spielerprofilen und Spielstatistiken. 
 Die Verwaltung der Spieldaten und Logik soll im Hintergrund über einen oder mehrere Amazon S3 Buckets geregelt werden und dadurch auch eine Skalierbarkeit ermöglichen. Wird ein neues Spiel eröffnet, so kann beispielsweise dafür ein neuer Bucket initialisiert werden. 
 Die Umgebung innerhalb des Servers wird mit NodeJS umgesetzt werden, da dies das Bereitstellen von Assets für die User ermöglicht. Um den Spielstand zwischen den Spielern zu synchronisieren, sollen diese eine Verbindung über Websockets mit dem Spielserver aufbauen.
-Die Spielumgebung, die der Nutzer zu sehen bekommt, wird mit HTML5 implementiert. Des Weiteren wird das Framework 'Phaser' verwendet, um dem Nutzer grafische Ausgaben zu liefern und die Eingaben des Nutzers an das Spiel zu verarbeiten.
-Die Umgebung innerhalb des Servers wird mit NodeJS umgesetzt werden, da dies das Bereitstellen von Assets für die User ermöglicht. Um den Spielstand zwischen den Spielern zu synchronisieren, sollen diese eine Verbindung über Websockets mit dem Spielserver aufbauen.
-Die Spielumgebung, die der Nutzer zu sehen bekommt, wird mit HTML5 und Javascript implementiert. Des Weiteren wird das Framework 'Phaser' verwendet, um dem Nutzer grafische Ausgaben zu liefern und die Eingaben des Nutzers an das Spiel zu verarbeiten.
-Da Cheating ein große Problematik, insbesondere beim Multiplayer-Spiel darstellt, werden alle empfangenen Daten auf dem Server validiert. Dies löst zwar das Problem nicht vollständig, sollte jedoch kleine Angriffe abwehren. 
+Die Spieloberfläche, die der Nutzer zu sehen bekommt, wird mit HTML5 und JavaScript implementiert. Des Weiteren wird das Framework 'Phaser' verwendet, um dem Nutzer grafische Ausgaben zu liefern und die Eingaben des Nutzers an das Spiel zu verarbeiten.
+Da ''Cheating'' eine große Problematik, insbesondere beim Multiplayer-Spiel darstellt, werden alle empfangenen Daten auf dem Server validiert. Dies löst zwar das Problem nicht vollständig, sollte jedoch kleine Angriffe abwehren. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{res/game_arch.png}
@@ -168,7 +170,7 @@ Da Cheating ein große Problematik, insbesondere beim Multiplayer-Spiel darstell
 \end{figure}
 
 \section{Graphischer Prototyp}
-Die grafische Oberfläche des Spiels teilt sich in zwei verschiedene Bereiche auf. Im oberen Teil des Fensters befinden sich aktuelle Informationen zum Spiel. So wird der Name und das Avatarbild des Spielers und des Mitspielers angezeigt, sowie die Anzahl der, sich im Inventar befindenden, Bomben. Der restliche Platz ist mit dem Spielfeld belegt. Das Spielfeld besteht aus zerstörbaren und unzerstörbaren Wänden, die sich optisch voneinander unterschieden. Damit wird dem Spieler die Differenzierung zwischen beiden visuell ermöglicht. Die Elemente mit der höchsten Relevanz sind jedoch der Spieler selbst sowie die Bomben. Weitere Bestandteile, die nicht in der Abbildung 6 dargestellt wurden, sind: Items aus der Wandzerstörung, sowie Spielmenü-Elemente. 
+Die grafische Oberfläche des Spiels teilt sich in zwei verschiedene Bereiche auf. Im oberen Teil des Fensters befinden sich aktuelle Informationen zum Spiel. Es wird der Name und das Avatarbild des Spielers und des Mitspielers angezeigt, sowie die Anzahl der, sich im Inventar befindenden, Bomben. Der restliche Platz ist mit dem Spielfeld belegt. Das Spielfeld besteht aus zerstörbaren und unzerstörbaren Wänden, die sich optisch voneinander unterschieden. Damit wird dem Spieler die Differenzierung zwischen beiden visuell ermöglicht. Die Elemente mit der höchsten Relevanz sind jedoch der Spieler selbst sowie die Bomben. Weitere Bestandteile, die nicht in der Abbildung 6 aufgeführt wurden, sind: Items aus der Wandzerstörung, sowie die Spielmenü-Elemente. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{res/prototyp.png}
