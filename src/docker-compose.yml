@@ -1,0 +1,19 @@
+version: '3.4'
+services:  
+  # Backend (Node.js)
+  node-backend:
+    build: './images/backend/'
+    volumes:
+      - ./images/backend/:/home/app/
+      - /home/app/node_modules
+    ports:
+      - "5000:5000"
+    networks:
+      - network-backend
+
+networks:
+  network-backend:
+    name: backend
+    driver: bridge # Bridge ist Docker-Default.
+    # internal: true # Wenn internal auf true gesetzt wird, ist das Netzwerk nicht mehr standardmäßig vom Host aufrufbar. Während Development noch hinderlich.
+
