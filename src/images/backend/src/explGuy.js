@@ -9,10 +9,11 @@ var gameSocket;
  */
 
 exports.initGame = function(sio, socket){
+    console.log("initGame");
     io = sio;
     gameSocket = socket;
     gameSocket.emit('connected', { message: "You are connected!" });
-
+    console.log("connected");
     // Host Events
     gameSocket.on('hostCreateNewGame', hostCreateNewGame);
 
@@ -20,7 +21,6 @@ exports.initGame = function(sio, socket){
     // Player Events
     gameSocket.on('playerJoinGame', playerJoinGame);
     // gameSocket.on('playerAnswer', playerAnswer);
-
 }
 
 
