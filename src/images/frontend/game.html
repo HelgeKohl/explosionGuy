@@ -52,42 +52,60 @@
         const map = this.make.tilemap({key: "map", tileWidth:32, tileHeight:32});
         const tileset = map.addTilesetImage("tileBild", "tiles");
 
-        // Layer die Keys übergeben, die in Tiled bestimmt wurden
-        const hintergrundLayer = map.createLayer("hintergrund", tileset, 0, 0);
-        const interaktivLayer = map.createLayer("interaktiv", tileset, 0, 0);
-        // Kollisions-Eigenschaft aus Layer beziehen
-        hintergrundLayer.setCollisionByProperty({collide:true});
-        interaktivLayer.setCollisionByProperty({collide:true});
-        //Spieler mit Kollisionserkennung ausstatten
-        //this.physics.add.collider(this.player, hintergrundLayer); //TODO Hier macht er Schwierigkeiten
-        //this.physics.add.collider(this.player, interaktivLayer);
+        // map Layer erstellen aus Tile-Layerdaten
+        this.hintergrundLayer = map.createLayer("hintergrund", tileset, 0, 0);
+        this.interaktivLayer = map.createLayer("interaktiv", tileset, 0, 0);
+        // Kollisions-Eigenschaft sowie Destroy-Eigenschaft aus Layer beziehen
+        this.hintergrundLayer.setCollisionByProperty({collide:true});
+        this.interaktivLayer.setCollisionByProperty({collide:true});
         // Spieler erstellen
         this.player = this.physics.add.sprite(100,100, "explosionGuy");
-
         // Spieler in Ecke links oben platzieren als Startposition
-        this.player.setPosition(48, 48)
+        this.player.setPosition(48, 48);
         this.cursors = this.input.keyboard.createCursorKeys();
     }
 
     function update ()
     {
-        this.player.setVelocity(0, 0);
+        if (this.input.keyboard.checkDown(this.cursors.left, 250))
+        {
+            // EIgenschaften des zu begehenden Tiles zuordnen
+            var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
+            var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
+            // Wenn Collide-Eigenschaften des zu begehenden Feldes Falsch sind darf gegangen werden
+            if (!hTile.properties.collide && !iTile.properties.collide)
+            {
+                this.player.x -= 32;
+            }
+        }
+        else if (this.input.keyboard.checkDown(this.cursors.right, 250))
+        {
+            var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
+            var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
 
-        if(this.cursors.up.isDown)
-        {
-            this.player.setVelocityY(-100);
+            if (!hTile.properties.collide && !iTile.properties.collide)
+            {
+                this.player.x += 32;
+            }
         }
-        else if(this.cursors.down.isDown)
+        else if (this.input.keyboard.checkDown(this.cursors.up, 250))
         {
-            this.player.setVelocityY(100);
+            var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
+            var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
+
+            if (!hTile.properties.collide && !iTile.properties.collide) {
+                this.player.y -= 32;
+            }
         }
-        else if(this.cursors.right.isDown)
+        else if (this.input.keyboard.checkDown(this.cursors.down, 250))
         {
-            this.player.setVelocityX(100);
-        }
-        else if(this.cursors.left.isDown)
-        {
-            this.player.setVelocityX(-100);
+            var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
+            var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
+
+            if (!hTile.properties.collide && !iTile.properties.collide)
+            {
+                this.player.y += 32;
+            }
         }
     }
 </script>
