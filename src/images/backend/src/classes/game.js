@@ -1,6 +1,7 @@
-import Playground from './playground';
+const Playground = require('./playground');
 
-export class Game {
+const Game = class {
+
   constructor(fieldsizeX, fieldsizeY, playerList, obstacleCount) {    
     this.Playground = new Playground(fieldsizeX, fieldsizeY, playerList, obstacleCount);
   }
@@ -9,3 +10,5 @@ export class Game {
     this.Playground.update();
   }
 }
+
+module.exports = Game;

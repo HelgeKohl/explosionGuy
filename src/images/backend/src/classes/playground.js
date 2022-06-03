@@ -1,12 +1,14 @@
-import Player from './player';
-import Bomb from './bomb';
+const Player = require('./player');
+const Bomb = require('./bomb');
 
-export class Playground {
+const Playground = class {
   constructor(maxX, maxY, playerList, obstacleCount) {    
     this.MaxX = maxX;
     this.MaxY = maxY;
     this.ObstaclePositions = [];
+    this.Players = [];
     this.Bombs = [];
+    this.Tick = 0;
 
     for(let i = 0; i < playerList.length; i++) {
       this.Players[i] = new Player(playerList[i].Playername);
@@ -19,18 +21,22 @@ export class Playground {
 
   update() {
     // update bombs
-    for(let i = 0; i < this.Bombs.length; i++) {
-      this.Bombs[i].Timer--;
-      if(this.Bombs[i].Timer <= 0) {
-        this.explodeBomb(this.Bombs[i]);
-        this.Bombs.splice(i, 1);
+    if(this.Tick % 60 == 0) {
+      for(let i = 0; i < this.Bombs.length; i++) {
+        this.Bombs[i].Timer--;
+        if(this.Bombs[i].Timer <= 0) {
+          this.explodeBomb(this.Bombs[i]);
+          this.Bombs.splice(i, 1);
+        }
+      }
+  
+      // update players
+      for(let i = 0; i < this.Players.length; i++) {
+        this.Players[i].refreshBombCount();
       }
     }
 
-    // update players
-    for(let i = 0; i < this.Players.length; i++) {
-      this.Players[i].refreshBombCount();
-    }
+    this.Tick++;
   }
 
   onInput(player, input){
@@ -78,7 +84,7 @@ export class Playground {
   placeBomb(player) {
     if(player.BombCount > 0) {
       player.BombCount--;
-      let bomb = new Bomb(player.PosX, player.PosY, player.BombStrength);
+      let bomb = new Bomb(player.PosX, player.PosY, player.BombStrength, 3);
       this.Bombs.push(bomb);
     }
   }
@@ -130,3 +136,5 @@ export class Playground {
     return true;
   }
 }
+
+module.exports = Playground;

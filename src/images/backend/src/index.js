@@ -1,6 +1,7 @@
 const express = require('express');
 const { createServer } = require("http");
 const { Server } = require('socket.io');
+
 var explGuy = require('./explGuy'); // Import the "Backend game logic file".
 
 const app = express();
@@ -8,7 +9,7 @@ const httpServer = createServer(app);
 
 var io = new Server(httpServer, { 
   cors: {
-    origin: 'http://localhost:3000',
+    origin: 'http://localhost:5000',
     credentials: true
   },
 });
@@ -20,13 +21,8 @@ io.on('connection', function (socket) {   // io.on geht genauso
   explGuy.initGame(io, socket);   //console.log('client connected');
 });
 
-io.on('disconnect', function (socket) {
-  console.log("disconnected");
-  console.log(socket.id);
-});
-
-httpServer.listen(3000);
-console.log("listening on port 3000");
+httpServer.listen(5000);
+console.log("Backend listening on port 5000");
 /*
 API - Client to Server
 join(player)

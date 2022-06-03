@@ -1,4 +1,4 @@
-export class Player{
+const Player = class {
   constructor(playerName, playerId){
     this.Playername = playerName;
     this.PlayerId = playerId;
@@ -23,3 +23,5 @@ export class Player{
     }
   }
 }
+
+module.exports = Player;

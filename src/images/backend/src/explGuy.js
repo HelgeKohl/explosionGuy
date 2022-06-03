@@ -1,5 +1,12 @@
+// import Game from './classes/game';
+const Game = require('./classes/game');
+
 var io;
 var gameSocket;
+var game;
+
+const TICK_RATE = 20;
+const TICKLENGTHMS = 1000 / TICK_RATE;
 
 /**
  * This function is called by index.js to initialize a new game instance.
@@ -14,6 +21,17 @@ exports.initGame = function(sio, socket){
     gameSocket = socket;
     gameSocket.emit('connected', { message: "You are connected!" });
     console.log("connected");
+
+    gameSocket.on('startGame', () => {
+        console.log("startGame");
+        game = new Game(10, 10, [{name: "player1", id: 1}, {name: "player2", id: 2}], 1);
+
+        setInterval(function(){
+            //select a move every 3 seconds
+            game.update()
+        }, TICKLENGTHMS);
+    })
+
     // Host Events
     gameSocket.on('hostCreateNewGame', hostCreateNewGame);
 
