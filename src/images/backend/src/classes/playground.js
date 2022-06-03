@@ -39,7 +39,8 @@ const Playground = class {
     this.Tick++;
   }
 
-  onInput(player, input){
+  onInput(playerId, input){
+    let player = this.Players.find(p => p.Id == playerId);
     switch(input) {
       case 'up':
         this.movePlayer(player, 'up');
@@ -122,15 +123,17 @@ const Playground = class {
     }
 
     // check for other players
-    for(let j = 0; j < this.Players.length; j++) {
-      if(this.Players[j].PosX == x && this.Players[j].PosY == y) {
+    for(let i = 0; i < this.Players.length; i++) {
+      if(this.Players[i].PosX == x && this.Players[i].PosY == y) {
         return false;
       }
     }
 
     // check for bombs
-    if(this.Bombs[i].PosX == x && this.BombPositions[i].PosY == y) {
-      return false;
+    for(let i = 0; i < this.Bombs.length; i++) {
+      if(this.Bombs[i].PosX == x && this.Bombs[i].PosY == y) {
+        return false;
+      }
     }
 
     return true;

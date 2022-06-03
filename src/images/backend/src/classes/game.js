@@ -9,6 +9,10 @@ const Game = class {
   update() {
     this.Playground.update();
   }
+
+  onInput(playerId, input){
+    this.Playground.onInput(playerId, input);
+  }
 }
 
 module.exports = Game;

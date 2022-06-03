@@ -23,14 +23,20 @@ exports.initGame = function(sio, socket){
     console.log("connected");
 
     gameSocket.on('startGame', () => {
-        console.log("startGame");
+        console.log("start Game");
         game = new Game(10, 10, [{name: "player1", id: 1}, {name: "player2", id: 2}], 1);
-
+        console.log("Game initialized");
         setInterval(function(){
             //select a move every 3 seconds
             game.update()
         }, TICKLENGTHMS);
-    })
+        
+    });
+
+    gameSocket.on('input', function(args){
+        console.log(game.Playground.Players[0])
+        game.onInput(undefined, args.direction);
+    });
 
     // Host Events
     gameSocket.on('hostCreateNewGame', hostCreateNewGame);

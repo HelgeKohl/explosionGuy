@@ -17,10 +17,10 @@ var IO = {
         
         IO.bindEvents();
 
-        document.getElementById("startButton").addEventListener("click", function() {
-            console.log("startButton");
-            IO.socket.emit("startGame");
-        });
+        // document.getElementById("startButton").addEventListener("click", function() {
+        //     console.log("startButton");
+        //     IO.socket.emit("startGame");
+        // });
     },
 
     /**
