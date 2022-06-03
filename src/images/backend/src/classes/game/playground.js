@@ -2,7 +2,9 @@ const Player = require('./player');
 const Bomb = require('./bomb');
 
 const Playground = class {
-  constructor(maxX, maxY, playerList, obstacleCount) {    
+  constructor(maxX, maxY, playerList, obstacleCount) {  
+    console.log("Init Playground");
+    console.log(playerList);  
     this.MaxX = maxX;
     this.MaxY = maxY;
     this.ObstaclePositions = [];
@@ -11,7 +13,8 @@ const Playground = class {
     this.Tick = 0;
 
     for(let i = 0; i < playerList.length; i++) {
-      this.Players[i] = new Player(playerList[i].Playername);
+      console.log(playerList[i]);
+      this.Players[i] = new Player(playerList[i].name, playerList[i].id);
     }
     
     for(let i = 0; i < obstacleCount; i++) {
@@ -41,22 +44,28 @@ const Playground = class {
 
   onInput(playerId, input){
     let player = this.Players.find(p => p.Id == playerId);
-    switch(input) {
-      case 'up':
-        this.movePlayer(player, 'up');
-        break;
-      case 'down':
-        this.movePlayer(player, 'down');
-        break;
-      case 'left':
-        this.movePlayer(player, 'left');
-        break;
-      case 'right':
-        this.movePlayer(player, 'right');
-        break;
-      case 'bomb':
-        this.placeBomb(player);
-        break;
+
+    try {
+      switch(input) {
+        case 'up':
+          this.movePlayer(player, 'up');
+          break;
+        case 'down':
+          this.movePlayer(player, 'down');
+          break;
+        case 'left':
+          this.movePlayer(player, 'left');
+          break;
+        case 'right':
+          this.movePlayer(player, 'right');
+          break;
+        case 'bomb':
+          this.placeBomb(player);
+          break;
+      }
+    }
+    catch(e) {
+      console.log(e);
     }
   }
 
@@ -79,6 +88,10 @@ const Playground = class {
     }
     if(this.isValidPosition(newPosX, newPosY)) {
       player.setNewPosition(newPosX, newPosY);
+      console.log("Player " + player.Name + " moved to " + newPosX + " " + newPosY);
+    }
+    else{
+      console.log("Invalid position");
     }
   }
 

@@ -1,5 +1,5 @@
-// import Game from './classes/game';
-const Game = require('./classes/game');
+const Game = require('./classes/game/game');
+const { v4: uuidv4 } = require('uuid');
 
 var io;
 var gameSocket;
@@ -19,23 +19,23 @@ exports.initGame = function(sio, socket){
     console.log("initGame");
     io = sio;
     gameSocket = socket;
-    gameSocket.emit('connected', { message: "You are connected!" });
+    var playerId = uuidv4();
+    gameSocket.emit('connected', { playerId:  playerId});
     console.log("connected");
 
     gameSocket.on('startGame', () => {
         console.log("start Game");
-        game = new Game(10, 10, [{name: "player1", id: 1}, {name: "player2", id: 2}], 1);
+        game = new Game(10, 10, [{name: "player1", id: playerId}], 1);
         console.log("Game initialized");
+        console.log(game.Playground.Players)
         setInterval(function(){
             //select a move every 3 seconds
             game.update()
         }, TICKLENGTHMS);
-        
     });
 
     gameSocket.on('input', function(args){
-        console.log(game.Playground.Players[0])
-        game.onInput(undefined, args.direction);
+        game.onInput(playerId, args.direction);
     });
 
     // Host Events
