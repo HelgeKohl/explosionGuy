@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8" />
+    <title>Explosion Guy</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+            background: #1a1a1a;
+        }
+    </style>
+</head>
+<body>
+<script type="text/javascript">
+
+    var config = {
+        type: Phaser.AUTO,
+        width: 544, //17 x 32
+        height: 416, //13 x 32
+        autoCenter: true,
+        // Bildschirm ausfüllen
+        scale: {
+            mode: Phaser.Scale.FIT
+        },
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        },
+        physics: {
+            default:"arcade", arcade:{
+                debug:true
+            }
+        }
+    };
+
+    var game = new Phaser.Game(config);
+
+    // Hier werden die Assets vor dem eigentlichen Spiel geladen
+    function preload ()
+    {
+        this.load.image("tiles", "assets/tilemaps/tileBild.png");
+        this.load.image("explosionGuy", "assets/explosionGuyHell.png")
+        //Daten aus erstellter JSON Tilemap beziehen
+        this.load.tilemapTiledJSON("map","assets/tilemaps/explosionGuy.tmj");
+    }
+
+    function create ()
+    {
+        // Map JSON von von Tiled laden
+        const map = this.make.tilemap({key: "map", tileWidth:32, tileHeight:32});
+        const tileset = map.addTilesetImage("tileBild", "tiles");
+
+        // map Layer erstellen aus Tile-Layerdaten
+        this.hintergrundLayer = map.createLayer("hintergrund", tileset, 0, 0);
+        this.interaktivLayer = map.createLayer("interaktiv", tileset, 0, 0);
+        // Kollisions-Eigenschaft sowie Destroy-Eigenschaft aus Layer beziehen
+        this.hintergrundLayer.setCollisionByProperty({collide:true});
+        this.interaktivLayer.setCollisionByProperty({collide:true});
+        // Spieler erstellen
+        this.player = this.physics.add.sprite(100,100, "explosionGuy");
+        // Spieler in Ecke links oben platzieren als Startposition
+        this.player.setPosition(48, 48);
+        this.cursors = this.input.keyboard.createCursorKeys();
+    }
+
+    function update ()
+    {
+        if (this.input.keyboard.checkDown(this.cursors.left, 250))
+        {
+            // EIgenschaften des zu begehenden Tiles zuordnen
+            var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
+            var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
+            // Wenn Collide-Eigenschaften des zu begehenden Feldes Falsch sind darf gegangen werden
+            if (!hTile.properties.collide && !iTile.properties.collide)
+            {
+                this.player.x -= 32;
+            }
+        }
+        else if (this.input.keyboard.checkDown(this.cursors.right, 250))
+        {
+            var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
+            var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
+
+            if (!hTile.properties.collide && !iTile.properties.collide)
+            {
+                this.player.x += 32;
+            }
+        }
+        else if (this.input.keyboard.checkDown(this.cursors.up, 250))
+        {
+            var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
+            var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
+
+            if (!hTile.properties.collide && !iTile.properties.collide) {
+                this.player.y -= 32;
+            }
+        }
+        else if (this.input.keyboard.checkDown(this.cursors.down, 250))
+        {
+            var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
+            var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
+
+            if (!hTile.properties.collide && !iTile.properties.collide)
+            {
+                this.player.y += 32;
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
