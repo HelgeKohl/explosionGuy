@@ -65,7 +65,11 @@
         this.player.setPosition(48, 48);
         this.cursors = this.input.keyboard.createCursorKeys();
 
+        
+        IO.socket.emit("createGame"); // zum Testen -> aktuell: neuen Raum erstellen (falls noch keiner verfügbar), ansonsten Beitritt zum ersten und einzigen Raum
+
         IO.socket.emit("startGame");
+
     }
 
     function update ()

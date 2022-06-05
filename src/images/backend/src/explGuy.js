@@ -24,6 +24,9 @@ exports.initGame = function(sio, socket){
     console.log("connected");
 
     gameSocket.on('startGame', () => {
+
+        console.log("Anzahl Spieler in room1: " + io.sockets.adapter.rooms.get("room1").size);
+
         console.log("start Game");
         game = new Game(10, 10, [{name: "player1", id: playerId}], 1);
         console.log("Game initialized");
