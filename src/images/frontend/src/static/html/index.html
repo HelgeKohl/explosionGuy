@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8" />
     <title>Explosion Guy</title>
-    <script src="./js/socket.io.js"></script>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
     <style type="text/css">
         body {
@@ -15,7 +14,7 @@
 <body>
 <script type="text/javascript">
 
-    var config = {
+    const config = {
         type: Phaser.AUTO,
         width: 544, //17 x 32
         height: 416, //13 x 32
@@ -36,15 +35,18 @@
         }
     };
 
-    var game = new Phaser.Game(config);
+
+    const game = new Phaser.Game(config);
 
     // Hier werden die Assets vor dem eigentlichen Spiel geladen
     function preload ()
     {
         this.load.image("tiles", "assets/tilemaps/tileBild.png");
-        this.load.image("explosionGuy", "assets/explosionGuyHell.png")
+        this.load.spritesheet("explosionGuy", "assets/explosionGuyHell.png",{frameWidth: 32,frameHeight: 32})
         //Daten aus erstellter JSON Tilemap beziehen
         this.load.tilemapTiledJSON("map","assets/tilemaps/explosionGuy.tmj");
+        this.load.spritesheet("bomb", "assets/bomb.png",{frameWidth: 32,frameHeight: 32});
+        this.load.spritesheet("explosion", "assets/explosion.png",{frameWidth: 32,frameHeight: 32});
     }
 
     function create ()
@@ -52,6 +54,41 @@
         // Map JSON von von Tiled laden
         const map = this.make.tilemap({key: "map", tileWidth:32, tileHeight:32});
         const tileset = map.addTilesetImage("tileBild", "tiles");
+        //Animationen
+        //Bombe & Explosions Animation
+        this.anims.create({ key: 'bomb-idle',
+            frames: this.anims.generateFrameNumbers('bomb', {start: 0,end: 1}),
+            repeat: -1,
+            frameRate: 2
+        });
+
+        this.anims.create({key: 'boom',
+            frames: this.anims.generateFrameNumbers('explosion', {start: 0,end: 7}),
+            repeat: -1,
+            frameRate: 5
+        });
+
+        //Playeranimation
+        this.anims.create({key: 'go-left',
+            frames: this.anims.generateFrameNumbers('explosionGuy', {start: 1,end: 2}),
+            repeat: -1,
+            frameRate: 5
+        });
+        this.anims.create({key: 'go-right',
+            frames: this.anims.generateFrameNumbers('explosionGuy', {start: 3,end: 4}),
+            repeat: -1,
+            frameRate: 5
+        });
+        this.anims.create({key: 'go-up',
+            frames: this.anims.generateFrameNumbers('explosionGuy', {start: 5,end: 6}),
+            repeat: -1,
+            frameRate: 5
+        });
+        this.anims.create({key: 'go-down',
+            frames: this.anims.generateFrameNumbers('explosionGuy', {start: 7,end: 8}),
+            repeat: -1,
+            frameRate: 5
+        });
 
         // map Layer erstellen aus Tile-Layerdaten
         this.hintergrundLayer = map.createLayer("hintergrund", tileset, 0, 0);
@@ -65,10 +102,16 @@
         this.player.setPosition(48, 48);
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        
-        IO.socket.emit("createGame"); // zum Testen -> aktuell: neuen Raum erstellen (falls noch keiner verfügbar), ansonsten Beitritt zum ersten und einzigen Raum
+        //Bombe
+        this.bomb = this.physics.add.sprite('bomb');
+        this.bomb.setScale(1);
+        this.bomb.play('bomb-idle');
 
-        IO.socket.emit("startGame");
+        //Explosion
+        this.expl = this.physics.add.sprite('explosion');
+        this.expl.setScale(1.5);
+        this.expl.play('boom');
+        this.expl.setVisible(false);
 
     }
 
@@ -76,10 +119,10 @@
     {
         if (this.input.keyboard.checkDown(this.cursors.left, 250))
         {
-            IO.socket.emit("input", {action: 'move', direction: 'left'});
             // EIgenschaften des zu begehenden Tiles zuordnen
             var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
             var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
+            this.player.play('go-left');
             // Wenn Collide-Eigenschaften des zu begehenden Feldes Falsch sind darf gegangen werden
             if (!hTile.properties.collide && !iTile.properties.collide)
             {
@@ -88,10 +131,9 @@
         }
         else if (this.input.keyboard.checkDown(this.cursors.right, 250))
         {
-            IO.socket.emit("input", {action: 'move', direction: 'right'});
             var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
             var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
-
+            this.player.play('go-right');
             if (!hTile.properties.collide && !iTile.properties.collide)
             {
                 this.player.x += 32;
@@ -99,27 +141,35 @@
         }
         else if (this.input.keyboard.checkDown(this.cursors.up, 250))
         {
-            IO.socket.emit("input", {action: 'move', direction: 'up'});
             var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
             var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
-
+            this.player.play('go-up');
             if (!hTile.properties.collide && !iTile.properties.collide) {
                 this.player.y -= 32;
             }
         }
         else if (this.input.keyboard.checkDown(this.cursors.down, 250))
         {
-            IO.socket.emit("input", {action: 'move', direction: 'down'});
             var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
             var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
-
+            this.player.play('go-down');
             if (!hTile.properties.collide && !iTile.properties.collide)
             {
                 this.player.y += 32;
             }
         }
+        if (this.player.body.velocity.x < 0.1)
+        {
+            this.player.anims.stop();
+
+        }
+
+        if (this.input.keyboard.checkDown(this.cursors.space))
+        {
+            //Bombe platzieren
+        }
     }
 </script>
-    <script src="./js/app.js"></script>
+
 </body>
 </html>
