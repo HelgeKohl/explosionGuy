@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Explosion Guy</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+    <script src="./js/socket.io.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -79,12 +80,12 @@
             repeat: -1,
             frameRate: 5
         });
-        this.anims.create({key: 'go-up',
+        this.anims.create({key: 'go-down',
             frames: this.anims.generateFrameNumbers('explosionGuy', {start: 5,end: 6}),
             repeat: -1,
             frameRate: 5
         });
-        this.anims.create({key: 'go-down',
+        this.anims.create({key: 'go-up',
             frames: this.anims.generateFrameNumbers('explosionGuy', {start: 7,end: 8}),
             repeat: -1,
             frameRate: 5
@@ -119,6 +120,7 @@
     {
         if (this.input.keyboard.checkDown(this.cursors.left, 250))
         {
+            IO.socket.emit("input", {action: 'move', direction: 'left'});
             // EIgenschaften des zu begehenden Tiles zuordnen
             var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
             var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
@@ -131,6 +133,7 @@
         }
         else if (this.input.keyboard.checkDown(this.cursors.right, 250))
         {
+            IO.socket.emit("input", {action: 'move', direction: 'right'});
             var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
             var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
             this.player.play('go-right');
@@ -141,6 +144,7 @@
         }
         else if (this.input.keyboard.checkDown(this.cursors.up, 250))
         {
+            IO.socket.emit("input", {action: 'move', direction: 'up'});
             var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
             var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
             this.player.play('go-up');
@@ -150,6 +154,7 @@
         }
         else if (this.input.keyboard.checkDown(this.cursors.down, 250))
         {
+            IO.socket.emit("input", {action: 'move', direction: 'down'});
             var hTile = this.hintergrundLayer.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
             var iTile = this.interaktivLayer.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
             this.player.play('go-down');
@@ -166,10 +171,11 @@
 
         if (this.input.keyboard.checkDown(this.cursors.space))
         {
+            IO.socket.emit("input", {action: 'bomb'});
             //Bombe platzieren
         }
     }
 </script>
-
+<script src="./js/app.js"></script>
 </body>
 </html>

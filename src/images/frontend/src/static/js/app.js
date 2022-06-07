@@ -31,9 +31,7 @@ var IO = {
         console.log("binding events");
         IO.socket.on('connected', IO.onConnected );
         IO.socket.on('disconnected', IO.onDisconnect );
-        IO.socket.on('letsGo', () => {
-            console.log("letsGo");
-        })
+        
         // IO.socket.on('newGameCreated', IO.onNewGameCreated );
         // IO.socket.on('playerJoinedRoom', IO.playerJoinedRoom );
         // IO.socket.on('beginNewGame', IO.beginNewGame );
@@ -48,6 +46,7 @@ var IO = {
     onConnected : function() {
         // Cache a copy of the client's socket.IO session ID on the App
         console.log("connected");
+        IO.socket.emit('startGame');
         App.mySocketId = IO.socket.sessionid;
     },
 
