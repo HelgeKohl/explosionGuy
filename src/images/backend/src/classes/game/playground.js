@@ -48,6 +48,10 @@ const Playground = class {
   onInput(playerId, input){
     let player = this.Players.find(p => p.Id == playerId);
 
+    if(player.IsAlive == false){
+      return;
+    }
+
     try {
       switch(input) {
         case 'up':

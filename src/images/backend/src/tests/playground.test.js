@@ -31,7 +31,7 @@ test("move player left", () => {
     expect(playground1.Players[1].PosY).toBe(3);
 });
 
-test("move player to invalid position", () => {
+test("move player outside board", () => {
     playground1.onInput(117, "left");
     expect(playground1.Players[2].PosX).toBe(0);
     expect(playground1.Players[2].PosY).toBe(0);
@@ -62,4 +62,37 @@ test("explode bomb", () => {
     playground1.update(); //bomb is at timer 0
 
     expect(playground1.Players[1].IsAlive).toBe(false);
+});
+
+test("move dead player", () => {
+    playground1.onInput(116, "left");
+    expect(playground1.Players[1].PosX).toBe(2);
+    expect(playground1.Players[1].PosY).toBe(3);
+});
+
+//neuer Playground für fehlende Move checks
+const player4 = new player("Patrice", 120, 0, 0);
+const player5 = new player("Anastasia", 121, 1, 0);
+const playerList1 = [player4, player5];
+const playground2 = new Playground(10, 10, playerList1, 1);
+playground2.ObstaclePositions[0] = [0,1];
+
+test("move player right, block by other player", () => {
+    playground2.onInput(120, "right");
+    expect(playground2.Players[0].PosX).toBe(0);
+    expect(playground2.Players[0].PosY).toBe(0);
+});
+
+test("move player right, block by obstacle", () => {
+    playground2.onInput(120, "down");
+    expect(playground2.Players[0].PosX).toBe(0);
+    expect(playground2.Players[0].PosY).toBe(0);
+});
+
+test("move player right, block by bomb", () => {
+    playground2.onInput(121, "bomb");
+    playground2.onInput(121, "right");
+    playground2.onInput(120, "right");
+    expect(playground2.Players[0].PosX).toBe(0);
+    expect(playground2.Players[0].PosY).toBe(0);
 });
