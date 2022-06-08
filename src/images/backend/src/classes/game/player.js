@@ -23,7 +23,7 @@ const Player = class {
 
   refreshBombCount(){
     if(this.BombCount < this.MaxBombCount && this.IsAlive){
-      this.BombCount = this.BombCount++;
+      this.BombCount++;
     }
   }
 }
