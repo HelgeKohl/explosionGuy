@@ -20,13 +20,16 @@ const Playground = class {
     for(let i = 0; i < obstacleCount; i++) {
       this.ObstaclePositions[i] = [Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY)];
     }
+    console.log(`Hindernis Positionen: ${this.ObstaclePositions}`);
   }
 
   update() {
     // update bombs
+    console.log(`Tick ist: ${this.Tick}`)
     if(this.Tick % 60 == 0) {
       for(let i = 0; i < this.Bombs.length; i++) {
         this.Bombs[i].Timer--;
+        console.log(`Bomb Timer ist: ${this.Bombs[i].Timer}`)
         if(this.Bombs[i].Timer <= 0) {
           this.explodeBomb(this.Bombs[i]);
           this.Bombs.splice(i, 1);
@@ -106,13 +109,14 @@ const Playground = class {
   explodeBomb(bomb) {
     let explosionRange = bomb.Strength;
     let explosionPositions = [];
-    for(let i = 0; i < explosionRange; i++) {
+    for(let i = 0; i < explosionRange+1; i++) {
       explosionPositions.push([bomb.PosX + i, bomb.PosY]);
       explosionPositions.push([bomb.PosX - i, bomb.PosY]);
       explosionPositions.push([bomb.PosX, bomb.PosY + i]);
       explosionPositions.push([bomb.PosX, bomb.PosY - i]);
     }
-
+    console.log(`Positionen der Explosionen: ${explosionPositions}`);
+    
     for(let i = 0; i < explosionPositions.length; i++) {
       for(let j = 0; j < this.Players.length; j++) {
         if(this.Players[j].PosX == explosionPositions[i][0] && this.Players[j].PosY == explosionPositions[i][1]) {
