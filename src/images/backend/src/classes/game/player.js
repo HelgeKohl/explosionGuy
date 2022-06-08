@@ -1,13 +1,13 @@
 const Player = class {
-  constructor(playerName, playerId){
+  constructor(playerName, playerId, playerPosX, playerPosY){
     console.log("Init Player");
     console.log("PlayerName: " + playerName);
     console.log("PlayerId: " + playerId);
     
     this.Name = playerName;
     this.Id = playerId;
-    this.PosX = 0;
-    this.PosY = 0;
+    this.PosX = playerPosX;
+    this.PosY = playerPosY;
     this.MaxBombCount = 3;
     this.BombCount = 1;
     this.BombStrength = 1;

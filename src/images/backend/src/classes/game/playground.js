@@ -14,7 +14,7 @@ const Playground = class {
 
     for(let i = 0; i < playerList.length; i++) {
       console.log(playerList[i]);
-      this.Players[i] = new Player(playerList[i].name, playerList[i].id);
+      this.Players[i] = new Player(playerList[i].Name, playerList[i].Id, playerList[i].PosX, playerList[i].PosY);
     }
     
     for(let i = 0; i < obstacleCount; i++) {

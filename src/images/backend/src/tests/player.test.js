@@ -1,5 +1,5 @@
 const player = require("../classes/game/player");
-const player1 = new player("Philipp", 115);
+const player1 = new player("Philipp", 115, 0, 0);
 
 test("set player position to 5,5", () => {
     player1.setNewPosition(5, 5);
