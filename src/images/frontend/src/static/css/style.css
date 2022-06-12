@@ -1,0 +1,40 @@
+
+/* Textfeld Spielname */ 
+input[type="text"] {
+    width: 200px;
+    height: 20px;
+    padding-right: 50px;
+}
+
+
+
+/* Button aktiviert */
+input[type="button"]:enabled{
+    margin-left: -50px;
+    height: 25px;
+    width: 100px;
+    background: rgb(7, 243, 243);
+    color: rgb(0, 0, 0);
+    border: 0;
+    -webkit-appearance: none;
+}
+
+/* Button deaktiviert */
+input[type="button"]:disabled{
+    margin-left: -50px;
+    height: 25px;
+    width: 100px;
+    background: #9C9C90;
+    color: rgb(0, 0, 0);
+    border: 0;
+    -webkit-appearance: none;
+}
+
+/* Box aktuelles Spiel */
+#ActGame{
+    background-color: lightgrey;
+    width: 300px;
+    border: 15px solid rgb(0, 0, 0);
+    padding: 50px;
+    margin: 20px;
+}

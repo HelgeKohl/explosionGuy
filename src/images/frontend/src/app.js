@@ -12,6 +12,12 @@ app.get('/', (req, res) => {
   res.sendFile(`/html/index.html`, { root: __dirname + '/static' });
 });
 
+// Test für Lobby
+app.get('/lobby', (req, res) => {
+  console.log("GET /");
+  res.sendFile(`/html/lobby.html`, { root: __dirname + '/static' });
+});
+
 app.get('/*', (req, res) => {
   
   console.log(`get ${req.path}`);

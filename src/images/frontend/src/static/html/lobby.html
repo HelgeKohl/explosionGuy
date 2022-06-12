@@ -1,0 +1,167 @@
+<html>
+  <head>
+    <script src="./js/socket.io.js"></script>
+	<script src="./js/app.js"></script>
+
+	<link href="./css/style.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+
+	gamename:
+	<input 	type="text"
+			id="TextNewGame"
+			onkeyup="enableCreateGame()"
+	> 
+
+	<input 	type="button" 
+			id="CreateGameButton"
+			value="CreateGame"
+			disabled
+			onclick="createGame()" 
+	>
+
+    <button id="UpdateRoomList"
+			onclick="updateRoomList()" 
+			style="background-color:#F9FF33;">
+	Update Room List 
+	</button>
+
+	<select id="list" 
+		onchange="getSelectValue()"
+		size="1"
+		>
+		<option selected disabled>Choose Game</option>
+	</select>
+
+    <button id="JoinGameButton"
+			onclick="joinGame()" 
+			style="background-color:#52FF33;">
+	Join Game
+	</button>
+
+	<p>
+		playername:
+		<input 	type="text"
+				id="textPlayerName"
+				onkeyup="enableCreateGame()"
+		> 
+	</p>
+
+	<p>
+		<div id="ActGame" 
+			style="display: none;"
+		>
+	</p></div>
+
+
+
+
+
+	<script type="text/javascript">
+
+		const list = document.getElementById("list");
+		var gameRoom = "";
+
+		// aktiviere Button "CreateGame"
+		function enableCreateGame() {
+			if((document.getElementById("TextNewGame").value==="") || (document.getElementById("textPlayerName").value==="")) { 
+				document.getElementById('CreateGameButton').disabled = true; 
+			} else { 
+				document.getElementById('CreateGameButton').disabled = false;
+			}
+    	}
+
+
+
+		// erstelle Room (mit Button)
+		function createGame(){
+			// starte Spiel
+			let room = document.getElementById("TextNewGame").value;
+
+			console.log("Try to create Room: " + room);
+			console.log("Eigene Socket ID: " + IO.socket.id);
+
+			IO.socket.emit("createGame", room, (response)=> {
+				console.log(response.status);
+
+				// bei Erfolg - Spiel anzeigen
+				if (response.errorCode === 0){ // kein Error
+					gameRoom = room;
+					showActGame();
+				}
+
+			});
+		}
+
+		// join Room mit Auswahl (select) + Button
+		function joinGame(){
+			// starte Spiel
+			console.log("join");
+
+			IO.socket.emit("joinGame", list.value, (response) => {
+				console.log(response.status);
+
+				// bei Erfolg - Spiel anzeigen
+				if (response.errorCode === 0){ // kein Error
+					gameRoom = list.value;
+					showActGame();
+				}
+
+			});
+
+		}
+
+		// Aktualisiere Room-Liste mit Ack 
+		function updateRoomList(){
+			console.log("UpdateRoomList");
+
+			IO.socket.emit("getGames", (response) => {
+				const data = response;
+
+
+				// init
+				list.innerHTML = '';
+				let optChoose = document.createElement("option");
+				optChoose.innerHTML = "Choose Game";
+				optChoose.disabled = true;
+				optChoose.selected = true;
+				list.appendChild(optChoose);
+
+				// 
+				data.forEach((item)=>{
+				let opt = document.createElement("option");
+				opt.innerHTML = item;
+				console.log(opt.value);
+				list.appendChild(opt);
+				})
+
+				// wenn data empty
+				// if (data.length == 0){
+				// 	let optChoose = document.createElement("option");
+				// 	optChoose.innerHTML = "Choose Game";
+				// 	optChoose.disabled = true;
+				// 	optChoose.selected = true;
+				// 	list.appendChild(optChoose);
+				// }
+
+			});
+		}
+
+
+		function showActGame(){
+			let gametext = document.getElementById("ActGame");
+			gametext.style.display = "block";
+			gametext.innerHTML = "Game:" + "&nbsp;&nbsp;&nbsp;&nbsp;" + gameRoom + "<br/>";
+			gametext.innerHTML += "Players:<br/>";
+		}
+
+		// bei Klick auf Auswahl -> direkt join ??
+		function getSelectValue(){
+			console.log(list.value)
+		}
+
+		
+
+	</script>
+  </body>
+</html>

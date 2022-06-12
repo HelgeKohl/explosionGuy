@@ -16,6 +16,8 @@ const TICKLENGTHMS = 1000 / TICK_RATE;
  */
 
 exports.initGame = function(sio, socket){
+
+    // Initialisiere Game
     console.log("initGame");
     io = sio;
     gameSocket = socket;
@@ -23,6 +25,8 @@ exports.initGame = function(sio, socket){
     gameSocket.emit('connected', { playerId:  playerId});
     console.log("connected");
 
+
+    // Start Game
     gameSocket.on('startGame', () => {
 
         // console.log("Anzahl Spieler in room1: " + io.sockets.adapter.rooms.get("room1").size);
@@ -42,11 +46,11 @@ exports.initGame = function(sio, socket){
     });
 
     // Host Events
-    gameSocket.on('hostCreateNewGame', hostCreateNewGame);
+    //gameSocket.on('hostCreateNewGame', hostCreateNewGame);
 
 
     // Player Events
-    gameSocket.on('playerJoinGame', playerJoinGame);
+    //gameSocket.on('playerJoinGame', playerJoinGame);
     // gameSocket.on('playerAnswer', playerAnswer);
 }
 
@@ -62,16 +66,16 @@ exports.initGame = function(sio, socket){
 /**
  * The 'START' button was clicked and 'hostCreateNewGame' event occurred.
  */
- function hostCreateNewGame() {
-    // Create a unique Socket.IO Room
-    var thisGameId = ( Math.random() * 100000 ) | 0;	// Id als eindeutige Bezeichnung für den "Room" -> kann auch anders erzeugt werden
+//  function hostCreateNewGame() {
+//     // Create a unique Socket.IO Room
+//     var thisGameId = ( Math.random() * 100000 ) | 0;	// Id als eindeutige Bezeichnung für den "Room" -> kann auch anders erzeugt werden
 
-    // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
-    this.emit('newGameCreated', {gameId: thisGameId, mySocketId: this.id});
+//     // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
+//     this.emit('newGameCreated', {gameId: thisGameId, mySocketId: this.id});
 
-    // Join the Room and wait for the players
-    this.join(thisGameId.toString()); 
-};
+//     // Join the Room and wait for the players
+//     this.join(thisGameId.toString()); 
+// };
 
 
 
@@ -90,28 +94,28 @@ exports.initGame = function(sio, socket){
  * the gameId entered by the player.
  * @param data Contains data entered via player's input - playerName and gameId.
  */
- function playerJoinGame(data) {
-    //console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
+//  function playerJoinGame(data) {
+//     //console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
 
-    // A reference to the player's Socket.IO socket object
-    var sock = this;
+//     // A reference to the player's Socket.IO socket object
+//     var sock = this;
 
-    // Look up the room ID in the Socket.IO manager object.
-    var room = gameSocket.manager.rooms["/" + data.gameId];
+//     // Look up the room ID in the Socket.IO manager object.
+//     var room = gameSocket.manager.rooms["/" + data.gameId];
 
-    // If the room exists...
-    if( room != undefined ){
-        // attach the socket id to the data object.
-        data.mySocketId = sock.id;
+//     // If the room exists...
+//     if( room != undefined ){
+//         // attach the socket id to the data object.
+//         data.mySocketId = sock.id;
 
-        // Join the room
-        sock.join(data.gameId);
+//         // Join the room
+//         sock.join(data.gameId);
 
-        // Emit an event notifying the clients that the player has joined the room.
-        io.sockets.in(data.gameId).emit('playerJoinedRoom', data);
+//         // Emit an event notifying the clients that the player has joined the room.
+//         io.sockets.in(data.gameId).emit('playerJoinedRoom', data);
 
-    } else {
-        // Otherwise, send an error message back to the player.
-        this.emit('error',{message: "This room does not exist."} );
-    }
-}
+//     } else {
+//         // Otherwise, send an error message back to the player.
+//         this.emit('error',{message: "This room does not exist."} );
+//     }
+// }
