@@ -1,7 +1,7 @@
 {
   "preloadData": {
-    "mWidth": "17",
-    "mHeight": "13",
+    "mWidth": 17,
+    "mHeight": 13,
     "playerPos": {
       "player1": [1, 1],
       "player2": [15, 1]
