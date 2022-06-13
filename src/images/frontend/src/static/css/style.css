@@ -6,29 +6,24 @@ input[type="text"] {
     padding-right: 50px;
 }
 
+/* Button  */ 
+input[type="button"]{
+    margin-left: 0px;
+    height: 25px;
+    width: 100px;
+    color: rgb(0, 0, 0);
+    border: 0;
+    -webkit-appearance: none;
+}
 
-
-/* Button aktiviert */
 input[type="button"]:enabled{
-    margin-left: -50px;
-    height: 25px;
-    width: 100px;
     background: rgb(7, 243, 243);
-    color: rgb(0, 0, 0);
-    border: 0;
-    -webkit-appearance: none;
 }
 
-/* Button deaktiviert */
 input[type="button"]:disabled{
-    margin-left: -50px;
-    height: 25px;
-    width: 100px;
     background: #9C9C90;
-    color: rgb(0, 0, 0);
-    border: 0;
-    -webkit-appearance: none;
 }
+
 
 /* Box aktuelles Spiel */
 #ActGame{

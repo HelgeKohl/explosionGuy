@@ -25,7 +25,7 @@ const Playground = class {
 
   update() {
     // update bombs
-    console.log(`Tick ist: ${this.Tick}`)
+    //console.log(`Tick ist: ${this.Tick}`)
     if(this.Tick % 60 == 0) {
       for(let i = 0; i < this.Bombs.length; i++) {
         this.Bombs[i].Timer--;

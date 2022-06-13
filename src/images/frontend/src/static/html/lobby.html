@@ -10,40 +10,36 @@
 	gamename:
 	<input 	type="text"
 			id="TextNewGame"
-			onkeyup="enableCreateGame()"
 	> 
 
 	<input 	type="button" 
 			id="CreateGameButton"
 			value="CreateGame"
 			disabled
-			onclick="createGame()" 
 	>
 
-    <button id="UpdateRoomList"
-			onclick="updateRoomList()" 
-			style="background-color:#F9FF33;">
-	Update Room List 
-	</button>
-
 	<select id="list" 
-		onchange="getSelectValue()"
 		size="1"
 		>
 		<option selected disabled>Choose Game</option>
 	</select>
 
-    <button id="JoinGameButton"
-			onclick="joinGame()" 
-			style="background-color:#52FF33;">
-	Join Game
+    <input 	type="button"
+			id="JoinGameButton"
+			value="JoinGame"
+			disabled
+	>
+
+
+    <button id="UpdateRoomList"
+			style="background-color:#F9FF33;">
+	Update Room List 
 	</button>
 
 	<p>
 		playername:
 		<input 	type="text"
 				id="textPlayerName"
-				onkeyup="enableCreateGame()"
 		> 
 	</p>
 
@@ -59,15 +55,60 @@
 
 	<script type="text/javascript">
 
-		const list = document.getElementById("list");
+	
 		var gameRoom = "";
+
+		// Event-Listener
+		var inputPlayerName = document.getElementById("textPlayerName");
+		inputPlayerName.addEventListener("keyup", function(){
+			enableCreateGame();
+			enableJoinGame();
+		});
+
+		var list = document.getElementById("list");
+		list.addEventListener("change", function(){
+			getSelectValue();
+			enableJoinGame();
+		});
+
+		var inputGameName = document.getElementById("TextNewGame");
+		inputGameName.addEventListener("keyup", function(){
+			enableCreateGame();
+		});
+
+		var inputCreateGame = document.getElementById("CreateGameButton");
+		inputCreateGame.addEventListener("click", function(){
+			createGame();
+		});
+
+		var inputJoinGame = document.getElementById("JoinGameButton");
+		inputJoinGame.addEventListener("click", function(){
+			joinGame();
+		});
+
+		var inputUpdateRooms = document.getElementById("UpdateRoomList");
+		inputUpdateRooms.addEventListener("click", function(){
+			updateRoomList();
+		});
+
+
+
 
 		// aktiviere Button "CreateGame"
 		function enableCreateGame() {
-			if((document.getElementById("TextNewGame").value==="") || (document.getElementById("textPlayerName").value==="")) { 
+			if((document.getElementById("TextNewGame").value=="") || (document.getElementById("textPlayerName").value=="")) { 
 				document.getElementById('CreateGameButton').disabled = true; 
 			} else { 
 				document.getElementById('CreateGameButton').disabled = false;
+			}
+    	}
+
+		// aktiviere Button "JoinGame"
+		function enableJoinGame() {
+			if((document.getElementById("textPlayerName").value=="")  || (list.value == "Choose Game")) { 
+				document.getElementById('JoinGameButton').disabled = true; 
+			} else { 
+				document.getElementById('JoinGameButton').disabled = false;
 			}
     	}
 
@@ -85,7 +126,7 @@
 				console.log(response.status);
 
 				// bei Erfolg - Spiel anzeigen
-				if (response.errorCode === 0){ // kein Error
+				if (response.errorCode == 0){ // kein Error
 					gameRoom = room;
 					showActGame();
 				}
@@ -102,7 +143,7 @@
 				console.log(response.status);
 
 				// bei Erfolg - Spiel anzeigen
-				if (response.errorCode === 0){ // kein Error
+				if (response.errorCode == 0){ // kein Error
 					gameRoom = list.value;
 					showActGame();
 				}
@@ -151,6 +192,7 @@
 		function showActGame(){
 			let gametext = document.getElementById("ActGame");
 			gametext.style.display = "block";
+
 			gametext.innerHTML = "Game:" + "&nbsp;&nbsp;&nbsp;&nbsp;" + gameRoom + "<br/>";
 			gametext.innerHTML += "Players:<br/>";
 		}
