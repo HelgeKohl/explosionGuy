@@ -12,3 +12,10 @@ test("refresh player bomb count", () => {
     player1.refreshBombCount();
     expect(player1.BombCount).toBe(1);
 });
+
+test("try moving a dead player", () => {
+    player1.IsAlive = false;
+    player1.setNewPosition(4,4);
+    expect(player1.PosX).toBe(5);
+    expect(player1.PosY).toBe(5);
+});

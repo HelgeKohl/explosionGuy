@@ -52,27 +52,22 @@ const Playground = class {
       return;
     }
 
-    try {
-      switch(input) {
-        case 'up':
-          this.movePlayer(player, 'up');
-          break;
-        case 'down':
-          this.movePlayer(player, 'down');
-          break;
-        case 'left':
-          this.movePlayer(player, 'left');
-          break;
-        case 'right':
-          this.movePlayer(player, 'right');
-          break;
-        case 'bomb':
-          this.placeBomb(player);
-          break;
-      }
-    }
-    catch(e) {
-      console.log(e);
+    switch(input) {
+      case 'up':
+        this.movePlayer(player, 'up');
+        break;
+      case 'down':
+        this.movePlayer(player, 'down');
+        break;
+      case 'left':
+        this.movePlayer(player, 'left');
+        break;
+      case 'right':
+        this.movePlayer(player, 'right');
+        break;
+      case 'bomb':
+        this.placeBomb(player);
+        break;
     }
   }
 

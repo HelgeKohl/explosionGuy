@@ -61,6 +61,7 @@ test("explode bomb", () => {
     playground1.Tick = 0;
     playground1.update(); //bomb is at timer 0
 
+    expect(playground1.Tick).toBe(1);
     expect(playground1.Players[1].IsAlive).toBe(false);
 });
 
@@ -68,6 +69,18 @@ test("move dead player", () => {
     playground1.onInput(116, "left");
     expect(playground1.Players[1].PosX).toBe(2);
     expect(playground1.Players[1].PosY).toBe(3);
+});
+
+test("let player place a bomb with no bombs left", () => {
+    playground1.Players[0].BombCount = 0;
+    playground1.onInput(115, "bomb");
+    expect(playground1.Players[0].BombCount).toBe(0);
+    expect(playground1.Bombs.length).toBe(0);
+});
+
+test("call update fuction with (timer % 60) != 0", () => {
+    playground1.update();
+    expect(playground1.Players[0].BombCount).toBe(0);
 });
 
 //neuer Playground für fehlende Move checks
