@@ -1,7 +1,7 @@
 const express = require('express');
 const { createServer } = require("http");
 const { Server } = require('socket.io');
-const explGuy = require('./explGuy'); // Import the "Backend game logic file".
+const explGuy = require('./explGuy');
 
 const app = express();
 const httpServer = createServer(app);
@@ -13,38 +13,18 @@ const io = new Server(httpServer, {
   },
 });
 
-// 
-const gameOwnerList = []; // [{"room": , "owner":}, ..]
-const playersList =[]; //[{"room:" , "players":[player1, player2,..] }, ..]
+// [{"room": , "owner":}, ..]
+const gameOwnerList = []; 
+//[{"room:" , "players":[player1, player2,..] }, ..]
+const playersList =[]; 
 
-
-// === Funktion, um Liste mit Namen der aktuellen Rooms zu bekommen ===
-// https://simplernerd.com/js-socketio-active-rooms/
-function getActiveRooms(io) {
-  // Convert map into 2D list:
-  // ==> [['4ziBKG9XFS06NdtVAAAH', Set(1)], ['room1', Set(2)], ...]
-  const arr = Array.from(io.sockets.adapter.rooms);
-  // Filter rooms whose name exist in set:
-  // ==> [['room1', Set(2)], ['room2', Set(2)]]
-  const filtered = arr.filter(room => !room[1].has(room[0]))
-  // Return only the room name: 
-  // ==> ['room1', 'room2']
-  const res = filtered.map(i => i[0]);
-  return res;
-}
 // ===
-
-
 // Listen for Socket.IO Connections. Once connected, start the game logic.
 io.on('connection', function (socket) {   // io.on geht genauso
   console.log("connected");
   
-
-
   // wird später verlegt
-  explGuy.initGame(io, socket);   //console.log('client connected');
-
-  
+  explGuy.initGame(io, socket);
 
   // erstelle Spiel 
   //-> Spielersteller ist "Owner" (nur er kann Spiel starten)
@@ -58,29 +38,16 @@ io.on('connection', function (socket) {   // io.on geht genauso
     // To Do ...
     var val = validateRoomName(newRoom);
 
-    if (val.errorCode != 0){
-      callback(val);
-    }
-    else{
-
+    if (val.errorCode == 0){
       console.log("Neuer Raum: " + newRoom);
       socket.join(newRoom);
       gameOwnerList.push({"room": newRoom, "owner": socket.id}) // notwendig? - soll jeder Spiel starten können?
       console.log(gameOwnerList);
-  
       console.log(io.sockets.adapter.rooms);
-  
-      callback({
-        errorCode: 0,       // <> 0 -> Fehler
-        status: "success"
-      })
-
     }
 
-    
-
+    callback(val)
   });
-
 
   // trete Spiel bei
   socket.on('joinGame', function(args, callback) {
@@ -99,27 +66,16 @@ io.on('connection', function (socket) {   // io.on geht genauso
       errorCode: 0,       // <> 0 -> Fehler
       status: "success"
     })
-
-
   });
 
   // sende Games/Rooms zurück
   socket.on('getGames', function(callback) {
     const rooms = getActiveRooms(io);
-
     callback(rooms);
-
   });
-
 });
 
 
-
-
-
-
-
-// Update OwnerList
 async function updateOwnerList(){
   const clients = (await io.fetchSockets()).map(socket => socket.id); 
 
@@ -131,91 +87,41 @@ async function updateOwnerList(){
   });
 
   console.log(gameOwnerList);
-
 }
 
 // Validate roomname
 function validateRoomName(roomname){
+  let response = {
+    errorCode: undefined,
+    status: undefined
+  }
+
   if (getActiveRooms(io).includes(roomname)){
-    return {
-      errorCode: -1,       // <> 0 -> Fehler
-      status: "Spielname schon vorhanden. Wähle einen anderen Namen!"
-    };
+    response.errorCode = -1;
+    response.status = "Spielname schon vorhanden. Wähle einen anderen Namen!";
   }
-  //...
   else{
-    return {
-      errorCode: 0,       // <> 0 -> Fehler
-      status: "success"
-    };
+    response.errorCode = 0;
+    response.status = "success";
   }
+
+  return response;
 }
 
-
-
+// === Funktion, um Liste mit Namen der aktuellen Rooms zu bekommen ===
+// https://simplernerd.com/js-socketio-active-rooms/
+function getActiveRooms(io) {
+  // Convert map into 2D list:
+  // ==> [['4ziBKG9XFS06NdtVAAAH', Set(1)], ['room1', Set(2)], ...]
+  const arr = Array.from(io.sockets.adapter.rooms);
+  // Filter rooms whose name exist in set:
+  // ==> [['room1', Set(2)], ['room2', Set(2)]]
+  const filtered = arr.filter(room => !room[1].has(room[0]))
+  // Return only the room name: 
+  // ==> ['room1', 'room2']
+  const res = filtered.map(i => i[0]);
+  return res;
+}
 
 httpServer.listen(5000);
 console.log("Backend listening on port 5000");
-
-
-
-    // // sende Starterlaubnis an Gameowner (bei mind. 2 Spieler):
-    // //const nPlayers = getActiveRooms(io).length;
-    // console.log(io.sockets.adapter.rooms.get(roomToJoin).size);
-
-    // if (io.sockets.adapter.rooms.get(roomToJoin).size > 1){
-
-    //   gameOwnerList.forEach((item)=>{
-    //     if (item.room == roomToJoin){
-    //       console.log("Socket-ID Owner:" + item.owner);
-    //       io.to(item.owner).emit("allowStartGame");
-    //     }
-    //   });      
-
-    // }
-
-
-
-
-
-/*
-API - Client to Server
-join(player)
-Move(player, richtung)
-PlaceBomb(player)
-
-API - Server to Clients
-init()
-UpdateGameState()
-{
-  players: [
-    {
-      Playername = playerName;
-      PlayerId = playerId;
-      PosX = 3;
-      PosY = 4;
-      BombCount = 1;
-      BombStrength = 1;
-      IsAlive = true;
-    },
-    {
-      Playername = playerName;
-      PlayerId = playerId;
-      PosX = 10;
-      PosY = 8;
-      BombCount = 1;
-      BombStrength = 1;
-      IsAlive = false;
-    }
-  ],
-  bombs: [
-    {
-      PosX = 3;
-      PosY = 4;
-      Strength = 1;
-      Countdown = 3;
-    },
-    ....
-  ]
-}
-*/
