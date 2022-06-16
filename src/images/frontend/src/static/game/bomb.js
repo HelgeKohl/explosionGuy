@@ -1,7 +1,7 @@
+import Player  from './player.js';
 import Explosion from './explosion.js';
-import Player from './player.js';
 
-class Bomb extends Phaser.Physics.Arcade.Sprite {
+export default class Bomb extends Phaser.Physics.Arcade.Sprite {
     constructor(scene) {
         super(scene);
         this.scene = scene;
@@ -29,5 +29,3 @@ class Bomb extends Phaser.Physics.Arcade.Sprite {
         obj.setVisible(false);
     }
 }
-
-export default Bomb;

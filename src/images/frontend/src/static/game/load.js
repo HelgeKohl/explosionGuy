@@ -1,4 +1,4 @@
-class Load extends Phaser.Scene {
+export default class Load extends Phaser.Scene {
     constructor() {
         super('Loading');
     }
@@ -109,5 +109,3 @@ class Load extends Phaser.Scene {
         this.scene.start('MainLevelScene');
     }
 }
-
-export default Load;

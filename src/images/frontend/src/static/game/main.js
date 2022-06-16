@@ -1,7 +1,7 @@
 import Load from './load.js';
 import Player from './player.js';
 
-class MainLevel extends Phaser.Scene {
+export default class MainLevel extends Phaser.Scene {
 
     constructor() {
         super('MainLevelScene');
@@ -137,5 +137,3 @@ class MainLevel extends Phaser.Scene {
         }
     }
 }
-
-export default MainLevel;

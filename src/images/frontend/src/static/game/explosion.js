@@ -1,4 +1,4 @@
-class Explosion extends Phaser.Physics.Arcade.Sprite {
+export default class Explosion extends Phaser.Physics.Arcade.Sprite {
     constructor(scene) {
         super(scene);
 
@@ -14,5 +14,3 @@ class Explosion extends Phaser.Physics.Arcade.Sprite {
         obj.setVisible(false);
     }
 }
-
-export default Explosion;
