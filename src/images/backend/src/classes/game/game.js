@@ -43,6 +43,10 @@ const Game = class {
       }
     }
 
+    this.Playground.WallPosition.forEach(pos => {
+      gamedata.layer1Data[pos[1]][pos[0]] = 1;
+    });
+
     return gamedata;
   }
 }

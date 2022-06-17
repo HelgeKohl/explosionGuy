@@ -8,6 +8,7 @@ const Playground = class {
     this.MaxX = maxX;
     this.MaxY = maxY;
     this.ObstaclePositions = [];
+    this.WallPosition = [];
     this.Players = [];
     this.Bombs = [];
     this.Tick = 0;
@@ -23,7 +24,13 @@ const Playground = class {
       console.log(playerList[i]);
       this.Players[i] = new Player(playerList[i].Name, playerList[i].Id, playerPosList[i][0], playerPosList[i][1]);
     }
-    
+
+    for (let i = 2; i < this.MaxX; i=i+2) {
+      for (let j = 2; j < this.MaxY; j=j+2) {
+        this.WallPosition.push([i, j]);
+      }
+    }
+
     for(let i = 0; i < obstacleCount; i++) {
       this.ObstaclePositions[i] = [Math.floor(Math.random() * maxX), Math.floor(Math.random() * maxY)];
     }
@@ -136,6 +143,13 @@ const Playground = class {
     // check map boundaries
     if(x < 1 || x >= this.MaxX-1 || y < 1 || y >= this.MaxY-1) {
       return false;
+    }
+
+    // check wall
+    for(let i = 0; i < this.WallPosition.length; i++) {
+      if(this.WallPosition[i][0] == x && this.WallPosition[i][1] == y) {
+        return false;
+      }
     }
 
     // check obstacles
