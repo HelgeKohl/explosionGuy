@@ -48,9 +48,10 @@ var IO = {
     /**
      * The client is successfully connected!
      */
-    onConnected : function() {
+    onConnected : function(args) {
         // Cache a copy of the client's socket.IO session ID on the App
         console.log("connected");
+        IO.playerId = args.playerId;
         IO.socket.emit('startGame');
         App.mySocketId = IO.socket.sessionid;
     },
@@ -61,7 +62,6 @@ var IO = {
 
     onNewGameCreated : function(args) {
         console.log("New Game started")
-        console.log(args)
 
         const config = {
             title: 'Explosion Guy',

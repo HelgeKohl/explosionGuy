@@ -5,9 +5,10 @@ export default class MainLevel extends Phaser.Scene {
 
     constructor(socket, data) {
         super('MainLevelScene');
-        this.IO = socket
-        this.gamedata = data
-        this.newUpdateAvailable = false
+        this.IO = socket;
+        this.PlayerId = this.IO.playerId;
+        this.gamedata = data;
+        this.newUpdateAvailable = false;
     }
     preload(){
 
@@ -22,6 +23,7 @@ export default class MainLevel extends Phaser.Scene {
         const tileset = map.addTilesetImage("tiles");
         this.background = map.createBlankLayer('layer1', tileset, 0, 0, mWidth, mHeight, 32, 32);
         this.breakable = map.createBlankLayer('layer2', tileset, 0, 0, mWidth, mHeight, 32, 32);
+        this.players = {};
 
         // Layer beschreiben die Platzierung von den Bildsegmenten per Index auf dem Spielfeld
         const layer1Data = data.layer1Data;
@@ -35,7 +37,10 @@ export default class MainLevel extends Phaser.Scene {
         this.addPropToLayer(layer1Data, this.background, true);
         this.addPropToLayer(layer2Data, this.breakable, false);
 
-        this.player = new Player(this, 48, 48);
+        for (const [id, data] of Object.entries(this.gamedata.player)) {
+            this.players[id] = new Player(this, data.pos[0]*48, data.pos[1]*48, id);
+        }
+
         this.cursors = this.input.keyboard.createCursorKeys();
     }
 
@@ -79,70 +84,64 @@ export default class MainLevel extends Phaser.Scene {
         {
             this.IO.socket.emit("input", {action: 'move', direction: 'left'});
             // EIgenschaften des zu begehenden Tiles zuordnen
-            let wall = this.background.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
-            let obstacle = this.breakable.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
-            this.player.play('go-left');
+            let wall = this.background.getTileAtWorldXY(this.players[this.IO.playerId].x - 32, this.players[this.IO.playerId].y, true);
+            let obstacle = this.breakable.getTileAtWorldXY(this.players[this.IO.playerId].x - 32, this.players[this.IO.playerId].y, true);
+            this.players[this.IO.playerId].play('go-left');
             // Wenn Collide-Eigenschaften des zu begehenden Feldes Falsch sind darf gegangen werden
             if (!wall.properties.collide && !obstacle.properties.collide)
             {
-                this.player.x -= 32;
+                this.players[this.IO.playerId].x -= 32;
             }
 
         }
         else if (this.input.keyboard.checkDown(this.cursors.right, 250))
         {
             this.IO.socket.emit("input", {action: 'move', direction: 'right'});
-            let wall = this.background.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
-            let obstacle = this.breakable.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
-            this.player.play('go-right');
+            let wall = this.background.getTileAtWorldXY(this.players[this.IO.playerId].x + 32, this.players[this.IO.playerId].y, true);
+            let obstacle = this.breakable.getTileAtWorldXY(this.players[this.IO.playerId].x + 32, this.players[this.IO.playerId].y, true);
+            this.players[this.IO.playerId].play('go-right');
             if (!wall.properties.collide && !obstacle.properties.collide)
             {
-                this.player.x += 32;
+                this.players[this.IO.playerId].x += 32;
             }
         }
 
         else if (this.input.keyboard.checkDown(this.cursors.up, 250))
         {
             this.IO.socket.emit("input", {action: 'move', direction: 'up'});
-            let wall = this.background.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
-            let obstacle = this.breakable.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
-            this.player.play('go-up');
+            let wall = this.background.getTileAtWorldXY(this.players[this.IO.playerId].x, this.players[this.IO.playerId].y - 32, true);
+            let obstacle = this.breakable.getTileAtWorldXY(this.players[this.IO.playerId].x, this.players[this.IO.playerId].y - 32, true);
+            this.players[this.IO.playerId].play('go-up');
             if (!wall.properties.collide && !obstacle.properties.collide) {
-                this.player.y -= 32;
+                this.players[this.IO.playerId].y -= 32;
             }
 
         }
         else if (this.input.keyboard.checkDown(this.cursors.down, 250))
         {
             this.IO.socket.emit("input", {action: 'move', direction: 'down'});
-            let wall = this.background.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
-            let obstacle = this.breakable.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
-            this.player.play('go-down');
+            let wall = this.background.getTileAtWorldXY(this.players[this.IO.playerId].x, this.players[this.IO.playerId].y + 32, true);
+            let obstacle = this.breakable.getTileAtWorldXY(this.players[this.IO.playerId].x, this.players[this.IO.playerId].y + 32, true);
+            this.players[this.IO.playerId].play('go-down');
             if (!wall.properties.collide && !obstacle.properties.collide)
             {
-                this.player.y += 32;
+                this.players[this.IO.playerId].y += 32;
 
             }
         }
 
         if (!this.input.keyboard.isDown)
         {
-            this.player.anims.stop();
-
+            // this.players[this.IO.playerId].anims.stop();
         }
 
         if (this.input.keyboard.checkDown(this.cursors.space))
         {
             this.IO.socket.emit("input", {action: 'bomb'});
-            this.player.dropBomb(this.player.x, this.player.y, isExploding, breakables);
+            this.players[this.IO.playerId].dropBomb(this.players[this.IO.playerId].x, this.players[this.IO.playerId].y, isExploding, breakables);
         }
 
         if(this.newUpdateAvailable){
-            // update gamestate
-            // upadte player
-            // update bombs
-            // update obstacle
-
             this.newUpdateAvailable == false;
         }
     }

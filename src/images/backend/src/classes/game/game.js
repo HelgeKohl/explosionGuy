@@ -21,10 +21,13 @@ const Game = class {
     gamedata.mWidth = this.Playground.MaxX;
     gamedata.mHeight = this.Playground.MaxY;
 
-    gamedata.playerPos = {}
+    gamedata.player = {};
 
     for (let index = 0; index < this.Playground.Players.length; index++) {
-      gamedata.playerPos["player" + (index+1)] = [this.Playground.Players[index].PosX, this.Playground.Players[index].PosX]
+      gamedata.player[this.Playground.Players[index].Id] = {
+        name: this.Playground.Players[index].Name,
+        pos: [this.Playground.Players[index].PosX, this.Playground.Players[index].PosX]
+      }
     }
 
     gamedata.layer1Data = []
