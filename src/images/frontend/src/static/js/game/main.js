@@ -115,7 +115,6 @@ export default class MainLevel extends Phaser.Scene {
             if (!wall.properties.collide && !obstacle.properties.collide) {
                 this.players[this.IO.playerId].y -= 32;
             }
-
         }
         else if (this.input.keyboard.checkDown(this.cursors.down, 250))
         {
@@ -132,7 +131,7 @@ export default class MainLevel extends Phaser.Scene {
 
         if (!this.input.keyboard.isDown)
         {
-            // this.players[this.IO.playerId].anims.stop();
+            this.players[this.IO.playerId].anims.stop();
         }
 
         if (this.input.keyboard.checkDown(this.cursors.space))
