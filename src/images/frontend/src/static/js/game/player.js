@@ -6,8 +6,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
         super(scene, x, y);
         this.scene = scene;
         this.id = id;
-        this.name = name;
-        this.isAlive = isAlive;
+        this.name = "name";
+        this.isAlive = true;
 
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);

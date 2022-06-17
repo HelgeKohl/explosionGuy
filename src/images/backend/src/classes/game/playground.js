@@ -11,10 +11,17 @@ const Playground = class {
     this.Players = [];
     this.Bombs = [];
     this.Tick = 0;
+    
+    let playerPosList = [
+      [1, 1],
+      [maxX-2, maxY-2]
+      [maxX-2, 1],
+      [1, maxY-2],
+    ]
 
     for(let i = 0; i < playerList.length; i++) {
       console.log(playerList[i]);
-      this.Players[i] = new Player(playerList[i].Name, playerList[i].Id, playerList[i].PosX, playerList[i].PosY);
+      this.Players[i] = new Player(playerList[i].Name, playerList[i].Id, playerPosList[i][0], playerPosList[i][1]);
     }
     
     for(let i = 0; i < obstacleCount; i++) {
@@ -127,7 +134,7 @@ const Playground = class {
 
   isValidPosition(x, y) {
     // check map boundaries
-    if(x < 0 || x >= this.MaxX || y < 0 || y >= this.MaxY) {
+    if(x < 1 || x >= this.MaxX-1 || y < 1 || y >= this.MaxY-1) {
       return false;
     }
 

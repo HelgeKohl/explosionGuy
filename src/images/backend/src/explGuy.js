@@ -26,11 +26,15 @@ exports.initGame = function(sio, socket){
     gameSocket.emit('connected', { playerId:  playerId});
     console.log("connected");
 
+    game = new Game(17, 13, [{Name: "player1", Id: playerId}], 1);
+
+    gameData = game.getPreloadData();
+    console.log("Preload Data")
+
+    gameSocket.emit('newGameCreated', gameData);
+
     gameSocket.on('startGame', function(){
         console.log("start Game");
-
-        game = new Game(10, 10, [{Name: "player1", Id: playerId}], 1);
-        gameSocket.emit("newGameCreated", {message: "hello"});
         console.log("Game initialized");
         console.log(game.Playground.Players)
         setInterval(function(){

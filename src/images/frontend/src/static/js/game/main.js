@@ -3,16 +3,19 @@ import Player from './player.js';
 
 export default class MainLevel extends Phaser.Scene {
 
-    constructor() {
+    constructor(socket, data) {
         super('MainLevelScene');
+        this.IO = socket
+        this.gamedata = data
+        this.newUpdateAvailable = false
     }
     preload(){
-        this.load.json('jsonData', "json/preloadData.json");
+
     }
     create ()
     {
         // Objekte aus preload json beziehen
-        const data = this.cache.json.get('jsonData').preloadData;
+        const data = this.gamedata
         const mWidth = data.mWidth;
         const mHeight = data.mHeight;
         const map = this.make.tilemap({ width: mWidth, height: mHeight, tileWidth: 32, tileHeight: 32 });
@@ -34,7 +37,6 @@ export default class MainLevel extends Phaser.Scene {
 
         this.player = new Player(this, 48, 48);
         this.cursors = this.input.keyboard.createCursorKeys();
-
     }
 
     // Fügt zu einem Object eine boolean-Eigenschaft hinzu
@@ -75,13 +77,13 @@ export default class MainLevel extends Phaser.Scene {
     {
         if (this.input.keyboard.checkDown(this.cursors.left, 250))
         {
-            IO.socket.emit("input", {action: 'move', direction: 'left'});
+            this.IO.socket.emit("input", {action: 'move', direction: 'left'});
             // EIgenschaften des zu begehenden Tiles zuordnen
-            this.wall = this.walls.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
-            this.breakable = this.obstacles.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
+            let wall = this.background.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
+            let obstacle = this.breakable.getTileAtWorldXY(this.player.x - 32, this.player.y, true);
             this.player.play('go-left');
             // Wenn Collide-Eigenschaften des zu begehenden Feldes Falsch sind darf gegangen werden
-            if (!this.wall.properties.collide && !this.breakable.properties.collide)
+            if (!wall.properties.collide && !obstacle.properties.collide)
             {
                 this.player.x -= 32;
             }
@@ -89,35 +91,34 @@ export default class MainLevel extends Phaser.Scene {
         }
         else if (this.input.keyboard.checkDown(this.cursors.right, 250))
         {
-            IO.socket.emit("input", {action: 'move', direction: 'right'});
-            this.wall = this.walls.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
-            this.breakable = this.obstacles.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
+            this.IO.socket.emit("input", {action: 'move', direction: 'right'});
+            let wall = this.background.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
+            let obstacle = this.breakable.getTileAtWorldXY(this.player.x + 32, this.player.y, true);
             this.player.play('go-right');
-            if (!this.wall.properties.collide && !this.breakable.properties.collide)
+            if (!wall.properties.collide && !obstacle.properties.collide)
             {
                 this.player.x += 32;
-
             }
         }
 
         else if (this.input.keyboard.checkDown(this.cursors.up, 250))
         {
-            IO.socket.emit("input", {action: 'move', direction: 'up'});
-            this.wall = this.walls.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
-            this.breakable = this.obstacles.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
+            this.IO.socket.emit("input", {action: 'move', direction: 'up'});
+            let wall = this.background.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
+            let obstacle = this.breakable.getTileAtWorldXY(this.player.x, this.player.y - 32, true);
             this.player.play('go-up');
-            if (!this.wall.properties.collide && !this.breakable.properties.collide) {
+            if (!wall.properties.collide && !obstacle.properties.collide) {
                 this.player.y -= 32;
             }
 
         }
         else if (this.input.keyboard.checkDown(this.cursors.down, 250))
         {
-            IO.socket.emit("input", {action: 'move', direction: 'down'});
-            this.wall = this.walls.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
-            this.breakable = this.obstacles.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
+            this.IO.socket.emit("input", {action: 'move', direction: 'down'});
+            let wall = this.background.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
+            let obstacle = this.breakable.getTileAtWorldXY(this.player.x, this.player.y + 32, true);
             this.player.play('go-down');
-            if (!this.wall.properties.collide && !this.breakable.properties.collide)
+            if (!wall.properties.collide && !obstacle.properties.collide)
             {
                 this.player.y += 32;
 
@@ -132,8 +133,17 @@ export default class MainLevel extends Phaser.Scene {
 
         if (this.input.keyboard.checkDown(this.cursors.space))
         {
-            IO.socket.emit("input", {action: 'bomb'});
+            this.IO.socket.emit("input", {action: 'bomb'});
             this.player.dropBomb(this.player.x, this.player.y, isExploding, breakables);
+        }
+
+        if(this.newUpdateAvailable){
+            // update gamestate
+            // upadte player
+            // update bombs
+            // update obstacle
+
+            this.newUpdateAvailable == false;
         }
     }
 }

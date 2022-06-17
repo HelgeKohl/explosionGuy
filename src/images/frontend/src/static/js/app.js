@@ -1,3 +1,6 @@
+import Load from './game/load.js';
+import MainLevel from "./game/main.js";
+
 /**
  * All the code relevant to Socket.IO is collected in the IO namespace.
  */
@@ -31,7 +34,9 @@ var IO = {
         console.log("binding events");
         IO.socket.on('connected', IO.onConnected );
         IO.socket.on('disconnected', IO.onDisconnect );
-        
+        IO.socket.on('newGameCreated', (args) => {
+            IO.onNewGameCreated(args)
+        });
         // IO.socket.on('newGameCreated', IO.onNewGameCreated );
         // IO.socket.on('playerJoinedRoom', IO.playerJoinedRoom );
         // IO.socket.on('beginNewGame', IO.beginNewGame );
@@ -52,6 +57,31 @@ var IO = {
 
     onDisconnect : function() {
         console.log("disconnected");
+    },
+
+    onNewGameCreated : function(args) {
+        console.log("New Game started")
+        console.log(args)
+
+        const config = {
+            title: 'Explosion Guy',
+            type: Phaser.AUTO,
+            width: 544, //17 x 32
+            height: 416, //13 x 32
+            autoCenter: true,
+            // Bildschirm ausfüllen
+            scale: {
+                mode: Phaser.Scale.FIT
+            },
+            scene: [new Load(args), new MainLevel(IO, args)],
+            physics: {
+                default:"arcade", arcade:{
+                    debug:true
+                }
+            }
+        };
+
+        const game = new Phaser.Game(config);
     }
 
     //....

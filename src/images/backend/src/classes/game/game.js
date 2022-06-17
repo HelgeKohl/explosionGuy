@@ -15,6 +15,36 @@ const Game = class {
   onInput(playerId, input){
     this.Playground.onInput(playerId, input);
   }
+
+  getPreloadData() {
+    let gamedata = {};
+    gamedata.mWidth = this.Playground.MaxX;
+    gamedata.mHeight = this.Playground.MaxY;
+
+    gamedata.playerPos = {}
+
+    for (let index = 0; index < this.Playground.Players.length; index++) {
+      gamedata.playerPos["player" + (index+1)] = [this.Playground.Players[index].PosX, this.Playground.Players[index].PosX]
+    }
+
+    gamedata.layer1Data = []
+    gamedata.layer2Data = []
+
+    for (let index = 0; index < gamedata.mHeight; index++) {
+      if(index == 0 || index == gamedata.mHeight - 1){
+        gamedata.layer1Data.push(Array(gamedata.mWidth).fill(1));
+      }
+      else{
+        gamedata.layer1Data.push(new Array(gamedata.mWidth).fill(0))
+        gamedata.layer2Data.push(new Array(gamedata.mWidth).fill(-1))
+
+        gamedata.layer1Data[index][0] = 1;
+        gamedata.layer1Data[index][gamedata.mWidth - 1] = 1;
+      }
+    }
+
+    return gamedata;
+  }
 }
 
 module.exports = Game;
