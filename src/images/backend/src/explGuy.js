@@ -1,11 +1,12 @@
 const Game = require('./classes/game/game');
 const { v4: uuidv4 } = require('uuid');
+const EventEmitter  = require('events');
 
 var io;
 var gameSocket;
 var game;
 
-const TICK_RATE = 20;
+const TICK_RATE = 5;
 const TICKLENGTHMS = 1000 / TICK_RATE;
 
 /**
@@ -23,28 +24,28 @@ exports.initGame = function(sio, socket){
 
     // onJoinRoom
     var playerId = uuidv4();
+    var explosionListener = new EventEmitter();
+
     gameSocket.emit('connected', { playerId:  playerId});
     console.log("connected");
 
-    game = new Game(17, 13, [{Name: "player1", Id: playerId}], 1);
+    game = new Game(17, 13, [{Name: "player1", Id: playerId}], 20, explosionListener);
 
     gameData = game.getPreloadData();
     console.log("Preload Data")
 
     gameSocket.emit('newGameCreated', gameData);
 
-    gameSocket.on('startGame', function(){
-        console.log("start Game");
-        console.log("Game initialized");
-        console.log(game.Playground.Players)
-        setInterval(function(){
-            //select a move every 3 seconds
-            game.update()
-            gameSocket.emit('update', {});
-        }, TICKLENGTHMS);
+    gameSocket.on('input', function(args){
+        console.log("input", args);
+
+        let returnData = game.onInput(playerId, args.action);
+        if(returnData != undefined){
+            gameSocket.emit('update', {"input": args.action, "data": returnData});
+        }
     });
 
-    gameSocket.on('input', function(args){
-        game.onInput(playerId, args.direction);
+    explosionListener.on('Explode', bomb => {
+        gameSocket.emit('explode', {"input": "explosion", "data": bomb});
     });
 }

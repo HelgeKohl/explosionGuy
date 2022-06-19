@@ -1,4 +1,5 @@
 import Load from './load.js';
+import Bomb  from './bomb.js';
 import Player from './player.js';
 
 export default class MainLevel extends Phaser.Scene {
@@ -8,7 +9,8 @@ export default class MainLevel extends Phaser.Scene {
         this.IO = socket;
         this.PlayerId = this.IO.playerId;
         this.gamedata = data;
-        this.newUpdateAvailable = false;
+        this.updateQueue = [];
+        this.self = this;
     }
     preload(){
 
@@ -24,6 +26,7 @@ export default class MainLevel extends Phaser.Scene {
         this.background = map.createBlankLayer('layer1', tileset, 0, 0, mWidth, mHeight, 32, 32);
         this.breakable = map.createBlankLayer('layer2', tileset, 0, 0, mWidth, mHeight, 32, 32);
         this.players = {};
+        this.bombs = [];
 
         // Layer beschreiben die Platzierung von den Bildsegmenten per Index auf dem Spielfeld
         const layer1Data = data.layer1Data;
@@ -38,10 +41,20 @@ export default class MainLevel extends Phaser.Scene {
         this.addPropToLayer(layer2Data, this.breakable, false);
 
         for (const [id, data] of Object.entries(this.gamedata.player)) {
-            this.players[id] = new Player(this, data.pos[0]*48, data.pos[1]*48, id);
+            let coords = this.translateCoordinates(data.pos);
+            this.players[id] = new Player(this, coords[0], coords[1], id);
         }
 
         this.cursors = this.input.keyboard.createCursorKeys();
+        const self = this
+
+        this.IO.socket.on("update", function(args){
+            self.updateQueue.push(args);
+        });
+
+        this.IO.socket.on("explode", function(args){
+            self.updateQueue.push(args);
+        })
     }
 
     // Fügt zu einem Object eine boolean-Eigenschaft hinzu
@@ -82,7 +95,7 @@ export default class MainLevel extends Phaser.Scene {
     {
         if (this.input.keyboard.checkDown(this.cursors.left, 250))
         {
-            this.IO.socket.emit("input", {action: 'move', direction: 'left'});
+            this.IO.socket.emit("input", {action: 'left'});
             // EIgenschaften des zu begehenden Tiles zuordnen
             let wall = this.background.getTileAtWorldXY(this.players[this.IO.playerId].x - 32, this.players[this.IO.playerId].y, true);
             let obstacle = this.breakable.getTileAtWorldXY(this.players[this.IO.playerId].x - 32, this.players[this.IO.playerId].y, true);
@@ -96,7 +109,7 @@ export default class MainLevel extends Phaser.Scene {
         }
         else if (this.input.keyboard.checkDown(this.cursors.right, 250))
         {
-            this.IO.socket.emit("input", {action: 'move', direction: 'right'});
+            this.IO.socket.emit("input", {action: 'right'});
             let wall = this.background.getTileAtWorldXY(this.players[this.IO.playerId].x + 32, this.players[this.IO.playerId].y, true);
             let obstacle = this.breakable.getTileAtWorldXY(this.players[this.IO.playerId].x + 32, this.players[this.IO.playerId].y, true);
             this.players[this.IO.playerId].play('go-right');
@@ -108,7 +121,7 @@ export default class MainLevel extends Phaser.Scene {
 
         else if (this.input.keyboard.checkDown(this.cursors.up, 250))
         {
-            this.IO.socket.emit("input", {action: 'move', direction: 'up'});
+            this.IO.socket.emit("input", {action: 'up'});
             let wall = this.background.getTileAtWorldXY(this.players[this.IO.playerId].x, this.players[this.IO.playerId].y - 32, true);
             let obstacle = this.breakable.getTileAtWorldXY(this.players[this.IO.playerId].x, this.players[this.IO.playerId].y - 32, true);
             this.players[this.IO.playerId].play('go-up');
@@ -118,7 +131,7 @@ export default class MainLevel extends Phaser.Scene {
         }
         else if (this.input.keyboard.checkDown(this.cursors.down, 250))
         {
-            this.IO.socket.emit("input", {action: 'move', direction: 'down'});
+            this.IO.socket.emit("input", {action: 'down'});
             let wall = this.background.getTileAtWorldXY(this.players[this.IO.playerId].x, this.players[this.IO.playerId].y + 32, true);
             let obstacle = this.breakable.getTileAtWorldXY(this.players[this.IO.playerId].x, this.players[this.IO.playerId].y + 32, true);
             this.players[this.IO.playerId].play('go-down');
@@ -134,14 +147,44 @@ export default class MainLevel extends Phaser.Scene {
             this.players[this.IO.playerId].anims.stop();
         }
 
-        if (this.input.keyboard.checkDown(this.cursors.space))
+        if (this.input.keyboard.checkDown(this.cursors.space, 250))
         {
             this.IO.socket.emit("input", {action: 'bomb'});
-            this.players[this.IO.playerId].dropBomb(this.players[this.IO.playerId].x, this.players[this.IO.playerId].y, isExploding, breakables);
         }
 
-        if(this.newUpdateAvailable){
-            this.newUpdateAvailable == false;
+        if(this.updateQueue.length > 0){
+            let updateData = this.updateQueue.shift();
+
+            if(updateData.input == "bomb"){
+                var bomb = new Bomb(this);
+                let coords = this.translateCoordinates([updateData.data.PosX, updateData.data.PosY])
+                bomb.setPosition(coords[0], coords[1]);
+
+                this.bombs.push({
+                    "x": coords[0],
+                    "y": coords[1],
+                    "bomb": bomb
+                });
+            }
+            else if(["up", "down", "left", "right"].includes(updateData.input)){
+                updateData.data.forEach(player => {
+                    let coords = this.translateCoordinates(player.data)
+                    this.players[player.id].x = coords[0];
+                    this.players[player.id].y = coords[1];
+                });
+            }
+            else if(updateData.input == "explosion"){
+                let coords = this.translateCoordinates([updateData.data.PosX, updateData.data.PosY])
+                this.bombs.find(bomb => bomb.x == coords[0] && bomb.y == coords[1]).bomb.explode();
+            }
+
+            // for(let i = 0; i < this.gamedata.explosions.length; i++){
+            //     console.log(this.gamedata.explosions[i]);
+            // }
         }
+    }
+
+    translateCoordinates(input){
+        return [16 + input[0] * 32, 16 + input[1] * 32];
     }
 }

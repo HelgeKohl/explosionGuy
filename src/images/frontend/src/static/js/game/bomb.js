@@ -1,4 +1,3 @@
-import Player  from './player.js';
 import Explosion from './explosion.js';
 
 export default class Bomb extends Phaser.Physics.Arcade.Sprite {
@@ -11,18 +10,11 @@ export default class Bomb extends Phaser.Physics.Arcade.Sprite {
         this.body.setCollideWorldBounds(true);
         this.setScale(1);
         this.body.setBounce(0.8);
-
     }
-    explode(player, breakables) {
-        let explosion = new Explosion(this)
-        for(b of breakables){
-            this.scene.physics.add.collider(explosion, b);
-            this.scene.physics.add.overlap(explosion, b, this.kill(b), null, this);
-        }
-
-        this.scene.physics.add.collider(explosion, player);
-        this.scene.physics.add.overlap(explosion, player, this.destroyObj(player), null, this);
-
+    explode() {
+        let explosion = new Explosion(this.scene)
+        console.log("Explosion")
+        this.destroyObj(this)
     }
     destroyObj(obj){
         obj.setActive(false);

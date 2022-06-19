@@ -19,14 +19,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
 
 
     }
-    dropBomb(x,y, isExploding)
-    {
-        this.bomb = new Bomb(this.scene);
-        this.bomb.setPosition(x,y);
-        if(isExploding === true){
-            this.bomb.explode(this);
-        }
-    }
     
     destroyObj(obj){
         obj.setActive(false);
