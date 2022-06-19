@@ -29,7 +29,7 @@ exports.initGame = function(sio, socket){
     gameSocket.emit('connected', { playerId:  playerId});
     console.log("connected");
 
-    game = new Game(17, 13, [{Name: "player1", Id: playerId}], 20, explosionListener);
+    game = new Game(16, 12, [{Name: "player1", Id: playerId}], 20, explosionListener);
 
     gameData = game.getPreloadData();
     console.log("Preload Data")

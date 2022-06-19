@@ -29,16 +29,8 @@ const Game = class {
     gamedata.layer1Data = []
     gamedata.layer2Data = []
 
-    for (let index = 0; index < gamedata.mHeight; index++) {
-      if(index == 0 || index == gamedata.mHeight - 1){
-        gamedata.layer1Data.push(Array(gamedata.mWidth).fill(1));
-      }
-      else{
-        gamedata.layer1Data.push(new Array(gamedata.mWidth).fill(0))
-        
-        gamedata.layer1Data[index][0] = 1;
-        gamedata.layer1Data[index][gamedata.mWidth - 1] = 1;
-      }
+    for (let index = 0; index <= gamedata.mHeight; index++) {
+      gamedata.layer1Data.push(new Array(gamedata.mWidth+1).fill(0))
       gamedata.layer2Data.push(new Array(gamedata.mWidth).fill(-1))
     }
 

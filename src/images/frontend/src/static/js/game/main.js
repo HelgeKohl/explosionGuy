@@ -19,10 +19,12 @@ export default class MainLevel extends Phaser.Scene {
     {
         // Objekte aus preload json beziehen
         const data = this.gamedata
-        const mWidth = data.mWidth;
-        const mHeight = data.mHeight;
+        const mWidth = data.mWidth + 1;
+        const mHeight = data.mHeight + 1;
         const map = this.make.tilemap({ width: mWidth, height: mHeight, tileWidth: 32, tileHeight: 32 });
         const tileset = map.addTilesetImage("tiles");
+
+        // name, tileset, x, y, width, height, tileWidth, tileHeight
         this.background = map.createBlankLayer('layer1', tileset, 0, 0, mWidth, mHeight, 32, 32);
         this.breakable = map.createBlankLayer('layer2', tileset, 0, 0, mWidth, mHeight, 32, 32);
         this.players = {};
@@ -177,6 +179,13 @@ export default class MainLevel extends Phaser.Scene {
                 console.log(updateData)
                 let coords = this.translateCoordinates([updateData.data.bomb.PosX, updateData.data.bomb.PosY])
                 this.bombs.find(bomb => bomb.x == coords[0] && bomb.y == coords[1]).bomb.explode(updateData.data.explosionPositions);
+                
+                updateData.data.destroyedObstacles.forEach(obstacle => {
+                    console.log(this.breakable.layer.data)
+                    this.breakable.removeTileAt(obstacle[0], obstacle[1], false);
+                    console.log(this.breakable.layer.data)
+                })
+                    
             }
 
             // for(let i = 0; i < this.gamedata.explosions.length; i++){

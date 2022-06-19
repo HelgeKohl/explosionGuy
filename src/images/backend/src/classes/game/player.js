@@ -10,7 +10,7 @@ const Player = class {
     this.PosY = playerPosY;
     this.MaxBombCount = 3;
     this.BombCount = 1;
-    this.BombStrength = 1;
+    this.BombStrength = 3;
     this.IsAlive = true;
     const self = this;
 

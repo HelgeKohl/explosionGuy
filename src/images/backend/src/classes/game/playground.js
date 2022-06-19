@@ -1,7 +1,6 @@
 const Player = require('./player');
 const Bomb = require('./bomb');
 
-
 const Playground = class {
   constructor(maxX, maxY, playerList, obstacleCount, explosionListener) {  
     console.log("Init Playground");
@@ -21,11 +20,19 @@ const Playground = class {
       [1, maxY-2],
     ]
     
-    console.log("playerposlist", playerPosList)
-    
     for(let i = 0; i < playerList.length; i++) {
       console.log(playerList[i]);
       this.Players[i] = new Player(playerList[i].Name, playerList[i].Id, playerPosList[i][0], playerPosList[i][1]);
+    }
+
+    for(let i = 0; i <= this.MaxX; i++) {
+      this.WallPosition.push([i, 0]);
+      this.WallPosition.push([i, this.MaxY]);
+    }
+    
+    for(let i = 1; i < this.MaxY; i++) {
+      this.WallPosition.push([0, i]);
+      this.WallPosition.push([this.MaxX, i]);
     }
 
     for (let i = 2; i < this.MaxX - 1; i=i+2) {
@@ -33,8 +40,6 @@ const Playground = class {
         this.WallPosition.push([i, j]);
       }
     }
-
-    console.log("wallpos", this.WallPosition);
 
     for(let i = 0; i < obstacleCount; i++) {
       let obstaclePosX = this.getRandomInt(1, maxX-1);
@@ -50,8 +55,6 @@ const Playground = class {
         i--;
       }
     }
-    console.log(`Hindernis Positionen: ${this.ObstaclePositions}`);
-    console.log(`Wand Positionen: ${this.WallPosition}`);
   }
 
   onInput(playerId, input){
@@ -150,6 +153,7 @@ const Playground = class {
     for(let i = 1; i <= explosionRange; i++) {
       // top
       if(!stopTop) {
+        // get next position in top direction
         let topDirectionPos = [bomb.PosX, bomb.PosY - i];
         // check if position is wall
         if(this.isItemInArray(this.WallPosition, topDirectionPos) || topDirectionPos[1] < 1) {
@@ -157,76 +161,89 @@ const Playground = class {
         }
         // check if position is obstacle
         else if(this.isItemInArray(this.ObstaclePositions, topDirectionPos)) {
+          console.log("top obstacle", topDirectionPos);
           stopTop = true;
           explosionPositions.push(topDirectionPos);
 
           // add obstacle to destroyedObstacles
           returnValue.destroyedObstacles.push(topDirectionPos);
           // remove obstacle from obstacle list
-          this.ObstaclePositions = this.ObstaclePositions.filter(pos => !this.isItemInArray(pos, topDirectionPos));
+          this.ObstaclePositions.splice(this.getIndexOfArray(this.ObstaclePositions, topDirectionPos), 1);
         }
         // just append position to explosionPositions
         else{
           explosionPositions.push(topDirectionPos);
         }
       }
+
       // bottom
       if(!stopBottom) {
+        // get next position in bottom direction
         let bottomDirectionPos = [bomb.PosX, bomb.PosY + i];
         // check if position is wall
-        if(this.isItemInArray(this.WallPosition, bottomDirectionPos) || bottomDirectionPos[1] > this.MaxY - 1) {
+        if(this.isItemInArray(this.WallPosition, bottomDirectionPos) || bottomDirectionPos[1] > this.MaxY - 2) {
           stopBottom = true;
         }
         // check if position is obstacle
         else if(this.isItemInArray(this.ObstaclePositions, bottomDirectionPos)) {
+          console.log("bottom obstacle", bottomDirectionPos);
           stopBottom = true;
           explosionPositions.push(bottomDirectionPos);
+
           // add obstacle to destroyedObstacles
           returnValue.destroyedObstacles.push(bottomDirectionPos);
           // remove obstacle from obstacle list
-          this.ObstaclePositions = this.ObstaclePositions.filter(pos => !this.isItemInArray(pos, bottomDirectionPos));
+          this.ObstaclePositions.splice(this.getIndexOfArray(this.ObstaclePositions, bottomDirectionPos), 1);
         }
         // just append position to explosionPositions
         else{
           explosionPositions.push(bottomDirectionPos);
         }
       }
+
       // left
       if(!stopLeft) {
+        // get next position in left direction
         let leftDirectionPos = [bomb.PosX - i, bomb.PosY];
         // check if position is wall
         if(this.isItemInArray(this.WallPosition, leftDirectionPos) || leftDirectionPos[0] < 1) {
           stopLeft = true;
         }
         // check if position is obstacle
-        else if(this.isItemInArray(this.ObstaclePositions, [bomb.PosX, bomb.PosY + i])) {
+        else if(this.isItemInArray(this.ObstaclePositions, leftDirectionPos)) {
+          console.log("left obstacle", leftDirectionPos);
           stopLeft = true;
           explosionPositions.push(leftDirectionPos);
+
           // add obstacle to destroyedObstacles
           returnValue.destroyedObstacles.push(leftDirectionPos);
           // remove obstacle from obstacle list
-          this.ObstaclePositions = this.ObstaclePositions.filter(pos => !this.isItemInArray(pos, leftDirectionPos));
+          this.ObstaclePositions.splice(this.getIndexOfArray(this.ObstaclePositions, leftDirectionPos), 1);
         }
         // just append position to explosionPositions
         else{
           explosionPositions.push(leftDirectionPos);
         }
       }
+
       // right
       if(!stopRight) {
+        // get next position in right direction
         let rightDirectionPos = [bomb.PosX + i, bomb.PosY];
         // check if position is wall
-        if(this.isItemInArray(this.WallPosition, rightDirectionPos) || rightDirectionPos[0] > this.MaxX - 1) {
+        if(this.isItemInArray(this.WallPosition, rightDirectionPos) || rightDirectionPos[0] > this.MaxX - 2) {
           stopRight = true;
         }
         // check if position is obstacle
         else if(this.isItemInArray(this.ObstaclePositions, rightDirectionPos)) {
+          console.log("right obstacle", rightDirectionPos);
           explosionPositions.push(rightDirectionPos);
           stopRight = true;
+
           // add obstacle to destroyedObstacles
           returnValue.destroyedObstacles.push(rightDirectionPos);
           // remove obstacle from obstacle list
-          this.ObstaclePositions = this.ObstaclePositions.filter(pos => !this.isItemInArray(pos, rightDirectionPos));
+          this.ObstaclePositions.splice(this.getIndexOfArray(this.ObstaclePositions, rightDirectionPos), 1);
         }
         // just append position to explosionPositions
         else{
@@ -251,6 +268,8 @@ const Playground = class {
     }
 
     returnValue["explosionPositions"] = explosionPositions;
+
+    this.Bombs = this.Bombs.filter(b => b.PosX != bomb.PosX && b.PosY != bomb.PosY);
 
     return returnValue;
   }
@@ -316,7 +335,18 @@ const Playground = class {
         }
     }
     return false;   // Not found
-}
+  }
+
+  getIndexOfArray(array, findArray){
+    let index = -1;
+    array.some((item, i)=>{
+      if(JSON.stringify(item) === JSON.stringify(findArray)) {
+        index = i;
+        return true;
+      }
+    });
+    return index;
+  }
 }
 
 module.exports = Playground;

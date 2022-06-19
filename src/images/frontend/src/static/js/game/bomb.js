@@ -13,6 +13,7 @@ export default class Bomb extends Phaser.Physics.Arcade.Sprite {
     }
     explode(explosionPositions) {
         explosionPositions.forEach(position => {
+            console.log(position);
             let coords = this.translateCoordinates(position);
             let explosion = new Explosion(this.scene)
             explosion.setPosition(coords[0], coords[1]);
