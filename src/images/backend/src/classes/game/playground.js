@@ -103,18 +103,25 @@ const Playground = class {
     if(this.isValidPosition(newPosX, newPosY)) {
       player.setNewPosition(newPosX, newPosY);
       console.log("Player " + player.Name + " moved to " + newPosX + " " + newPosY);
-      
-      return this.getPlayerPositions();
     }
     else{
       console.log("Invalid position");
     }
+    return this.getPlayerPositions();
   }
 
   placeBomb(player) {
-    console.log("Player " + player.Name + " placed a bomb at " + player.PosX + " " + player.PosY);
-    console.log("new Player BombCount: " + player.BombCount);
-    if(player.BombCount > 0) {
+    //check if there is already a bomb
+    let valid  = true;
+    for(let i = 0; i < this.Bombs.length; i++) {
+      if(this.Bombs[i].PosX == player.PosX && this.Bombs[i].PosY == player.PosY) {
+        valid = false;
+      }
+    }
+    
+    if(player.BombCount > 0 && valid) {
+      console.log("Player " + player.Name + " placed a bomb at " + player.PosX + " " + player.PosY);
+      console.log("new Player BombCount: " + player.BombCount);
       player.BombCount--;
       
       let bomb = new Bomb(player.PosX, player.PosY, player.BombStrength, 3, this.explosionListener);
