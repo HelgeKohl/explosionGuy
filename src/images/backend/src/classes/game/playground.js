@@ -132,25 +132,127 @@ const Playground = class {
   }
 
   explodeBomb(bomb) {
+    var returnValue = {
+      "bomb": bomb,
+      "hitPlayers": [],
+      "destroyedObstacles": [],
+    };
+
     let explosionRange = bomb.Strength;
-    let explosionPositions = [];
-    for(let i = 0; i < explosionRange+1; i++) {
-      explosionPositions.push([bomb.PosX + i, bomb.PosY]);
-      explosionPositions.push([bomb.PosX - i, bomb.PosY]);
-      explosionPositions.push([bomb.PosX, bomb.PosY + i]);
-      explosionPositions.push([bomb.PosX, bomb.PosY - i]);
+    let explosionPositions = [[bomb.PosX, bomb.PosY]];
+
+    let stopTop = false;
+    let stopBottom = false;
+    let stopLeft = false;
+    let stopRight = false;
+
+    // calculate explosion positions and check if they hit a obstacle or wall
+    for(let i = 1; i <= explosionRange; i++) {
+      // top
+      if(!stopTop) {
+        let topDirectionPos = [bomb.PosX, bomb.PosY - i];
+        // check if position is wall
+        if(this.isItemInArray(this.WallPosition, topDirectionPos) || topDirectionPos[1] < 1) {
+          stopTop = true;
+        }
+        // check if position is obstacle
+        else if(this.isItemInArray(this.ObstaclePositions, topDirectionPos)) {
+          stopTop = true;
+          explosionPositions.push(topDirectionPos);
+
+          // add obstacle to destroyedObstacles
+          returnValue.destroyedObstacles.push(topDirectionPos);
+          // remove obstacle from obstacle list
+          this.ObstaclePositions = this.ObstaclePositions.filter(pos => !this.isItemInArray(pos, topDirectionPos));
+        }
+        // just append position to explosionPositions
+        else{
+          explosionPositions.push(topDirectionPos);
+        }
+      }
+      // bottom
+      if(!stopBottom) {
+        let bottomDirectionPos = [bomb.PosX, bomb.PosY + i];
+        // check if position is wall
+        if(this.isItemInArray(this.WallPosition, bottomDirectionPos) || bottomDirectionPos[1] > this.MaxY - 1) {
+          stopBottom = true;
+        }
+        // check if position is obstacle
+        else if(this.isItemInArray(this.ObstaclePositions, bottomDirectionPos)) {
+          stopBottom = true;
+          explosionPositions.push(bottomDirectionPos);
+          // add obstacle to destroyedObstacles
+          returnValue.destroyedObstacles.push(bottomDirectionPos);
+          // remove obstacle from obstacle list
+          this.ObstaclePositions = this.ObstaclePositions.filter(pos => !this.isItemInArray(pos, bottomDirectionPos));
+        }
+        // just append position to explosionPositions
+        else{
+          explosionPositions.push(bottomDirectionPos);
+        }
+      }
+      // left
+      if(!stopLeft) {
+        let leftDirectionPos = [bomb.PosX - i, bomb.PosY];
+        // check if position is wall
+        if(this.isItemInArray(this.WallPosition, leftDirectionPos) || leftDirectionPos[0] < 1) {
+          stopLeft = true;
+        }
+        // check if position is obstacle
+        else if(this.isItemInArray(this.ObstaclePositions, [bomb.PosX, bomb.PosY + i])) {
+          stopLeft = true;
+          explosionPositions.push(leftDirectionPos);
+          // add obstacle to destroyedObstacles
+          returnValue.destroyedObstacles.push(leftDirectionPos);
+          // remove obstacle from obstacle list
+          this.ObstaclePositions = this.ObstaclePositions.filter(pos => !this.isItemInArray(pos, leftDirectionPos));
+        }
+        // just append position to explosionPositions
+        else{
+          explosionPositions.push(leftDirectionPos);
+        }
+      }
+      // right
+      if(!stopRight) {
+        let rightDirectionPos = [bomb.PosX + i, bomb.PosY];
+        // check if position is wall
+        if(this.isItemInArray(this.WallPosition, rightDirectionPos) || rightDirectionPos[0] > this.MaxX - 1) {
+          stopRight = true;
+        }
+        // check if position is obstacle
+        else if(this.isItemInArray(this.ObstaclePositions, rightDirectionPos)) {
+          explosionPositions.push(rightDirectionPos);
+          stopRight = true;
+          // add obstacle to destroyedObstacles
+          returnValue.destroyedObstacles.push(rightDirectionPos);
+          // remove obstacle from obstacle list
+          this.ObstaclePositions = this.ObstaclePositions.filter(pos => !this.isItemInArray(pos, rightDirectionPos));
+        }
+        // just append position to explosionPositions
+        else{
+          explosionPositions.push(rightDirectionPos);
+        }
+      }
+
+      // if all directions are stopped, stop loop
+      if(stopTop && stopBottom && stopLeft && stopRight) {
+        break;
+      }
     }
-    console.log(`Positionen der Explosionen: ${explosionPositions}`);
     
+    // check if explosionPositions hit a player
     for(let i = 0; i < explosionPositions.length; i++) {
       for(let j = 0; j < this.Players.length; j++) {
         if(this.Players[j].PosX == explosionPositions[i][0] && this.Players[j].PosY == explosionPositions[i][1]) {
           this.Players[j].IsAlive = false;
+          returnValue.hitPlayers.push(this.Players[j]);
         }
       }
     }
 
-    this.ExplosionQueue.push([bomb.PosX, bomb.PosY]);
+    returnValue["explosionPositions"] = explosionPositions;
+
+    return returnValue;
   }
 
   getPlayerPositions() {

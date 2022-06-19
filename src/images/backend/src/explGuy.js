@@ -46,6 +46,7 @@ exports.initGame = function(sio, socket){
     });
 
     explosionListener.on('Explode', bomb => {
-        gameSocket.emit('explode', {"input": "explosion", "data": bomb});
+        explosionData = game.Playground.explodeBomb(bomb);
+        gameSocket.emit('explode', {"input": "explosion", "data": explosionData});
     });
 }

@@ -174,8 +174,9 @@ export default class MainLevel extends Phaser.Scene {
                 });
             }
             else if(updateData.input == "explosion"){
-                let coords = this.translateCoordinates([updateData.data.PosX, updateData.data.PosY])
-                this.bombs.find(bomb => bomb.x == coords[0] && bomb.y == coords[1]).bomb.explode();
+                console.log(updateData)
+                let coords = this.translateCoordinates([updateData.data.bomb.PosX, updateData.data.bomb.PosY])
+                this.bombs.find(bomb => bomb.x == coords[0] && bomb.y == coords[1]).bomb.explode(updateData.data.explosionPositions);
             }
 
             // for(let i = 0; i < this.gamedata.explosions.length; i++){
