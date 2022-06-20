@@ -8,6 +8,8 @@ const gameName = urlParams.get('p1');
 const playerId = urlParams.get('p2');
 const playername = urlParams.get('p3');
 
+IO.playerId = playerId;
+
 console.log("Game-Name: " + gameName);
 console.log("Player-ID: " + playerId);
 console.log("Player-Name: "  + playername);
@@ -49,7 +51,7 @@ IO.socket.on("updatePlayerList", function(args){
 
 // starte Spiel mit Button
 function startGame(){
-	IO.socket.emit("startGame", (response) => {
+	IO.socket.emit("startGame", data.room, (response) => {
 		console.log(response.status);
 
 		// if (response.errorCode != 0){

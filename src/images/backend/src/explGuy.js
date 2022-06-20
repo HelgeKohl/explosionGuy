@@ -3,7 +3,6 @@ const { v4: uuidv4 } = require('uuid');
 const EventEmitter  = require('events');
 
 var io;
-var gameSocket;
 var game;
 
 const TICK_RATE = 5;
@@ -16,37 +15,48 @@ const TICKLENGTHMS = 1000 / TICK_RATE;
  * @param socket The socket object for the connected client.
  */
 
-exports.initGame = function(sio, socket){
+exports.initGame = function(sio, sockets, room){
     // Initialisiere Game
     console.log("initGame");
     io = sio;
-    gameSocket = socket;
+    var gameSockets = sockets;
+    var playerList = [];
 
-    // onJoinRoom
-    var playerId = uuidv4();
+    for (var i = 0; i < gameSockets.length; i++) {
+        let player = {
+            Name: gameSockets[i].playername,
+            Id: gameSockets[i].playerId,
+        }
+
+        playerList.push(player);
+    }
+
+    console.log("################################################################")
+    console.log("################################################################")
+    console.log("################################################################")
     var explosionListener = new EventEmitter();
 
-    gameSocket.emit('connected', { playerId:  playerId});
-    console.log("connected");
-
-    game = new Game(16, 12, [{Name: "player1", Id: playerId}], 20, explosionListener);
+    game = new Game(16, 12, playerList, 20, explosionListener);
 
     gameData = game.getPreloadData();
     console.log("Preload Data")
 
-    gameSocket.emit('newGameCreated', gameData);
+    io.to(room).emit('newGameCreated', gameData);
 
-    gameSocket.on('input', function(args){
-        console.log("input", args);
-
-        let returnData = game.onInput(playerId, args.action);
-        if(returnData != undefined){
-            gameSocket.emit('update', {"input": args.action, "data": returnData});
-        }
+    console.log(gameSockets)
+    gameSockets.forEach(function(socket) {
+        socket.socket.on('input', function(args){
+            console.log("input", args);
+    
+            let returnData = game.onInput(socket.playerId, args.action);
+            if(returnData != undefined){
+                io.to(room).emit('update', {"input": args.action, "data": returnData});
+            }
+        });
     });
 
     explosionListener.on('Explode', bomb => {
         explosionData = game.Playground.explodeBomb(bomb);
-        gameSocket.emit('explode', {"input": "explosion", "data": explosionData});
+        io.to(room).emit('explode', {"input": "explosion", "data": explosionData});
     });
 }

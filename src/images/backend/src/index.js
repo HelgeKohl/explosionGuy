@@ -49,7 +49,6 @@ io.on('connection', function (socket) {   // io.on geht genauso
 
       playersList.set(newRoom,[data]); 
       console.log(playersList);
-
     }
 
     callback(val)
@@ -108,7 +107,7 @@ io.on('connection', function (socket) {   // io.on geht genauso
       if (listPlayerData[i].playerId == playerData.playerId){
 
         // Spieler wurde gefunden -> füge Socket-ID hinzu + join room
-        listPlayerData[i].socket = socket.id;
+        listPlayerData[i].socket = socket;
         socket.join(playerData.room);
         console.log(listPlayerData);
 
@@ -133,13 +132,13 @@ io.on('connection', function (socket) {   // io.on geht genauso
   });
 
 
-  socket.on('startGame', function(callback){
+  socket.on('startGame', function(room, callback){
 
     // Validate -> To-Do!!
     let val = validateStartGame();
 
     if (val.errorCode == 0){
-      explGuy.initGame(io, socket); 
+      explGuy.initGame(io, playersList.get(room), room); 
     }
 
     callback(val);
@@ -223,7 +222,7 @@ function getPlayerNamesFromRoom(io, roomName){
   var activePlayerList =[];
   // compare active socket-Ids with listPlayerData-socket-Ids -> return names of all active players
   for (var i = 0; i < listPlayerData.length; i++){
-    if(clients.includes(listPlayerData[i].socket)){
+    if(clients.includes(listPlayerData[i].socket.id)){
       activePlayerList.push(listPlayerData[i].playername);
     }
   }
