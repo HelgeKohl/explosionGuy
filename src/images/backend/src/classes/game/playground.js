@@ -293,7 +293,7 @@ const Playground = class {
 
   isValidPosition(x, y) {
     // check map boundaries
-    if(x < 1 || x >= this.MaxX-1 || y < 1 || y >= this.MaxY-1) {
+    if(x < 1 || x >= this.MaxX || y < 1 || y >= this.MaxY) {
       return false;
     }
 
