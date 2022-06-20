@@ -1,0 +1,229 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{float}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Dokumentation der Softwarearchitektur des Projekts Explosion Guy}
+
+
+% Authoren	
+\author{
+	\IEEEauthorblockN{Bösl Florian}
+	\IEEEauthorblockA{
+		\textit{f.boesl@oth-aw.de}\\
+	}
+	\and
+
+	\IEEEauthorblockN{Kohl Helge}
+	\IEEEauthorblockA{
+		\textit{h.kohl@oth-aw.de}\\
+	}
+	\and
+
+	\IEEEauthorblockN{Anastasia Chernysheva}
+	\IEEEauthorblockA{
+		\textit{a.chernysheva@oth-aw.de}\\
+	}
+	\and
+
+	\IEEEauthorblockN{Korinth Patrice}
+	\IEEEauthorblockA{
+		\textit{p.korinth@oth-aw.de}\\
+	}
+	\and
+
+	\IEEEauthorblockN{Porsch Philipp}
+	\IEEEauthorblockA{
+		\textit{p.porsch@oth-aw.de}\\
+	}
+}
+
+\maketitle
+
+\begin{abstract}
+In diesem technischem Report wird die Softwarearchitektur des Projekts 
+Explosion Guy vorgestellt. Das Projekt wurde im Rahmen der Vorlesung Big Data und Cloud-basiertes Computing implementiert. Ziel der Implementierung ist es, 
+das allgemein bekannte Spiel "Bomberman" zu adaptieren und es mithilfe einer Cloud-Infrastruktur online spielbar zu machen.\\
+\end{abstract}
+
+\begin{IEEEkeywords}
+ Webdesign, Matchmaking, Cloud Infrastructure
+\end{IEEEkeywords}
+
+\section{Introduction}
+Bei der Applikation Explosion Guy geht es darum, das Spiel "Bomberman" zu adaptieren. Dabei werden dem Spieler mithilfe eines graphischen Web-Interfaces basierend auf Phaser anschauliche Informationen über den Verlauf des Spiels mitgeteilt. Das Interface dient auch dazu, die Eingaben des Spielers an das Backend weiterzureichen. Im Backend werden die Informationen aller Spieler verarbeitet und so ein online Spielerlebnis erzeugt.
+
+\section{Architektur Allgemein}
+Als Architektur wird ein Ansatz verfolgt, der sich an einer Client-Server Kommunikation, ähnlich wie in Onlinespielen, orientiert.
+Dadurch wird eine abgeschlossene Logik von Front- und Backendkomponenten erreicht, die jeweils
+von einem Subteam entwickelt wird. Diese Einheiten werden jeweils als isolierte Applikation gekapselt. Während das Backend als Anwendung innerhalb der Containervisualisierung Docker betrieben wird, wird das Frontend als allgemeine Webapplikation ausgeliefert. Durch eine zentrale Konfigurationsdatei des Containers kann dieser einfach zwischen den Teammitgliedern ausgetauscht und ausgeführt werden. Damit wird eine hohe Portabilität gewährleistet.
+Die Kommunikation der Teilsysteme wird durch Websockets angeboten. Der Informationsaustausch über Websockets ermöglicht es, durch die identitätsbasierten Verbindungen die Kommunikation zwischen den Spielern und der zugehörigen Partei im Backend effizient zu gestalten.
+Dadurch wird es möglich ein Echtzeiterlebnis mit zusätzlicher Überwachung aus dem Backend zu realisieren.
+Durch die Einbettung der verschiedenen Bestandteile in einen Cloud-Service ist es jederzeit möglich, ein neues Spiel zu starten, oder einem vorhandenen Spiel beizutreten, da durch die nahezu unbegrenzten Ressourcen des Cloud-Services auf Anfrage neue Spielserver erstellt und verwaltet werden können.
+
+\section{Frontend: Spielinterface}
+% TODO:
+Mithilfe des Web-Frameworks Phaser ist es möglich, ein graphisch ansprechendes Interface für das Spiel zu erstellen. Dabei werden nicht nur die Ausgangsinformationen in Form von Veränderungen des Spielfeldes für den Spieler bereitgestellt, sondern auch die Eingaben an das System vom Spieler erfasst. Diese Eingaben leitet das Frontend an das Backed weiter, von wo aus sie dann weiter verarbeitet werden können. Um ein möglichst flüssiges und ruckelfreies Spielerlebnis zu erzeugen, wurde das Frontend auch mit Teilen der Spiellogik ausgestattet. So können beispielsweise alle Bewegungen direkt nach Drücken der entsprechenden Eingabe ausgeführt werden, um Verzögerungen zu vermeiden. Sollte der Server nach Kontrolle einen ungültigen Spielzug feststellen, so wird der Zug zurückgesetzt. Dies erfüllt neben der Aufwertung des Gameplays auch eine kleine Anti-Cheat Rolle.
+\\
+\\
+Die Funktionalität des Frontends umfasst folgende API-Zugriffe:
+% TODO: Text ist noch als Vorlage da
+\smallskip
+
+\textbf{Filmsuche (/db/search-movies)}
+\begin{itemize}
+\item Beschreibung:
+    Bei der Filmsuche werden in der Datenbank passende Filme gesucht.
+\item Parameter:
+\begin{itemize}
+    \item Teiltitel
+    \item Provider
+\end{itemize}
+\item Rückgabe:
+    Liste mit Filmen und deren Metadaten
+\end{itemize}
+
+\smallskip
+
+\textbf{Personensuche (/db/search-persons)}
+\begin{itemize}
+\item Beschreibung:
+    Bei der Personensuche werden in der DBpedia Daten zu Filmmitwirkenden eines Filmes gesucht.
+\item Parameter:
+    \begin{itemize}
+    \item Filmtitel
+    \item Erscheinungsjahr
+    \end{itemize}
+\item Rückgabe:
+    Liste der Filmmitwirkenden und dazugehörigen Metadaten
+\end{itemize}
+
+\smallskip
+
+\textbf{Gemeinsamkeitensuche (/db/compare-movies)}
+\begin{itemize}
+\item Beschreibung:
+    Bei der Gemeinsamkeitensuche werden gemeinsame Merkmale einzelner Filme gesucht.
+\item Parameter:
+    Liste mit Filmtiteln
+\item Rückgabe:
+    Liste der Gemeinsamkeiten der Filme
+\end{itemize}
+
+\smallskip
+
+\textbf{Suche nach ähnlichen Filmen (/db/search-similar-movies)}
+\begin{itemize}
+\item Beschreibung:
+    Bei der Suche nach ähnlichen Filmen werden Filme gesucht, die Gemeinsamkeiten mit den angebegeben Filmen aufweisen.
+\item Parameter:
+    \begin{itemize}
+    \item Liste mit Filmtiteln
+    \item Streamingdienstanbieter der zu vergleichenden Filme
+    \end{itemize}
+\item Rückgabe:
+    Liste mit Filmen
+\end{itemize}
+
+\smallskip
+
+\textbf{Suche nach IMDB Daten eines Filmes (/imdb/search-imdbdata)}
+\begin{itemize}
+\item Beschreibung:
+    Bei der Suche nach einem Film werden die Bewertungen und ein hinterlegtes Bild des Filmes in der IMDB gesucht.
+\item Parameter:
+    Titel des Filmes
+\item Rückgabe:
+    \begin{itemize}
+    \item Liste mit Bewertungen des Filmes
+    \item URL eines in der IMDB hinterlegten Bildes
+    \end{itemize}
+\end{itemize}
+
+\smallskip
+
+Die Verwaltung der Daten erfolgt mittels einer Virtuoso-Datenbank. Diese enthält Filmdaten der Streamingdienstanbieter
+Netflix, Amazon-Prime, Disney+ und Hulu, welche aus Kaggle bezogen wurden.
+Die Datensätze enthalten Filmtitel der jeweiligen Provider, sowie dessen Metainformationen wie 
+Filmmitwirkende, Genre und Erscheinungsjahr. Mithilfe einer in Virtuoso angelegten View ist es möglich
+mit SparQl-Statements auf die importierten Daten zu zugreifen.
+\\
+\\
+Das Modul "Fetch SPARQL Endpoint" ermöglicht es innerhalb der Filmverwaltung eine Verbindung zwischen dem Node-Server
+und der Virtuoso-Datenbank sowie der DBpedia aufzubauen. Anschließend können SPARQL-Statements abgesetzt und die Ergebnisse
+asynchron Verarbeitet werden.
+\\
+\\
+Die IMDB ist eine Datenbank zu Filmen, Fernsehserien, Videoproduktionen und Computerspielen sowie über Personen,
+die daran mitgewirkt haben. Sie bietet eine API zum Zugriff auf diese Daten. Dafür wird ein API-Schlüssel benötigt, 
+mit diesem sind täglich 100 Anfragen kostenfrei verfügbar. Nach überschreiten dieser Begrenzung sind keine weiteren Anfragen
+an diesem Tag möglich, die Anfragenbegrenzung kann jedoch kostenpflichtig erhöht werden. 
+\\
+\\
+Um die vorgesehene Funktionalität gewährleisten zu können, wurden mithilfe von Jest, einem JavaScript Testframework, 
+Unit- und Integrationstests entworfen. Dadurch kann die interne Integrität, sowie die Anbindung an externe Systeme,
+sichergestellt werden. Die Tests wurden dabei mit dem Arrange-Act-Assert-Pattern entworfen. Dieses soll eine 
+übersichtliche Struktur und Einheitlichkeit garantieren.
+
+\section{Backend: Spiellogik und Matchmaking}
+Das Backend besteht aus zwei großen Aufgabenpaketen. Einerseits hat es die Aufgabe, die Informationen aller Spieler entgegenzunehmen, diese zu verarbeiten und sie danach an die jeweils anderen Spieler weiterzuleiten. Andererseits muss das Backend die Funktionalität des Matchmakings übernehmen. Dazu muss es den Spielern die Möglichkeit geben, eigene Spielräume zu erstellen oder vorhandenen Räumen beizutreten. Um diese Funktionen optimal abzudecken, wurde das Backend in zwei Teilbereiche getrennt, welche im Folgenden ausführlich beleuchtet werden.
+\subsection{Spiellogik}
+Das Paket der Spiellogik bildet das erste wichtige Bestandteil des Backends. Mit Spiellogik werden alle Abläufe, die im Hintergrund zu erfüllen sind, bezeichnet. So beispielsweise die Positionsbestimmung der Spieler nach einer Eingabe oder das Zählen eines Timers der Bomben. Zur Implementierung der Spiellogik wird ein Server mithilfe von Node.js innerhalb eines Docker Containers aufgebaut. Der Server verwaltet die Logik mit verschiedenen Klassen:
+
+\begin{itemize}
+    \item \textbf{Spieler}
+    Text, der den Spieler beschreibt
+    \smallskip
+    \item \textbf{Bombe} 
+    Text, der die Bombe beschreibt
+    \smallskip
+    \item \textbf{Playground}
+    TExt, der den Playground beschreibt
+    \smallskip
+    \item \textbf{Game}
+    Text, der das Game beschreibt
+    \smallskip
+    \subitem \textbf{Platzhalter}
+    Platzhalter für mehr falls nötig 
+    \smallskip
+    \item \textbf{Platzhalter}
+    Platzhalter für mehr falls nötig 
+\end{itemize}
+
+Text zur Beschreibung der Kommunikation mit dem Frontend.
+
+\subsection{Matchmaking}
+Das zweite wichtige Paket für die Gesamtfunktion ist das Paket des Matchmakings. Darunter lassen sich alle Mechanismen zusammenfassen, die es den Spielern ermöglichen, einen Raum zu erstellen oder einem Raum beizutreten. Realisiert wird dies, indem ein zusätzlicher Matchmaking Server aufgesetzt wird. Dieser wird wie der Logikserver mit Node.js und Docker bereitgestellt. Die Spieler werden also bei Verbindungsaufbau zunächst mit dem Matchmakingserver verbunden. Dieser leitet sie dann entweder an einen neu erstellten Spielraum oder an einen bereits vorhandenen Raum weiter. Innerhalb eines Spielraumes übernimmt dann die Spiellogik die Verwaltung, indem sie die für sich relevanten Spieler mithilfe ihrer Socket-ID adressiert. Der Matchmakingserver kennt also alle aktuellen Spielräume mit ihren Spielerzahlen und kann bei Bedarf neue Spielräume erstellen. Wird die Anzahl dieser Räume irgendwann so groß, dass sie ein einzelner Server nicht mehr versorgen könnte, so wird ein neuer Server für die Spielräume in der Cloud-Infrastruktur hochgefahren und an den Matchmakingserver weitervermittelt.
+
+\subsection{Testing}
+Zum Testen der verschiedenen Klassen und Funktionen des Backends wurde mithilfe von Jest für jede Klasse ein Testfile angelegt. Darin enthalten sind mehrere Testfälle, die teilweise iterativ die einzelnen Komponenten des Systems prüfen. Die Verwendung von Jest ermöglicht zudem eine Coverage-Prüfung, mit der es möglich ist, die genauen Prozentwerte der Testabdeckung sowie nicht abgedeckte Zeilen zu ermitteln. Nach Korrekter Einrichtung der einzelnen Testfälle ist es dann möglich, durch einen einzelnen Befehl die Integrität des gesamten Programmcodes zu verifizieren.
+
+\begin{itemize}
+    \item \textbf{Snapshot-Tests:}
+    Die Snapshot-Tests erzeugen eine HTML-Document in welches die zu testende Komponente gerendert wird.
+    Anschließend wird die HTML-Datei mit einer Snapshot-Datei verglichen, um sicher zu stellen das die Komponente wie erwartet dargestellt wird.
+    \item \textbf{Funktionstest:}
+    Bei den Funktionstests wird für jede Komponente eine Instanz mit dem Enzyme-Adapter erstellt.
+    Mit dieser Objektinstanz könne verschieden Funktionen der Klasse getestet werden und geprüft werden ob Felder des Objekts richtig gesetzt werden.
+\end{itemize}
+
+
+
+\begin{thebibliography}{0}
+	\bibitem{axios}Axios [Online] \url{https://www.npmjs.com/package/axios} (visited on Jan. 7, 2022)
+    \bibitem{microservices}Microservice-Frontend-Architekturen [Online] \url{https://www.sigs-datacom.de/uploads/tx_dmjournals/attermeyer_OTS_Microservices_Docker_16.pdf} (visited on Jan. 7, 2022)
+    \bibitem{reactTest}React-Testing [Online] \url{https://testing-library.com/docs/react-testing-library/intro/} (visited on Jan. 7, 2022)
+    \bibitem{enzyme}Enzyme [Online] \url{https://www.npmjs.com/package/enzyme} (visited on Jan. 7, 2022)  
+\end{thebibliography}
+
+\end{document}
