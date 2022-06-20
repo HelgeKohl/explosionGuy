@@ -103,6 +103,5 @@ var App = {
     },
 
 };
-
-IO.init();
-// App.init();
+IO.init()
+export default IO;

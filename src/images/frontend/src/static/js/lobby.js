@@ -1,4 +1,6 @@
 
+import IO from './app.js';
+
 // Parameter
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);

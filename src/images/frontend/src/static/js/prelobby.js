@@ -1,3 +1,5 @@
+import IO from "./app.js";
+
 const url="/game?";
 var gameRoom = "";
 var playerId ="";
