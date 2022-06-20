@@ -7,11 +7,16 @@ const Bomb = class {
 
     const self = this
     
-    let interval = setInterval(function(){
+    this.interval = setInterval(function(){
       console.log("Exploding");
       self.explosionEmitter.emit('Explode', self);
       clearInterval(interval)
     }, timer * 1000);
+  }
+
+  interruptInterval(){
+    console.log("Interrupt wird ausgeführt");
+    clearInterval(this.interval);
   }
 }
 

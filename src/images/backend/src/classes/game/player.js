@@ -27,14 +27,14 @@ const Player = class {
 
   refreshBombCount(){
     if(this.BombCount < this.MaxBombCount && this.IsAlive){
-      console.log("refresh Bomb")
+      console.log("refresh Bomb");
       this.BombCount++;
     }
   }
 
   interruptInterval(){
-    console.log("Interrupt wird ausgeführt")
-    clearInterval(this.interval)
+    console.log("Interrupt wird ausgeführt");
+    clearInterval(this.interval);
   }
 }
 

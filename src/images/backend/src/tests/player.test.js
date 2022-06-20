@@ -1,6 +1,6 @@
 const player = require("../classes/game/player");
 
-describe("'Playertests'", function () {
+describe('Playertests', function () {
 test("set player position to 5,5", () => {
     //arrange
     const player1 = new player("Philipp", 115, 0, 0);
