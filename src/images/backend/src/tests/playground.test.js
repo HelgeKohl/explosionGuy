@@ -1,22 +1,25 @@
 const Playground = require('../classes/game/playground');
 const player = require("../classes/game/player");
 
-const player1 = new player("Philipp", 115, 3, 3);
-const player2 = new player("Helge", 116, 4, 4);
-const player3 = new player("Florian", 117, 0, 0);
-const playerList = [player1, player2, player3];
-const playground1 = new Playground(10, 10, playerList, 0);
-
+describe("'PlaygroundMovement'", function () {
 test("move player downwards", () => {
+    //arrange
+    const player1 = new player("Philipp", 115, 1, 1);
+    const playerList = [player1];
+    const playground1 = new Playground(10, 10, playerList, 0);
+    //act
     playground1.onInput(115, "down");
-    expect(playground1.Players[0].PosX).toBe(3);
-    expect(playground1.Players[0].PosY).toBe(4);
+    //assert
+    expect(playground1.Players[0].PosX).toBe(1);
+    expect(playground1.Players[0].PosY).toBe(2);
+    player1.interruptInterval();
+    playground1.Players[0].interruptInterval();
 });
-
+})
 test("move player upwards", () => {
     playground1.onInput(116, "up");
-    expect(playground1.Players[1].PosX).toBe(4);
-    expect(playground1.Players[1].PosY).toBe(3);
+    expect(playground1.Players[1].PosX).toBe(1);
+    expect(playground1.Players[1].PosY).toBe(1);
 });
 
 test("move player right", () => {
@@ -30,6 +33,8 @@ test("move player left", () => {
     expect(playground1.Players[1].PosX).toBe(3);
     expect(playground1.Players[1].PosY).toBe(3);
 });
+
+
 
 test("move player outside board", () => {
     playground1.onInput(117, "left");

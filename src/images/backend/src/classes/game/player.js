@@ -13,8 +13,7 @@ const Player = class {
     this.BombStrength = 3;
     this.IsAlive = true;
     const self = this;
-
-    let interval = setInterval(function(){
+    this.interval = setInterval(function(){
       self.refreshBombCount();
     }, 3000);
   }
@@ -31,6 +30,11 @@ const Player = class {
       console.log("refresh Bomb")
       this.BombCount++;
     }
+  }
+
+  interruptInterval(){
+    console.log("Interrupt wird ausgeführt")
+    clearInterval(this.interval)
   }
 }
 

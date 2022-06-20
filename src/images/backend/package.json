@@ -4,7 +4,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js --ignore node_modules/ --legacy-watch",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "test-t": "jest --coverage -t 'Playertests'"
   },
   "author": "",
   "license": "ISC",
