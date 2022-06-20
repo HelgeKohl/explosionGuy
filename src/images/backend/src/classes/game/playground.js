@@ -43,6 +43,7 @@ const Playground = class {
       }
     }
 
+    // add obstacles in playground
     for(let i = 0; i < obstacleCount; i++) {
       let obstaclePosX = this.getRandomInt(1, maxX-1);
       let obstaclePosY = this.getRandomInt(1, maxY-1);

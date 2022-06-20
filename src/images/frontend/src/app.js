@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   console.log("GET /");
-  res.sendFile(`/html/index.html`, { root: __dirname + '/static' });
+  res.sendFile(`/html/prelobby.html`, { root: __dirname + '/static' });
 });
 
 // Test für Pre-Lobby
