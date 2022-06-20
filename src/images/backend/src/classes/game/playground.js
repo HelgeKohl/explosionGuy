@@ -15,9 +15,9 @@ const Playground = class {
     
     let playerPosList = [
       [1, 1],
-      [maxX-2, maxY-2],
-      [maxX-2, 1],
-      [1, maxY-2],
+      [maxX-1, maxY-1],
+      [maxX-1, 1],
+      [1, maxY-1],
     ]
     
     for(let i = 0; i < playerList.length; i++) {
@@ -25,6 +25,7 @@ const Playground = class {
       this.Players[i] = new Player(playerList[i].Name, playerList[i].Id, playerPosList[i][0], playerPosList[i][1]);
     }
 
+    // add map borders
     for(let i = 0; i <= this.MaxX; i++) {
       this.WallPosition.push([i, 0]);
       this.WallPosition.push([i, this.MaxY]);
@@ -35,6 +36,7 @@ const Playground = class {
       this.WallPosition.push([this.MaxX, i]);
     }
 
+    // add walls in playground
     for (let i = 2; i < this.MaxX - 1; i=i+2) {
       for (let j = 2; j < this.MaxY - 1; j=j+2) {
         this.WallPosition.push([i, j]);
@@ -163,12 +165,11 @@ const Playground = class {
         // get next position in top direction
         let topDirectionPos = [bomb.PosX, bomb.PosY - i];
         // check if position is wall
-        if(this.isItemInArray(this.WallPosition, topDirectionPos) || topDirectionPos[1] < 1) {
+        if(this.isItemInArray(this.WallPosition, topDirectionPos)) {
           stopTop = true;
         }
         // check if position is obstacle
         else if(this.isItemInArray(this.ObstaclePositions, topDirectionPos)) {
-          console.log("top obstacle", topDirectionPos);
           stopTop = true;
           explosionPositions.push(topDirectionPos);
 
@@ -188,12 +189,11 @@ const Playground = class {
         // get next position in bottom direction
         let bottomDirectionPos = [bomb.PosX, bomb.PosY + i];
         // check if position is wall
-        if(this.isItemInArray(this.WallPosition, bottomDirectionPos) || bottomDirectionPos[1] > this.MaxY - 2) {
+        if(this.isItemInArray(this.WallPosition, bottomDirectionPos)) {
           stopBottom = true;
         }
         // check if position is obstacle
         else if(this.isItemInArray(this.ObstaclePositions, bottomDirectionPos)) {
-          console.log("bottom obstacle", bottomDirectionPos);
           stopBottom = true;
           explosionPositions.push(bottomDirectionPos);
 
@@ -213,12 +213,11 @@ const Playground = class {
         // get next position in left direction
         let leftDirectionPos = [bomb.PosX - i, bomb.PosY];
         // check if position is wall
-        if(this.isItemInArray(this.WallPosition, leftDirectionPos) || leftDirectionPos[0] < 1) {
+        if(this.isItemInArray(this.WallPosition, leftDirectionPos)) {
           stopLeft = true;
         }
         // check if position is obstacle
         else if(this.isItemInArray(this.ObstaclePositions, leftDirectionPos)) {
-          console.log("left obstacle", leftDirectionPos);
           stopLeft = true;
           explosionPositions.push(leftDirectionPos);
 
@@ -238,12 +237,11 @@ const Playground = class {
         // get next position in right direction
         let rightDirectionPos = [bomb.PosX + i, bomb.PosY];
         // check if position is wall
-        if(this.isItemInArray(this.WallPosition, rightDirectionPos) || rightDirectionPos[0] > this.MaxX - 2) {
+        if(this.isItemInArray(this.WallPosition, rightDirectionPos)) {
           stopRight = true;
         }
         // check if position is obstacle
         else if(this.isItemInArray(this.ObstaclePositions, rightDirectionPos)) {
-          console.log("right obstacle", rightDirectionPos);
           explosionPositions.push(rightDirectionPos);
           stopRight = true;
 
