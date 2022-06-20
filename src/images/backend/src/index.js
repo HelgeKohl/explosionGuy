@@ -13,10 +13,13 @@ const io = new Server(httpServer, {
   },
 });
 
+const { v4: uuidv4, validate } = require('uuid');
+
 // [{"room": , "owner":}, ..]
-const gameOwnerList = []; 
-//[{"room:" , "players":[player1, player2,..] }, ..]
-const playersList =[]; 
+//const gameOwnerList = []; 
+
+ // "gamename"=>[ {playerId: playerId1, playername: "name", socket:".."},  ...], 
+const playersList = new Map();
 
 // ===
 // Listen for Socket.IO Connections. Once connected, start the game logic.
@@ -24,26 +27,29 @@ io.on('connection', function (socket) {   // io.on geht genauso
   console.log("connected");
   
   // wird später verlegt
-  explGuy.initGame(io, socket);
+  //explGuy.initGame(io, socket);
 
   // erstelle Spiel 
-  //-> Spielersteller ist "Owner" (nur er kann Spiel starten)
   socket.on('createGame', function(args, callback) {
-    updateOwnerList();
-
-    const newRoom = args;
-    //const rooms = getActiveRooms(io); // alle Räume bzw. Spiele
-
-    // -> validate Name of newRoom!!!
-    // To Do ...
+    const newRoom = args.room;
+    const playername = args.playername;
+  
+    // validate Name of newRoom
     var val = validateRoomName(newRoom);
+    val.playerId = undefined;
 
     if (val.errorCode == 0){
       console.log("Neuer Raum: " + newRoom);
-      socket.join(newRoom);
-      gameOwnerList.push({"room": newRoom, "owner": socket.id}) // notwendig? - soll jeder Spiel starten können?
-      console.log(gameOwnerList);
-      console.log(io.sockets.adapter.rooms);
+      val.playerId = uuidv4();
+
+      var data ={ playerId: val.playerId, 
+                  playername: playername, 
+                  socket: undefined
+                };
+
+      playersList.set(newRoom,[data]); 
+      console.log(playersList);
+
     }
 
     callback(val)
@@ -51,45 +57,113 @@ io.on('connection', function (socket) {   // io.on geht genauso
 
   // trete Spiel bei
   socket.on('joinGame', function(args, callback) {
-    updateOwnerList();
+    const roomToJoin = args.room;
+    const playername = args.playername;
 
-    const roomToJoin = args;
+    var val = { errorCode: undefined, 
+                status: undefined,
+                playerId: undefined
+              };    
 
     // validate!
     // To Do ...
+    val.errorCode = 0;
+    val.status = "success";
 
-    console.log("Join room: " + roomToJoin);
-    socket.join(roomToJoin);
-    console.log(io.sockets.adapter.rooms);
+    console.log("Join game: " + roomToJoin);
 
-    callback({
-      errorCode: 0,       // <> 0 -> Fehler
-      status: "success"
-    })
+    val.playerId = uuidv4();
+    console.log(val);
+
+    var data ={ playerId: val.playerId, 
+                playername: playername, 
+                socket: undefined
+              };
+    playersList.get(roomToJoin).push(data); // val.playerId
+    console.log(playersList);
+
+    callback(val);
   });
+
+
 
   // sende Games/Rooms zurück
   socket.on('getGames', function(callback) {
     const rooms = getActiveRooms(io);
     callback(rooms);
   });
+
+
+  // === auf Lobby/Game -Seite === 
+  socket.on('joinRoom', function(args, callback) {
+    const playerData = args;
+    
+    // hole Liste mit SpielerDaten
+    var listPlayerData = playersList.get(playerData.room); 
+    var response = {  errorCode: undefined, 
+                      status: undefined
+                  };
+
+    for (var i = 0; i < listPlayerData.length; i++){
+      if (listPlayerData[i].playerId == playerData.playerId){
+
+        // Spieler wurde gefunden -> füge Socket-ID hinzu + join room
+        listPlayerData[i].socket = socket.id;
+        socket.join(playerData.room);
+        console.log(listPlayerData);
+
+        response.errorCode = 0;
+        response.status = "success";
+      }
+      else {
+        response.errorCode = -1;
+        response.status = "PlayerID not found";
+      };
+    }
+
+    var playerList = getPlayerNamesFromRoom(io, playerData.room);
+    console.log(playerList);
+    console.log(getActiveRooms(io));
+
+    callback(response);
+
+    // sende bei "Join" Namen aller Spieler (im Room) zurück
+    io.to(playerData.room).emit("updatePlayerList", playerList);
+  
+  });
+
+
+  socket.on('startGame', function(callback){
+
+    // Validate -> To-Do!!
+    let val = validateStartGame();
+
+    if (val.errorCode == 0){
+      explGuy.initGame(io, socket); 
+    }
+
+    callback(val);
+
+  });
+  // ===
+
 });
 
 
-async function updateOwnerList(){
-  const clients = (await io.fetchSockets()).map(socket => socket.id); 
 
-  // Lösche Objekte mit abgelaufener Socket-ID
-  gameOwnerList.forEach((item, index, object)=>{
-    if (!clients.includes(item.owner)){
-      object.splice(index,1);
-    }
-  });
+// async function updateOwnerList(){
+//   const clients = (await io.fetchSockets()).map(socket => socket.id); 
 
-  console.log(gameOwnerList);
-}
+//   // Lösche Objekte mit abgelaufener Socket-ID
+//   gameOwnerList.forEach((item, index, object)=>{
+//     if (!clients.includes(item.owner)){
+//       object.splice(index,1);
+//     }
+//   });
 
-// Validate roomname
+//   console.log(gameOwnerList);
+// }
+
 function validateRoomName(roomname){
   let response = {
     errorCode: undefined,
@@ -108,6 +182,22 @@ function validateRoomName(roomname){
   return response;
 }
 
+function validateStartGame(){
+  let response = {
+    errorCode: undefined,
+    status: undefined
+  }
+
+  // To-Do!
+  response.errorCode = 0;
+  response.status = "success";
+  return response;
+
+  // check if number of activePlayer >1 in room
+  
+
+}
+
 // === Funktion, um Liste mit Namen der aktuellen Rooms zu bekommen ===
 // https://simplernerd.com/js-socketio-active-rooms/
 function getActiveRooms(io) {
@@ -122,6 +212,27 @@ function getActiveRooms(io) {
   const res = filtered.map(i => i[0]);
   return res;
 }
+
+
+function getPlayerNamesFromRoom(io, roomName){
+  // get active socket-ids
+  const clients = Array.from(io.sockets.adapter.rooms.get(roomName));
+  // get player-Data
+  var listPlayerData = playersList.get(roomName); 
+
+  var activePlayerList =[];
+  // compare active socket-Ids with listPlayerData-socket-Ids -> return names of all active players
+  for (var i = 0; i < listPlayerData.length; i++){
+    if(clients.includes(listPlayerData[i].socket)){
+      activePlayerList.push(listPlayerData[i].playername);
+    }
+  }
+
+  return activePlayerList;
+
+}
+
+
 
 httpServer.listen(5000);
 console.log("Backend listening on port 5000");

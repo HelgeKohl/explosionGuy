@@ -7,14 +7,23 @@ const port = process.env.PORT || 8080;
 app.use(cors());
 app.use(express.json());
 
+
+
 app.get('/', (req, res) => {
   console.log("GET /");
   res.sendFile(`/html/index.html`, { root: __dirname + '/static' });
 });
 
-// Test für Lobby
-app.get('/lobby', (req, res) => {
+// Test für Pre-Lobby
+app.get('/prelobby', (req, res) => {
   console.log("GET /");
+  res.sendFile(`/html/prelobby.html`, { root: __dirname + '/static' });
+});
+
+// Weiterleitung zur Lobby/zum Spiel
+app.get('/game', (req, res) => {
+  console.log("GET /");
+  console.log(`${req.params}`);
   res.sendFile(`/html/lobby.html`, { root: __dirname + '/static' });
 });
 

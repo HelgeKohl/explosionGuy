@@ -46,7 +46,7 @@ var IO = {
     onConnected : function() {
         // Cache a copy of the client's socket.IO session ID on the App
         console.log("connected");
-        IO.socket.emit('startGame');
+        //IO.socket.emit('startGame');
         App.mySocketId = IO.socket.sessionid;
     },
 

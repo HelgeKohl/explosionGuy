@@ -1,209 +1,28 @@
-<html>
+<!doctype html>
   <head>
     <script src="./js/socket.io.js"></script>
-	<script src="./js/app.js"></script>
+    <script src="./js/app.js"></script>
+  	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	  <meta charset="utf-8">
 
-	<link href="./css/style.css" rel="stylesheet" type="text/css">
   </head>
   <body>
+    <!-- <div class="mb-3 ml-3">
+      <button id="refreshPlayer" type="button" class="btn btn-outline-primary">aktualisiere Spieler</button>
+    </div> -->
 
-	gamename:
-	<input 	type="text"
-			id="TextNewGame"
-	> 
+    <ul id="playerList" class="list-group list-group-light">
+			<li class="list-group-item px-3 border-0" aria-current="true">
+			  Spielerliste:
+			</li>
+		</ul>    
 
-	<input 	type="button" 
-			id="CreateGameButton"
-			value="CreateGame"
-			disabled
-	>
-
-	<select id="list" 
-		size="1"
-		>
-		<option selected disabled>Choose Game</option>
-	</select>
-
-    <input 	type="button"
-			id="JoinGameButton"
-			value="JoinGame"
-			disabled
-	>
+    <div class="mb-3 ml-3">
+      <button id="startGame" type="button" class="btn btn-outline-primary">starte Spiel</button>
+    </div>
 
 
-    <button id="UpdateRoomList"
-			style="background-color:#F9FF33;">
-	Update Room List 
-	</button>
-
-	<p>
-		playername:
-		<input 	type="text"
-				id="textPlayerName"
-		> 
-	</p>
-
-	<p>
-		<div id="ActGame" 
-			style="display: none;"
-		>
-	</p></div>
-
-
-
-
-
-	<script type="text/javascript">
-
-	
-		var gameRoom = "";
-
-		// Event-Listener
-		var inputPlayerName = document.getElementById("textPlayerName");
-		inputPlayerName.addEventListener("keyup", function(){
-			enableCreateGame();
-			enableJoinGame();
-		});
-
-		var list = document.getElementById("list");
-		list.addEventListener("change", function(){
-			getSelectValue();
-			enableJoinGame();
-		});
-
-		var inputGameName = document.getElementById("TextNewGame");
-		inputGameName.addEventListener("keyup", function(){
-			enableCreateGame();
-		});
-
-		var inputCreateGame = document.getElementById("CreateGameButton");
-		inputCreateGame.addEventListener("click", function(){
-			createGame();
-		});
-
-		var inputJoinGame = document.getElementById("JoinGameButton");
-		inputJoinGame.addEventListener("click", function(){
-			joinGame();
-		});
-
-		var inputUpdateRooms = document.getElementById("UpdateRoomList");
-		inputUpdateRooms.addEventListener("click", function(){
-			updateRoomList();
-		});
-
-
-
-
-		// aktiviere Button "CreateGame"
-		function enableCreateGame() {
-			if((document.getElementById("TextNewGame").value=="") || (document.getElementById("textPlayerName").value=="")) { 
-				document.getElementById('CreateGameButton').disabled = true; 
-			} else { 
-				document.getElementById('CreateGameButton').disabled = false;
-			}
-    	}
-
-		// aktiviere Button "JoinGame"
-		function enableJoinGame() {
-			if((document.getElementById("textPlayerName").value=="")  || (list.value == "Choose Game")) { 
-				document.getElementById('JoinGameButton').disabled = true; 
-			} else { 
-				document.getElementById('JoinGameButton').disabled = false;
-			}
-    	}
-
-
-
-		// erstelle Room (mit Button)
-		function createGame(){
-			// starte Spiel
-			let room = document.getElementById("TextNewGame").value;
-
-			console.log("Try to create Room: " + room);
-			console.log("Eigene Socket ID: " + IO.socket.id);
-
-			IO.socket.emit("createGame", room, (response)=> {
-				console.log(response.status);
-
-				// bei Erfolg - Spiel anzeigen
-				if (response.errorCode == 0){ // kein Error
-					gameRoom = room;
-					showActGame();
-				}
-
-			});
-		}
-
-		// join Room mit Auswahl (select) + Button
-		function joinGame(){
-			// starte Spiel
-			console.log("join");
-
-			IO.socket.emit("joinGame", list.value, (response) => {
-				console.log(response.status);
-
-				// bei Erfolg - Spiel anzeigen
-				if (response.errorCode == 0){ // kein Error
-					gameRoom = list.value;
-					showActGame();
-				}
-
-			});
-
-		}
-
-		// Aktualisiere Room-Liste mit Ack 
-		function updateRoomList(){
-			console.log("UpdateRoomList");
-
-			IO.socket.emit("getGames", (response) => {
-				const data = response;
-
-
-				// init
-				list.innerHTML = '';
-				let optChoose = document.createElement("option");
-				optChoose.innerHTML = "Choose Game";
-				optChoose.disabled = true;
-				optChoose.selected = true;
-				list.appendChild(optChoose);
-
-				// 
-				data.forEach((item)=>{
-				let opt = document.createElement("option");
-				opt.innerHTML = item;
-				console.log(opt.value);
-				list.appendChild(opt);
-				})
-
-				// wenn data empty
-				// if (data.length == 0){
-				// 	let optChoose = document.createElement("option");
-				// 	optChoose.innerHTML = "Choose Game";
-				// 	optChoose.disabled = true;
-				// 	optChoose.selected = true;
-				// 	list.appendChild(optChoose);
-				// }
-
-			});
-		}
-
-
-		function showActGame(){
-			let gametext = document.getElementById("ActGame");
-			gametext.style.display = "block";
-
-			gametext.innerHTML = "Game:" + "&nbsp;&nbsp;&nbsp;&nbsp;" + gameRoom + "<br/>";
-			gametext.innerHTML += "Players:<br/>";
-		}
-
-		// bei Klick auf Auswahl -> direkt join ??
-		function getSelectValue(){
-			console.log(list.value)
-		}
-
-		
-
-	</script>
+    <script src="./js/lobby.js"></script>
   </body>
+
 </html>
