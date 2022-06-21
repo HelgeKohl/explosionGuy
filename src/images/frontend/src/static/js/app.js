@@ -76,7 +76,7 @@ var IO = {
             scene: [new Load(args), new MainLevel(IO, args)],
             physics: {
                 default:"arcade", arcade:{
-                    debug:true
+                    debug:false
                 }
             }
         };
