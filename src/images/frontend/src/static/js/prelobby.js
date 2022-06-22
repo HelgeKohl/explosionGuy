@@ -33,7 +33,6 @@ inputUpdateRooms.addEventListener("click", function(){
 gamelist.addEventListener("click", function(event){
 	const isButton = event.target.nodeName === 'BUTTON';
 	if (!isButton) {
-		console.log("Kein Button!");
 		return;
 	}
 	gameRoom = event.target.innerHTML;
@@ -87,6 +86,9 @@ function createGame(){
 			console.log(response.playerId);
 			window.location.href = url + "p1=" + gameRoom + "&p2=" + playerId + "&p3=" + playername;
 		}
+		else{
+			alert(response.status);
+		}
 	});
 }
 
@@ -106,6 +108,9 @@ function joinGame(){
 			playerId = response.playerId;
 			console.log(response.playerId);
 			window.location.href = url + "p1=" + gameRoom + "&p2=" + playerId + "&p3=" + playername;
+		}
+		else{
+			alert(response.status);
 		}
 
 	});

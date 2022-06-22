@@ -36,6 +36,11 @@ IO.socket.emit("joinRoom", data, (response) => {
 	console.log(response.status);
 	console.log(IO.socket.id);
 
+	if (response.errorCode != 0){
+		alert(response.status);
+		window.location.href = "/prelobby";
+	}
+
 
 });
 
@@ -43,7 +48,6 @@ IO.socket.emit("joinRoom", data, (response) => {
 // Update, wenn (anderer) Spieler joint
 IO.socket.on("updatePlayerList", function(args){
 	let players = args;
-
 	console.log(players);
 	updatePlayerList(players);
 
@@ -54,9 +58,10 @@ function startGame(){
 	IO.socket.emit("startGame", data.room, (response) => {
 		console.log(response.status);
 
-		// if (response.errorCode != 0){
-		// 	window.location.href = "/prelobby";
-		// }
+		if (response.errorCode != 0){
+			alert(response.status);
+		}
+
 	});
 };
 
