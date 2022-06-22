@@ -209,11 +209,17 @@ function validateStartGame(io, game){
     response.status = "Spiel nicht mehr gültig!";
     return response;
   }
+
+  if (runningGamesList.includes(game)){
+    response.errorCode = -2;
+    response.status = "Spiel bereits gestartet!";
+    return response;
+  }
   
   let num_players = Array.from(io.sockets.adapter.rooms.get(game)).length;
 
   if (num_players < 2){
-    response.errorCode = -2;
+    response.errorCode = -3;
     response.status = "Mindestens 2 Spieler notwendig!";
   }
   else{
@@ -236,6 +242,10 @@ function validateJoinGame(game){
   if (runningGamesList.includes(game)){
     response.errorCode = -1,
     response.status = "Spiel schon gestartet! Beitritt nicht mehr möglich!"
+  }
+  else if (!playersList.has(game)){
+    response.errorCode = -2,
+    response.status = "Spiel nicht mehr vorhanden! Kein Beitritt möglich!";
   }
   else {
     response.errorCode = 0;
