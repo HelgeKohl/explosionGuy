@@ -10,6 +10,8 @@ export default class Load extends Phaser.Scene {
         this.load.spritesheet("bomb", "assets/bomb.png",{frameWidth: 32,frameHeight: 32});
         this.load.spritesheet("explosion", "assets/explosion.png",{frameWidth: 32,frameHeight: 32});
         this.load.spritesheet("game-over", "assets/game_over.png",{frameWidth: 254,frameHeight: 106});
+        this.load.spritesheet("you-win", "assets/winner.png",{frameWidth: 254,frameHeight: 106});
+
         this.load.spritesheet("button", "assets/button.png",{frameWidth: 174,frameHeight: 57});
 
         this.load.bitmapFont('retrogames', 'assets/fonts/retro.png', 'assets/fonts/retro.xml');
@@ -54,7 +56,12 @@ export default class Load extends Phaser.Scene {
         this.anims.create({key: 'game-over',
             frames: this.anims.generateFrameNumbers('game-over', {start: 0,end: 8}),
             repeat: 0,
-            frameRate: 4
+            frameRate: 3
+        });
+        this.anims.create({key: 'you-win',
+            frames: this.anims.generateFrameNumbers('you-win', {start: 0,end: 11}),
+            repeat: 0,
+            frameRate: 3
         });
 
         this.scene.start('MainLevelScene');

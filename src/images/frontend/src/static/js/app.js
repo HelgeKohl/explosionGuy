@@ -1,5 +1,6 @@
 import Load from './game/load.js';
 import MainLevel from "./game/main.js";
+import Endgame from "./game/endgame.js";
 
 /**
  * All the code relevant to Socket.IO is collected in the IO namespace.
@@ -73,7 +74,7 @@ var IO = {
             scale: {
                 mode: Phaser.Scale.FIT
             },
-            scene: [new Load(args), new MainLevel(IO, args)],
+            scene: [new Load(args), new MainLevel(IO, args), new Endgame(args)],
             physics: {
                 default:"arcade", arcade:{
                     debug:false

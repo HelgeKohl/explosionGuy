@@ -152,7 +152,7 @@ export default class MainLevel extends Phaser.Scene {
         if (this.input.keyboard.checkDown(this.cursors.space, 250))
         {
             this.IO.socket.emit("input", {action: 'bomb'});
-            //this.players[this.IO.playerId].kill;
+            //this.players[this.IO.playerId].kill();
         }
 
         if(this.updateQueue.length > 0){

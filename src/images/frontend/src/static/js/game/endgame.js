@@ -45,25 +45,26 @@ export default class Endgame extends Phaser.Scene {
 
     }
     winner(){
-        var img  = this.add.sprite(this.width/2, this.height/2, 'winner');
+        var img  = this.add.sprite(this.width/2, this.height/2, 'you-win');
         img.play('you-win');
+        img.setScale(1.5, 1.5);
+        img.once('animationcomplete', ()=>  {
+            img.destroy();
+            this.openWindow(true);
+        });
+
     }
     openWindow(win) {
         var label = win ? 'You Win!' : 'You Lose!';
-        var h1 = this.add.bitmapText(this.centerx -120, this.centery - 50, 'retrogames', label, 25);
-        var h2 = this.add.bitmapText(this.centerx -110, this.centery - 5, 'retrogames', 'return to lobby?', 10);
+        var h1 = this.add.bitmapText(this.centerx -110, this.centery - 50, 'retrogames', label, 25);
+        var h2 = this.add.bitmapText(this.centerx -105, this.centery - 5, 'retrogames', 'return to lobby?', 10);
 
         var returnToLobby = new Button(this,this.centerx - 80, this.centery + 60,'yes');
         var watchGame = new Button(this,this.centerx + 80 , this.centery + 60 ,'no');
 
 
         watchGame.once('pointerdown', () => {
-            this.overlay.setAlpha(0.9);
-            this.box.setVisible(false);
-            h1.setVisible(false);
-            h2.setVisible(false);
-            returnToLobby.kill();
-            watchGame.kill();
+            this.scene.stop();
         });
 
         returnToLobby.once('pointerdown', () => {
