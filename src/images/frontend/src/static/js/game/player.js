@@ -20,8 +20,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
 
     }
     
-    destroyObj(obj){
-        obj.setActive(false);
-        obj.setVisible(false);
+    kill(){
+        this.isAlive = false;
+        this.setActive(false);
+        this.setVisible(false);
+        this.scene.scene.launch('Ending', {isAlive: this.isAlive});
     }
 }
