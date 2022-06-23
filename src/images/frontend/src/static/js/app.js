@@ -70,6 +70,8 @@ var IO = {
             width: 544, //17 x 32
             height: 416, //13 x 32
             autoCenter: true,
+            pixelArt: true,
+            roundPixels: false,
             // Bildschirm ausfüllen
             scale: {
                 mode: Phaser.Scale.FIT
