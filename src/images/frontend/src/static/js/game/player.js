@@ -33,9 +33,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
     }
     
     kill(){
-        this.isAlive = true;
         this.setActive(false);
         this.setVisible(false);
-        this.scene.scene.launch('Ending', {isAlive: this.isAlive});
     }
 }

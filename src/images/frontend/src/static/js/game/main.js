@@ -196,7 +196,16 @@ export default class MainLevel extends Phaser.Scene {
                 updateData.data.destroyedObstacles.forEach(obstacle => {
                     this.breakable.removeTileAt(obstacle[0], obstacle[1], false);
                 })
-                    
+
+                updateData.data.hitPlayers.forEach(player => {
+                    this.players[player.Id].isAlive = player.isAlive;
+                    this.players[player.Id].kill();
+                    if(player.Id == this.IO.playerId){
+                        this.scene.launch('Ending', {isAlive: player.isAlive});
+                    }
+                })
+                
+
             }
             else if(updateData.input == "refresh"){
                 console.log("I am " + this.IO.playerId)
