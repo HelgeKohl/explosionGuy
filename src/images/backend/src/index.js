@@ -95,10 +95,13 @@ io.on('connection', function (socket) {   // io.on geht genauso
       }
     });
 
+    callback(rooms);
+
     // aktualisiere runningGamesList
     refreshRunningGamesList(io);
+    // aktualisiere PlayersList
+    refreshPlayersList(io);
 
-    callback(rooms);
   });
 
 
@@ -296,6 +299,25 @@ function refreshRunningGamesList(io){
   runningGamesList = runningGamesList.filter( function(el){
     return getActiveRooms(io).includes(el);
   });
+}
+
+
+// löscht Spiele, die nicht mehr aktiv sind (Socket wurde schon mal eingetragen) 
+// (Spiele, die gerade erstellt wurden (und noch keinen Socket bekommen haben) nicht löschen!)
+function refreshPlayersList(io){
+  
+  let activeRooms = getActiveRooms(io);
+
+  playersList.forEach((value, key) =>{
+    if(!activeRooms.includes(key)){
+      value.forEach(element => {
+        if(typeof element.socket !== "undefined"){
+          playersList.delete(key);
+        }
+      });
+    }
+  });
+  console.log(playersList.size);
 }
 
 
