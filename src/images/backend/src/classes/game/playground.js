@@ -146,7 +146,11 @@ const Playground = class {
 
   explodeBomb(bomb) {
     var returnValue = {
-      "bomb": bomb,
+      "bomb": {
+        PosX: bomb.PosX,
+        PosY: bomb.PosY,
+        Strength: bomb.Strength
+      },
       "hitPlayers": [],
       "destroyedObstacles": [],
     };
