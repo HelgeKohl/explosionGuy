@@ -57,6 +57,10 @@ exports.initGame = function(sio, sockets, room){
 
     explosionListener.on('Explode', bomb => {
         explosionData = game.Playground.explodeBomb(bomb);
+
+        let alivePlayers = game.Playground.getAlivePlayers();
+        explosionData.isGameOver = (alivePlayers.length < 2);
+        explosionData.alivePlayers = alivePlayers;
         io.to(room).emit('explode', {"input": "explosion", "data": explosionData});
     });
     

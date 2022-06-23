@@ -361,6 +361,16 @@ const Playground = class {
     });
     return index;
   }
+
+  getAlivePlayers(){
+    let alivePlayers = [];
+    for(let i = 0; i < this.Players.length; i++) {
+      if (this.Players[i].IsAlive){
+        alivePlayers.push(this.Players[i].Id);
+      }
+    }
+    return alivePlayers; 
+  }
 }
 
 module.exports = Playground;
