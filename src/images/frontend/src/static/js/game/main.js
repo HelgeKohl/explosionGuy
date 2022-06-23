@@ -61,6 +61,12 @@ export default class MainLevel extends Phaser.Scene {
         this.IO.socket.on("explode", function(args){
             self.updateQueue.push(args);
         })
+
+        this.IO.socket.on("refresh", function(args){
+            console.log("Refresh inc")
+            console.log(args)
+            self.updateQueue.push(args);
+        })
     }
 
     // Fügt zu einem Object eine boolean-Eigenschaft hinzu
@@ -144,7 +150,6 @@ export default class MainLevel extends Phaser.Scene {
             if (!wall.properties.collide && !obstacle.properties.collide)
             {
                 this.players[this.IO.playerId].y += 32;
-
             }
         }
 
@@ -155,8 +160,11 @@ export default class MainLevel extends Phaser.Scene {
 
         if (this.input.keyboard.checkDown(this.cursors.space, 250))
         {
-            this.IO.socket.emit("input", {action: 'bomb'});
-            // this.players[this.IO.playerId].kill();
+            if(this.bombCount > 0){
+                this.IO.socket.emit("input", {action: 'bomb'});
+                this.bombCount--;
+                this.bombText.setText("Bombs: " + this.bombCount);
+            }
         }
 
         if(this.updateQueue.length > 0){
@@ -186,21 +194,19 @@ export default class MainLevel extends Phaser.Scene {
                 this.bombs.find(bomb => bomb.x == coords[0] && bomb.y == coords[1]).bomb.explode(updateData.data.explosionPositions);
                 
                 updateData.data.destroyedObstacles.forEach(obstacle => {
-                    console.log(this.breakable.layer.data)
                     this.breakable.removeTileAt(obstacle[0], obstacle[1], false);
-                    console.log(this.breakable.layer.data)
                 })
                     
             }
-            // Change current bomb count on backend refresh
-            this.IO.socket.on("explode", function(args) { // TODO BACKEND Mit sinnvoller Bombenupdate-Methode austauschen
-                this.bombCount++;
-                this.bombText.setText("Bombs: " + this.bombCount);
-            });
-
-            // for(let i = 0; i < this.gamedata.explosions.length; i++){
-            //     console.log(this.gamedata.explosions[i]);
-            // }
+            else if(updateData.input == "refresh"){
+                console.log("I am " + this.IO.playerId)
+                console.log("Refresh for " + updateData.Id)
+                if(this.IO.playerId == updateData.data.Id){
+                    console.log("Refresh")
+                    this.bombCount = updateData.data.BombCount;
+                    this.bombText.setText("Bombs: " + this.bombCount);
+                }
+            }
         }
     }
 

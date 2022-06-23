@@ -59,4 +59,12 @@ exports.initGame = function(sio, sockets, room){
         explosionData = game.Playground.explodeBomb(bomb);
         io.to(room).emit('explode', {"input": "explosion", "data": explosionData});
     });
+    
+    explosionListener.on('Refresh', player => {
+        let refreshData = {
+            Id: player.Id,
+            BombCount: player.BombCount
+        }
+        io.to(room).emit('refresh', {"input": "refresh", "data": refreshData});
+    })
 }

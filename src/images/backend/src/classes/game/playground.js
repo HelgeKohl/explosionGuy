@@ -22,7 +22,7 @@ const Playground = class {
     
     for(let i = 0; i < playerList.length; i++) {
       console.log(playerList[i]);
-      this.Players[i] = new Player(playerList[i].Name, playerList[i].Id, playerPosList[i][0], playerPosList[i][1]);
+      this.Players[i] = new Player(playerList[i].Name, playerList[i].Id, playerPosList[i][0], playerPosList[i][1], explosionListener);
     }
 
     // add map borders
