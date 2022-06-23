@@ -13,7 +13,7 @@ export default class MainLevel extends Phaser.Scene {
         this.self = this;
     }
     preload(){
-
+        this.load.bitmapFont('retrogames', 'assets/fonts/retro.png', 'assets/fonts/retro.xml');
     }
     create ()
     {
@@ -29,7 +29,7 @@ export default class MainLevel extends Phaser.Scene {
         this.breakable = map.createBlankLayer('layer2', tileset, 0, 0, mWidth, mHeight, 32, 32);
         this.players = {};
         this.bombs = [];
-        this.bombCount = 0;
+        this.bombCount = 1;
 
         // Layer beschreiben die Platzierung von den Bildsegmenten per Index auf dem Spielfeld
         const layer1Data = data.layer1Data;
@@ -44,7 +44,7 @@ export default class MainLevel extends Phaser.Scene {
         this.addPropToLayer(layer2Data, this.breakable, false);
 
         // Add text for the current bomb counter
-        this.bombText = this.add.text(0, 0, 'Bombs: 0', { font: 'retrogames', color: "white", fontSize: '32px' });
+        this.bombText = this.add.bitmapText(8, 8, 'retrogames', 'bombs:' + this.bombCount, 16)
 
         for (const [id, data] of Object.entries(this.gamedata.player)) {
             let coords = this.translateCoordinates(data.pos);
