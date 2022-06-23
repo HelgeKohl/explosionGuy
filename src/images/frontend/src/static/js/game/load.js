@@ -3,16 +3,17 @@ export default class Load extends Phaser.Scene {
         super('Loading');
     }
     preload () {
-        this.load.image("tiles", "assets/tilemaps/tileBild.png");
-        this.load.spritesheet("player-movement", "assets/player_movement.png",{frameWidth: 32,frameHeight: 32})
-        this.load.image("player", "assets/player.png")
         //Daten aus erstellter JSON Tilemap beziehen
+        this.load.image("tiles", "assets/tilemaps/tileBild.png");
+        this.load.image("player", "assets/player.png");
+        this.load.spritesheet("player-movement", "assets/player_movement.png",{frameWidth: 32,frameHeight: 32})
         this.load.spritesheet("bomb", "assets/bomb.png",{frameWidth: 32,frameHeight: 32});
         this.load.spritesheet("explosion", "assets/explosion.png",{frameWidth: 32,frameHeight: 32});
         this.load.spritesheet("game-over", "assets/game_over.png",{frameWidth: 254,frameHeight: 106});
-        this.load.spritesheet("you-win", "assets/winner.png",{frameWidth: 254,frameHeight: 106});
-
+        this.load.spritesheet("winner", "assets/winner.png",{frameWidth: 254,frameHeight: 106});
         this.load.spritesheet("button", "assets/button.png",{frameWidth: 174,frameHeight: 57});
+        this.load.image("bomb-icon", "assets/bomb_icon.png");
+        this.load.spritesheet("bombicon-anim", "assets/bomb_outline.png", {frameWidth: 31.64,frameHeight: 29});
 
         this.load.bitmapFont('retrogames', 'assets/fonts/retro.png', 'assets/fonts/retro.xml');
 
@@ -59,11 +60,16 @@ export default class Load extends Phaser.Scene {
             frameRate: 3
         });
         this.anims.create({key: 'you-win',
-            frames: this.anims.generateFrameNumbers('you-win', {start: 0,end: 11}),
+            frames: this.anims.generateFrameNumbers('winner', {start: 0,end: 11}),
             repeat: 0,
             frameRate: 3
         });
 
+        this.anims.create({key: 'bomb-outline',
+            frames: this.anims.generateFrameNumbers('bombicon-anim', {start: 0,end: 4}),
+            repeat: 0,
+            frameRate: 4
+        });
         this.scene.start('MainLevelScene');
     }
 }

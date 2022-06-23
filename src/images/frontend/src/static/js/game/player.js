@@ -17,6 +17,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
         this.body.setCollideWorldBounds(true);
         this.setScale(1);
 
+        var bomboutline1 = this.scene.add.sprite(510, 15, 'bomb-icon').setScale(0.8, 0.8),
+            bomboutline2 = this.scene.add.sprite(480, 15, 'bomb-icon').setScale(0.8, 0.8),
+            bomboutline3 = this.scene.add.sprite(450, 15, 'bomb-icon').setScale(0.8, 0.8);
+        this.bomboutlines = [bomboutline1, bomboutline2, bomboutline3];
+
+        this.scene.time.addEvent({
+            delay: 3000,
+            callback: ()=>{
+                this.bomboutlines[0].play('bomb-outline').setScale(0.8,0.8)
+            },
+            loop: false
+        });
 
     }
     
