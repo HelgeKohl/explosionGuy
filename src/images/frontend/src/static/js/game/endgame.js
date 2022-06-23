@@ -68,7 +68,7 @@ export default class Endgame extends Phaser.Scene {
         });
 
         returnToLobby.once('pointerdown', () => {
-            //return to lobby.html
+            window.location.href = "/prelobby";
         });
     }
 
