@@ -272,7 +272,11 @@ const Playground = class {
       for(let j = 0; j < this.Players.length; j++) {
         if(this.Players[j].PosX == explosionPositions[i][0] && this.Players[j].PosY == explosionPositions[i][1]) {
           this.Players[j].IsAlive = false;
-          returnValue.hitPlayers.push(this.Players[j]);
+          let player = {
+            "Id": this.Players[j].Id,
+            "IsAlive": this.Players[j].IsAlive
+          }
+          returnValue.hitPlayers.push(player);
         }
       }
     }
