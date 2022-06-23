@@ -29,6 +29,7 @@ export default class MainLevel extends Phaser.Scene {
         this.breakable = map.createBlankLayer('layer2', tileset, 0, 0, mWidth, mHeight, 32, 32);
         this.players = {};
         this.bombs = [];
+        this.bombCount = 0;
 
         // Layer beschreiben die Platzierung von den Bildsegmenten per Index auf dem Spielfeld
         const layer1Data = data.layer1Data;
@@ -41,6 +42,9 @@ export default class MainLevel extends Phaser.Scene {
         // Properties zu den Tiles hinzufügen
         this.addPropToLayer(layer1Data, this.background, true);
         this.addPropToLayer(layer2Data, this.breakable, false);
+
+        // Add text for the current bomb counter
+        this.bombText = this.add.text(0, 0, 'Bombs: 0', { font: 'retrogames', color: "white", fontSize: '32px' });
 
         for (const [id, data] of Object.entries(this.gamedata.player)) {
             let coords = this.translateCoordinates(data.pos);
@@ -188,6 +192,11 @@ export default class MainLevel extends Phaser.Scene {
                 })
                     
             }
+            // Change current bomb count on backend refresh
+            this.IO.socket.on("explode", function(args) { // TODO BACKEND Mit sinnvoller Bombenupdate-Methode austauschen
+                this.bombCount++;
+                this.bombText.setText("Bombs: " + this.bombCount);
+            });
 
             // for(let i = 0; i < this.gamedata.explosions.length; i++){
             //     console.log(this.gamedata.explosions[i]);
