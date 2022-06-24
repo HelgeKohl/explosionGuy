@@ -65,6 +65,11 @@ das allgemein bekannte Spiel "Bomberman" zu adaptieren und es mithilfe einer Clo
 Bei der Applikation Explosion Guy geht es darum, das Spiel \glqq Bomberman\grqq{} zu adaptieren. Dabei werden dem Spieler mithilfe eines graphischen Web-Interfaces basierend auf Phaser anschauliche Informationen über den Verlauf des Spiels mitgeteilt. Das Interface dient auch dazu, die Eingaben des Spielers an das Backend weiterzureichen. Im Backend werden die Informationen aller Spieler verarbeitet und so ein online Spielerlebnis erzeugt.
 
 \section{Architektur Allgemein}
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{architecture.jpeg}
+    \caption{Übersicht Gesamtsystem}
+\end{figure*}
 Als Architektur wird ein Ansatz verfolgt, der sich an einer Client-Server Kommunikation, ähnlich wie in anderen Onlinespielen, orientiert.
 Dadurch wird eine abgeschlossene Logik von Front- und Backendkomponenten erreicht, die jeweils
 von einem Subteam entwickelt wird. Diese Einheiten werden jeweils als isolierte Applikation gekapselt. Während das Backend als Anwendung innerhalb der Containervisualisierung Docker betrieben wird, wird das Frontend als allgemeine Webapplikation ausgeliefert. Durch eine zentrale Konfigurationsdatei des Containers kann dieser einfach zwischen den Teammitgliedern ausgetauscht und ausgeführt werden. Damit wird eine hohe Portabilität gewährleistet.

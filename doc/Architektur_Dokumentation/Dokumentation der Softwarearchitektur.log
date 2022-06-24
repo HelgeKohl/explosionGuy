@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2020.10.26)  24 JUN 2022 13:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2020.10.26)  24 JUN 2022 13:55
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -456,39 +456,44 @@ LaTeX Info: Redefining \nameref on input line 15.
 \@outlinefile=\write3
 \openout3 = `"Dokumentation der Softwarearchitektur.out"'.
 
+<architecture.jpeg, id=40, 638.23444pt x 564.15768pt>
+File: architecture.jpeg Graphic file (type jpg)
+<use architecture.jpeg>
+Package pdftex.def Info: architecture.jpeg  used on input line 70.
+(pdftex.def)             Requested size: 516.0pt x 456.13882pt.
 
-Underfull \hbox (badness 3108) in paragraph at lines 77--83
+Underfull \hbox (badness 3108) in paragraph at lines 82--88
 \OT1/ptm/m/n/10 Da-bei wer-den nicht nur die Aus-gangs-in-for-ma-tio-nen in
  []
 
 
-Underfull \hbox (badness 1715) in paragraph at lines 77--83
+Underfull \hbox (badness 1715) in paragraph at lines 82--88
 \OT1/ptm/m/n/10 so wird der Zug zur[]uck-ge-setzt. Dies erf[]ullt ne-ben der
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 77--83
+Underfull \hbox (badness 10000) in paragraph at lines 82--88
 
  []
 
 
-Underfull \hbox (badness 1394) in paragraph at lines 77--83
+Underfull \hbox (badness 1394) in paragraph at lines 82--88
 \OT1/ptm/m/n/10 Die Funk-tio-na-lit[]at des Fron-tends um-fasst fol-gen-de API-
 
  []
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 86.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 91.
 
 (e:/Programme/texlive/2020/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 86.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 91.
 
 
 (e:/Programme/texlive/2020/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 4713) in paragraph at lines 126--128
+Underfull \hbox (badness 4713) in paragraph at lines 131--133
 []\OT1/ptm/b/n/10 Suche nach []ahn-li-chen Fil-men (/db/search-similar-
  []
 
@@ -496,103 +501,108 @@ Underfull \hbox (badness 4713) in paragraph at lines 126--128
 
 
 ]
-ngerman: "FF is now obsolete, please use FFF instead on input line 163.
+ngerman: "FF is now obsolete, please use FFF instead on input line 168.
 
-Underfull \hbox (badness 10000) in paragraph at lines 156--178
+Underfull \hbox (badness 10000) in paragraph at lines 161--183
 []\OT1/ptm/m/n/10 Die Ver-wal-tung der Da-ten er-folgt mit-tels ei-ner
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 156--178
+Underfull \hbox (badness 10000) in paragraph at lines 161--183
 \OT1/ptm/m/n/10 Virtuoso-Datenbank. Die-se enth[]alt Film-da-ten der
  []
 
 
-Underfull \hbox (badness 4995) in paragraph at lines 156--178
+Underfull \hbox (badness 4995) in paragraph at lines 161--183
 \OT1/ptm/m/n/10 Stre-a-ming-dien-stan-bie-ter Net-flix, Amazon-Prime, Dis-ney+
  []
 
 
-Underfull \hbox (badness 5189) in paragraph at lines 156--178
+Underfull \hbox (badness 5189) in paragraph at lines 161--183
 \OT1/ptm/m/n/10 und Hu-lu, wel-che aus Kag-gle be-zo-gen wur-den. Die
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 156--178
+Underfull \hbox (badness 10000) in paragraph at lines 161--183
 
  []
 
 
-Underfull \hbox (badness 2096) in paragraph at lines 156--178
+Underfull \hbox (badness 2096) in paragraph at lines 161--183
 \OT1/ptm/m/n/10 Server und der Virtuoso-Datenbank so-wie der DB-pe-dia
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 156--178
+Underfull \hbox (badness 10000) in paragraph at lines 161--183
 \OT1/ptm/m/n/10 auf-zu-bau-en. An-schlie-^^Yend k[]onnen SPARQL-Statements
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 156--178
+Underfull \hbox (badness 10000) in paragraph at lines 161--183
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 156--178
+Underfull \hbox (badness 10000) in paragraph at lines 161--183
 \OT1/ptm/m/n/10 Vi-deo-pro-duk-tio-nen und Com-pu-ter-spie-len so-wie []uber
  []
 
 
-Underfull \hbox (badness 2875) in paragraph at lines 156--178
+Underfull \hbox (badness 2875) in paragraph at lines 161--183
 \OT1/ptm/m/n/10 Per-so-nen, die dar-an mit-ge-wirkt ha-ben. Sie bie-tet ei-ne
  []
 
 
-Underfull \hbox (badness 5431) in paragraph at lines 156--178
+Underfull \hbox (badness 5431) in paragraph at lines 161--183
 \OT1/ptm/m/n/10 An-fra-gen-be-gren-zung kann je-doch kos-ten-pflich-tig erh[]oh
 t
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 156--178
+Underfull \hbox (badness 10000) in paragraph at lines 161--183
 
  []
 
 
-Underfull \hbox (badness 1496) in paragraph at lines 156--178
+Underfull \hbox (badness 1496) in paragraph at lines 161--183
 \OT1/ptm/m/n/10 si-cher-ge-stellt wer-den. Die Tests wur-den da-bei mit dem
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 156--178
+Underfull \hbox (badness 10000) in paragraph at lines 161--183
 \OT1/ptm/m/n/10 Arrange-Act-Assert-Pattern ent-wor-fen. Die-ses soll ei-ne
  []
 
-
-Underfull \hbox (badness 2088) in paragraph at lines 189--192
+[2pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.183 
+       <./architecture.jpeg>]
+Underfull \hbox (badness 2088) in paragraph at lines 194--197
 []\OT1/ptm/b/n/10 Bombe \OT1/ptm/m/n/10 Die Bom-ben-klas-se enth[]alt []ahn-lic
 h wie die
  []
 
-[2]
-Underfull \hbox (badness 10000) in paragraph at lines 275--276
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 280--281
 []\OT1/ptm/m/n/10 Parameter []de-stroy-e-dObstacles\: Po-si-ti-on der
  []
 
 
-Underfull \hbox (badness 5519) in paragraph at lines 302--305
+Underfull \hbox (badness 5519) in paragraph at lines 307--310
 []\OT1/ptm/b/n/10 Snapshot-Tests: \OT1/ptm/m/n/10 Die Snapshot-Tests er-zeu-gen
  ei-ne
  []
 
-[3]
-Underfull \hbox (badness 10000) in paragraph at lines 314--315
+
+Underfull \hbox (badness 10000) in paragraph at lines 319--320
 \OT1/ptm/m/n/8 de / uploads / tx[]dmjournals / attermeyer[]OTS[]Microservices[]
 Docker[]16 .
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 315--316
+Underfull \hbox (badness 10000) in paragraph at lines 320--321
 []\OT1/ptm/m/n/8 React-Testing [On-li-ne] []$https : / / testing-[]library . co
 m / docs /
  []
@@ -608,21 +618,19 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[4
-
-] (./Dokumentation der Softwarearchitektur.aux)
+[4] (./Dokumentation der Softwarearchitektur.aux)
 Package rerunfilecheck Info: File `"Dokumentation der Softwarearchitektur".out'
  has not changed.
 (rerunfilecheck)             Checksum: 91CB5C240CCDFF130BA15A516F188AFC;512.
  ) 
 Here is how much of TeX's memory you used:
- 7999 strings out of 479917
- 121841 string characters out of 5881714
- 446556 words of memory out of 5000000
- 24419 multiletter control sequences out of 15000+600000
+ 8009 strings out of 479917
+ 122000 string characters out of 5881714
+ 444556 words of memory out of 5000000
+ 24426 multiletter control sequences out of 15000+600000
  570868 words of font info for 99 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 66i,8n,72p,1167b,484s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 66i,8n,72p,1167b,564s stack positions out of 5000i,500n,10000p,200000b,80000s
 {e:/Programme/texlive/2020/texmf-dist/fonts/enc/dvips/base/8r.enc}<e:/Program
 me/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><e:/Progra
 mme/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><e:/Progra
@@ -630,11 +638,11 @@ mme/texlive/2020/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><e:/Programme/texl
 ive/2020/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb><e:/Programme/texlive/202
 0/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><e:/Programme/texlive/2020/texmf-
 dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on "Dokumentation der Softwarearchitektur.pdf" (4 pages, 84783 b
-ytes).
+Output written on "Dokumentation der Softwarearchitektur.pdf" (4 pages, 229810 
+bytes).
 PDF statistics:
- 101 PDF objects out of 1000 (max. 8388607)
- 88 compressed objects within 1 object stream
- 18 named destinations out of 1000 (max. 500000)
- 73 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 104 PDF objects out of 1000 (max. 8388607)
+ 90 compressed objects within 1 object stream
+ 19 named destinations out of 1000 (max. 500000)
+ 78 words of extra memory for PDF output out of 10000 (max. 10000000)
 
