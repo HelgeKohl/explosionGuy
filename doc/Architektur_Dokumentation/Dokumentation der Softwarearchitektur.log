@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2020.10.26)  24 JUN 2022 11:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2020.10.26)  24 JUN 2022 13:12
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -575,19 +575,24 @@ h wie die
  []
 
 [2]
-Underfull \hbox (badness 5519) in paragraph at lines 223--226
+Underfull \hbox (badness 10000) in paragraph at lines 275--276
+[]\OT1/ptm/m/n/10 Parameter []de-stroy-e-dObstacles\: Po-si-ti-on der
+ []
+
+
+Underfull \hbox (badness 5519) in paragraph at lines 302--305
 []\OT1/ptm/b/n/10 Snapshot-Tests: \OT1/ptm/m/n/10 Die Snapshot-Tests er-zeu-gen
  ei-ne
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 235--236
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 314--315
 \OT1/ptm/m/n/8 de / uploads / tx[]dmjournals / attermeyer[]OTS[]Microservices[]
 Docker[]16 .
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 236--237
+Underfull \hbox (badness 10000) in paragraph at lines 315--316
 []\OT1/ptm/m/n/8 React-Testing [On-li-ne] []$https : / / testing-[]library . co
 m / docs /
  []
@@ -603,7 +608,7 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[3
+[4
 
 ] (./Dokumentation der Softwarearchitektur.aux)
 Package rerunfilecheck Info: File `"Dokumentation der Softwarearchitektur".out'
@@ -611,24 +616,25 @@ Package rerunfilecheck Info: File `"Dokumentation der Softwarearchitektur".out'
 (rerunfilecheck)             Checksum: 91CB5C240CCDFF130BA15A516F188AFC;512.
  ) 
 Here is how much of TeX's memory you used:
- 7998 strings out of 479917
- 121835 string characters out of 5881714
- 443556 words of memory out of 5000000
+ 7999 strings out of 479917
+ 121841 string characters out of 5881714
+ 446556 words of memory out of 5000000
  24419 multiletter control sequences out of 15000+600000
  570868 words of font info for 99 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 66i,8n,72p,1167b,410s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 66i,8n,72p,1167b,484s stack positions out of 5000i,500n,10000p,200000b,80000s
 {e:/Programme/texlive/2020/texmf-dist/fonts/enc/dvips/base/8r.enc}<e:/Program
-me/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><e:/Program
-me/texlive/2020/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><e:/Programme/texli
-ve/2020/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb><e:/Programme/texlive/2020
-/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><e:/Programme/texlive/2020/texmf-d
-ist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on "Dokumentation der Softwarearchitektur.pdf" (3 pages, 74397 b
+me/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><e:/Progra
+mme/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><e:/Progra
+mme/texlive/2020/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><e:/Programme/texl
+ive/2020/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb><e:/Programme/texlive/202
+0/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><e:/Programme/texlive/2020/texmf-
+dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on "Dokumentation der Softwarearchitektur.pdf" (4 pages, 84783 b
 ytes).
 PDF statistics:
- 93 PDF objects out of 1000 (max. 8388607)
- 82 compressed objects within 1 object stream
- 17 named destinations out of 1000 (max. 500000)
+ 101 PDF objects out of 1000 (max. 8388607)
+ 88 compressed objects within 1 object stream
+ 18 named destinations out of 1000 (max. 500000)
  73 words of extra memory for PDF output out of 10000 (max. 10000000)
 

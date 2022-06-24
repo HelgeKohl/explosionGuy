@@ -62,7 +62,7 @@ das allgemein bekannte Spiel "Bomberman" zu adaptieren und es mithilfe einer Clo
 \end{IEEEkeywords}
 
 \section{Introduction}
-Bei der Applikation Explosion Guy geht es darum, das Spiel "Bomberman" zu adaptieren. Dabei werden dem Spieler mithilfe eines graphischen Web-Interfaces basierend auf Phaser anschauliche Informationen über den Verlauf des Spiels mitgeteilt. Das Interface dient auch dazu, die Eingaben des Spielers an das Backend weiterzureichen. Im Backend werden die Informationen aller Spieler verarbeitet und so ein online Spielerlebnis erzeugt.
+Bei der Applikation Explosion Guy geht es darum, das Spiel \glqq Bomberman\grqq{} zu adaptieren. Dabei werden dem Spieler mithilfe eines graphischen Web-Interfaces basierend auf Phaser anschauliche Informationen über den Verlauf des Spiels mitgeteilt. Das Interface dient auch dazu, die Eingaben des Spielers an das Backend weiterzureichen. Im Backend werden die Informationen aller Spieler verarbeitet und so ein online Spielerlebnis erzeugt.
 
 \section{Architektur Allgemein}
 Als Architektur wird ein Ansatz verfolgt, der sich an einer Client-Server Kommunikation, ähnlich wie in anderen Onlinespielen, orientiert.
@@ -205,16 +205,95 @@ Das Paket der Spiellogik bildet das erste wichtige Bestandteil des Backends. Mit
     nötigen Daten für die Initialisierung des Frontends ab.
     Zusätzlich leitet diese die Spielereingaben an das
     Playgroundobjekt weiter.
+    
+\smallskip
 
 \end{itemize}
+Der Spielserver hört auf folgendes Websocket-Event von Clientseite:
+\begin{itemize}
+\item Event: \textbf{input}
 
-Text zur Beschreibung der Kommunikation mit dem Frontend.
+\item Beschreibung:
+    Bei jeder Eingabe auf der Clientseite wird dieses Event ausgelöst. Die Eingabe wird an den Spielserver gesendet und von diesem verarbeitet. Je nach Eingabe wird ein spezifisches Antwort-Event zur Aktualisierung der Clients ausgelöst.
+    
+\item Parameter \glqq action\grqq{} kann folgende Werte annehmen:
+\begin{itemize}
+    \item left
+    \item right
+    \item up
+    \item down
+    \item bomb
+\end{itemize}
+\end{itemize}
+
+\smallskip
+
+Der Spielserver löst auf Clientseite folgende Websocket-Events aus:
+\begin{itemize}
+\item Event: \textbf{newGameCreated}
+\begin{itemize}
+\item Beschreibung:
+    Die Clients werden darüber informiert, dass ein neues Spiel gestartet wurde. Sie erhalten alle nötigen Informationen um das Spiel auf Clientseite zu initialisieren.
+    
+\item Parameter \glqq mWidth\grqq{}: Spielfeldbreite
+\item Parameter \glqq mHeight\grqq{}: Spielfeldhöhe
+\item Parameter \glqq player\grqq{}: ID, Name und Position jedes Spielers
+\item Parameter \glqq layer1Data\grqq{}: Matrix des Spielfeldes mit unzerstörbaren Wänden
+\item Parameter \glqq layer2Data\grqq{}: Matrix des Spielfeldes mit zerstörbaren Objekten
+\end{itemize}
+
+\item Event: \textbf{update}
+\begin{itemize}
+\item Beschreibung:
+    Antwort auf das \glqq input\grqq-Event eines Clients. Die Clients werden über darüber informiert wie sich das Spielfeld durch den Input verändert hat.
+    
+\item Fall 1 Input war Bewegung:
+\begin{itemize}
+\item Parameter \glqq input\grqq{}: Enthält den zugehörigen Inputtyp
+\item Parameter \glqq data\grqq{}: Enthält Array Spieler-IDs und deren Position
+\end{itemize}
+
+\item Fall 2 Input war Bombe:
+\begin{itemize}
+\item Parameter \glqq input\grqq{}: Enthält den zugehörigen Inputtyp
+\item Parameter \glqq PlayerId\grqq{}: Enthält die ID des Spielers der eine Bombe gesetzt hat
+\item Parameter \glqq BombCount\grqq{}: Enthält den aktualisierten Bombcount des Spielers
+\item Parameter \glqq PosX\grqq{}: Enthält die X-Position der Bombe
+\item Parameter \glqq PosY\grqq{}: Enthält die Y-Position der Bombe
+\item Parameter \glqq BombStrength\grqq{}: Enthält die Explosionsstärke der Bombe
+\end{itemize}
+    
+\end{itemize}
+
+\item Event: \textbf{explode}
+\begin{itemize}
+\item Beschreibung:
+    Die Clients werden darüber informiert, dass eine Bombe explodiert. Sie erhalten alle nötigen Informationen um das Spiel auf Clientseite zu aktualisieren.
+    
+\item Parameter \glqq bomb\grqq{}: Position und Stärke der explodierenden Bombe
+\item Parameter \glqq hitPlayers\grqq{}: ID und isAlive Status der getroffenen Spieler
+\item Parameter \glqq destroyedObstacles\grqq{}: Position der zerstörten Hindernisse
+\item Parameter \glqq explosionPositions\grqq{}: 
+Positionen der Felder die Explodieren
+\end{itemize}
+
+\item Event: \textbf{Refresh}
+\begin{itemize}
+\item Beschreibung:
+    Die Clients werden darüber informiert, dass ein Spieler eine neue Bombe erhält.
+    
+\item Parameter \glqq Id\grqq{}: ID des Spielers dessen Bombenanzahl aktualisiert wird
+\item Parameter \glqq BombCount\grqq{}: Anzahl der Bomben des Spielers
+\end{itemize}
+
+\end{itemize}
+\smallskip
 
 \subsection{Matchmaking}
 Das zweite wichtige Paket für die Gesamtfunktion ist das Paket des Matchmakings. Darunter lassen sich alle Mechanismen zusammenfassen, die es den Spielern ermöglichen, einen Raum zu erstellen oder einem Raum beizutreten. Realisiert wird dies, indem ein zusätzlicher Matchmaking Server aufgesetzt wird. Dieser wird wie der Logikserver mit Node.js und Docker bereitgestellt. Die Spieler werden also bei Verbindungsaufbau zunächst mit dem Matchmakingserver verbunden. Dieser leitet sie dann entweder an einen neu erstellten Spielraum oder an einen bereits vorhandenen Raum weiter. Innerhalb eines Spielraumes übernimmt dann die Spiellogik die Verwaltung, indem sie die für sich relevanten Spieler mithilfe ihrer Socket-ID adressiert. Der Matchmakingserver kennt also alle aktuellen Spielräume mit ihren Spielerzahlen und kann bei Bedarf neue Spielräume erstellen. Wird die Anzahl dieser Räume irgendwann so groß, dass sie ein einzelner Server nicht mehr versorgen könnte, so wird ein neuer Server für die Spielräume in der Cloud-Infrastruktur hochgefahren und an den Matchmakingserver weitervermittelt.
 
 \subsection{File Server}
-Todo
+Das letzte Packet ist ist die File-Server-Funktionalität des Backends. Um das Spielen über den Browser des Nutzers zu ermöglichen müssen die nötigen Dateien abrufbar sein. Hierfür wurde ein eigenständiger File-Server aufgesetzt der die abgefragten Dateien ausliefert. Während der Entwicklung liegen diese Dateien auf dem Dateisystem des Entwicklers, im Live-Betrieb sollen diese in einem Amazon S3-Bucket abgelegt werden.
 
 \subsection{Testing}
 Zum Testen der verschiedenen Klassen und Funktionen des Backends wurde mithilfe von Jest für jede Klasse ein Testfile angelegt. Darin enthalten sind mehrere Testfälle, die teilweise iterativ die einzelnen Komponenten des Systems prüfen. Die Verwendung von Jest ermöglicht zudem eine Coverage-Prüfung, mit der es möglich ist, die genauen Prozentwerte der Testabdeckung sowie nicht abgedeckte Zeilen zu ermitteln. Nach Korrekter Einrichtung der einzelnen Testfälle ist es dann möglich, durch einen einzelnen Befehl die Integrität des gesamten Programmcodes zu verifizieren.
