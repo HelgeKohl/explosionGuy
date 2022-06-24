@@ -217,7 +217,7 @@ Das Paket der Spiellogik bildet das erste wichtige Bestandteil des Backends. Mit
 Der Spielserver hört auf folgendes Websocket-Event von Clientseite:
 \begin{itemize}
 \item Event: \textbf{input}
-
+\begin{itemize}
 \item Beschreibung:
     Bei jeder Eingabe auf der Clientseite wird dieses Event ausgelöst. Die Eingabe wird an den Spielserver gesendet und von diesem verarbeitet. Je nach Eingabe wird ein spezifisches Antwort-Event zur Aktualisierung der Clients ausgelöst.
     
@@ -228,6 +228,7 @@ Der Spielserver hört auf folgendes Websocket-Event von Clientseite:
     \item up
     \item down
     \item bomb
+\end{itemize}
 \end{itemize}
 \end{itemize}
 
@@ -295,7 +296,48 @@ Positionen der Felder die Explodieren
 \smallskip
 
 \subsection{Matchmaking}
-Das zweite wichtige Paket für die Gesamtfunktion ist das Paket des Matchmakings. Darunter lassen sich alle Mechanismen zusammenfassen, die es den Spielern ermöglichen, einen Raum zu erstellen oder einem Raum beizutreten. Realisiert wird dies, indem ein zusätzlicher Matchmaking Server aufgesetzt wird. Dieser wird wie der Logikserver mit Node.js und Docker bereitgestellt. Die Spieler werden also bei Verbindungsaufbau zunächst mit dem Matchmakingserver verbunden. Dieser leitet sie dann entweder an einen neu erstellten Spielraum oder an einen bereits vorhandenen Raum weiter. Innerhalb eines Spielraumes übernimmt dann die Spiellogik die Verwaltung, indem sie die für sich relevanten Spieler mithilfe ihrer Socket-ID adressiert. Der Matchmakingserver kennt also alle aktuellen Spielräume mit ihren Spielerzahlen und kann bei Bedarf neue Spielräume erstellen. Wird die Anzahl dieser Räume irgendwann so groß, dass sie ein einzelner Server nicht mehr versorgen könnte, so wird ein neuer Server für die Spielräume in der Cloud-Infrastruktur hochgefahren und an den Matchmakingserver weitervermittelt.
+Das zweite wichtige Paket für die Gesamtfunktion ist das Paket des Matchmakings. Darunter lassen sich alle Mechanismen zusammenfassen, die es den Spielern ermöglichen, einen Raum zu erstellen oder einem Raum beizutreten. Die Spieler werden also bei Verbindungsaufbau zunächst mit dem Server verbunden. Dieser leitet sie dann entweder an einen neu erstellten Spielraum oder an einen bereits vorhandenen Raum weiter. Innerhalb eines Spielraumes übernimmt dann die Spiellogik die Verwaltung, indem sie die für sich relevanten Spieler mithilfe ihrer Socket-ID adressiert. Der Server kennt also alle aktuellen Spielräume mit ihren Spielerzahlen und kann bei Bedarf neue Spielräume erstellen. Wird die Anzahl dieser Räume irgendwann so groß, dass sie ein einzelner Server nicht mehr versorgen könnte, könnte theoretisch ein neuer Server für die Spielräume in der Cloud-Infrastruktur hochgefahren werden (wurde aber nicht mehr implementiert).
+
+\begin{itemize}
+
+\item Event: \textbf{createGame}
+\begin{itemize}
+\item Beschreibung: Möchte ein Client in der Prelobby ein Spiel erstellen, drückt er dort den entsprechenden Button und dieses Event wird ausgelöst. Die Übergabeparameter werden validiert. Ist die Validierung erfolgreich, wird eine Spieler-ID generiert, der Spielname und die Spielerdaten in der playersList gespeichert und mittels callback wird die Spieler-ID an den Client gesendet. Der kann sich nun zur Lobby und Spielseite weiterleiten. Sein Zugangsschlüssel ist die Player-ID.
+\item Parameter \glqq room\grqq{} enthält den Spielnamen und \glqq playername\grqq{} den Spielername
+\item Callback: \glqq errorCode\grqq{} und \glqq status\grqq{} als Validierungsinformationen und \glqq playerId\grqq{}
+\end{itemize}
+
+\item Event: \textbf{joinGame}
+\begin{itemize}
+\item Beschreibung: Möchte ein Client in der Prelobby einem Spiel beitreten, drückt er dort auf das entsprechende Spiel und dieses Event wird ausgelöst. Wie bei createGame erfolgt eine Validierung. Die Spielerdaten mit Spieler-ID werden bei der playersList beim entsprechenden Spiel hinzugefügt.
+\item Parameter \glqq room\grqq{} enthält den Spielnamen und \glqq playername\grqq{} den Spielername
+\item Callback: \glqq errorCode\grqq{}, \glqq status\grqq{} und \glqq playerId\grqq{} (wie bei createGame)
+\end{itemize}
+
+\item Event: \textbf{getGames}
+\begin{itemize}
+\item Beschreibung: Wenn der Client in der Prelobby die aktuell offenen Spiele aktualisieren möchte, drückt er dort den entsprechenden Button und dieses Event wird ausgelöst. Es werden die aktuell aktiven rooms (=Spielnamen) abgefragt. Dann werden die schon laufenden Spiele (runningGamesList) von der Liste entfernt und die Liste dem Client zurückgeliefert
+\item Callback: \glqq rooms\grqq{} (Array mit Spielen, denen beigetreten werden kann)
+\end{itemize}
+
+\item Event: \textbf{joinRoom}
+\begin{itemize}
+\item Beschreibung: Hat ein Client erfolgreich in der Prelobby ein Spiel erstellt bzw. ist einem Spiel beigetreten, wird mit dem Routenwechsel zur Lobby bzw. zum Spiel dieses Event ausgelöst.
+Der Spielername übermittelt dabei den Spielnamen, seinen Spielernamen und seine Player-ID. Es wird überprüft, ob die Player-ID hinterlegt ist. Wenn ja wird der Client zum entsprechenden room hinzugefügt bzw. eröffnet diesen und der socket wird in die playersList eingetragen. Des Weiteren wird ein Event an den room ausgelöst, dass die aktuellen Spielernamen des Spiels liefert, damit diese beim Client automatisch aktualisiert werden.
+\item Parameter \glqq room\grqq{}, \glqq playerId\grqq{} und \glqq playername\grqq{} 
+\item Callback: \glqq errorCode\grqq{} und \glqq status\grqq{} als Validierungsinformationen
+\end{itemize}
+
+\item Event: \textbf{startGame}
+\begin{itemize}
+\item Beschreibung: Drückt ein Spieler in der Lobby auf den Button um das Spiel zu starten, wird dieses Event ausgelöst. Nach erfolgreicher Validierung, dass das Spiel gestartet werden kann, wird Initialisierungs-Methode des Spiels aufgerufen. Dabei werden der room und die Spielerdaten (inklusive aller Client-Sockets des rooms) übergeben.
+Außerdem wird der room als aktives Spiel in der runningGamesList eingetragen.
+\item Parameter \glqq room\grqq{} mit room- bzw. Spielnamen 
+\item Callback: \glqq errorCode\grqq{} und \glqq status\grqq{} als Validierungsinformationen
+\end{itemize}
+
+\end{itemize}
+
 
 \subsection{File Server}
 Das letzte Packet ist ist die File-Server-Funktionalität des Backends. Um das Spielen über den Browser des Nutzers zu ermöglichen müssen die nötigen Dateien abrufbar sein. Hierfür wurde ein eigenständiger File-Server aufgesetzt der die abgefragten Dateien ausliefert. Während der Entwicklung liegen diese Dateien auf dem Dateisystem des Entwicklers, im Live-Betrieb sollen diese in einem Amazon S3-Bucket abgelegt werden.
