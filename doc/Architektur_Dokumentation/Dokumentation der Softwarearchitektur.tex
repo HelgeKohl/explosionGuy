@@ -9,6 +9,7 @@
 \usepackage{xcolor}
 \usepackage{hyperref}
 \usepackage{float}
+\usepackage{ngerman}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
@@ -64,7 +65,7 @@ das allgemein bekannte Spiel "Bomberman" zu adaptieren und es mithilfe einer Clo
 Bei der Applikation Explosion Guy geht es darum, das Spiel "Bomberman" zu adaptieren. Dabei werden dem Spieler mithilfe eines graphischen Web-Interfaces basierend auf Phaser anschauliche Informationen über den Verlauf des Spiels mitgeteilt. Das Interface dient auch dazu, die Eingaben des Spielers an das Backend weiterzureichen. Im Backend werden die Informationen aller Spieler verarbeitet und so ein online Spielerlebnis erzeugt.
 
 \section{Architektur Allgemein}
-Als Architektur wird ein Ansatz verfolgt, der sich an einer Client-Server Kommunikation, ähnlich wie in Onlinespielen, orientiert.
+Als Architektur wird ein Ansatz verfolgt, der sich an einer Client-Server Kommunikation, ähnlich wie in anderen Onlinespielen, orientiert.
 Dadurch wird eine abgeschlossene Logik von Front- und Backendkomponenten erreicht, die jeweils
 von einem Subteam entwickelt wird. Diese Einheiten werden jeweils als isolierte Applikation gekapselt. Während das Backend als Anwendung innerhalb der Containervisualisierung Docker betrieben wird, wird das Frontend als allgemeine Webapplikation ausgeliefert. Durch eine zentrale Konfigurationsdatei des Containers kann dieser einfach zwischen den Teammitgliedern ausgetauscht und ausgeführt werden. Damit wird eine hohe Portabilität gewährleistet.
 Die Kommunikation der Teilsysteme wird durch Websockets angeboten. Der Informationsaustausch über Websockets ermöglicht es, durch die identitätsbasierten Verbindungen die Kommunikation zwischen den Spielern und der zugehörigen Partei im Backend effizient zu gestalten.
@@ -73,7 +74,7 @@ Durch die Einbettung der verschiedenen Bestandteile in einen Cloud-Service ist e
 
 \section{Frontend: Spielinterface}
 % TODO:
-Mithilfe des Web-Frameworks Phaser ist es möglich, ein graphisch ansprechendes Interface für das Spiel zu erstellen. Dabei werden nicht nur die Ausgangsinformationen in Form von Veränderungen des Spielfeldes für den Spieler bereitgestellt, sondern auch die Eingaben an das System vom Spieler erfasst. Diese Eingaben leitet das Frontend an das Backed weiter, von wo aus sie dann weiter verarbeitet werden können. Um ein möglichst flüssiges und ruckelfreies Spielerlebnis zu erzeugen, wurde das Frontend auch mit Teilen der Spiellogik ausgestattet. So können beispielsweise alle Bewegungen direkt nach Drücken der entsprechenden Eingabe ausgeführt werden, um Verzögerungen zu vermeiden. Sollte der Server nach Kontrolle einen ungültigen Spielzug feststellen, so wird der Zug zurückgesetzt. Dies erfüllt neben der Aufwertung des Gameplays auch eine kleine Anti-Cheat Rolle.
+Mithilfe des Web-Frameworks Phaser ist es möglich, ein graphisch ansprechendes Interface für das Spiel zu erstellen. Dabei werden nicht nur die Ausgangsinformationen in Form von Veränderungen des Spielfeldes für den Spieler bereitgestellt, sondern auch die Eingaben an das System vom Spieler erfasst. Diese Eingaben leitet das Frontend an das Backed weiter, von wo aus sie dann weiter verarbeitet werden können. Um ein möglichst flüssiges und ruckelfreies Spielerlebnis zu erzeugen, wurde das Frontend auch mit Teilen der Spiellogik ausgestattet. So können beispielsweise alle Bewegungen direkt nach Drücken der entsprechenden Eingabe ausgeführt werden ohne die Antwort des Backends abzuwarten, um Verzögerungen zu vermeiden. Sollte der Server nach Kontrolle einen ungültigen Spielzug feststellen, so wird der Zug zurückgesetzt. Dies erfüllt neben der Aufwertung des Gameplays auch eine kleine Anti-Cheat Rolle.
 \\
 \\
 Die Funktionalität des Frontends umfasst folgende API-Zugriffe:
@@ -176,34 +177,44 @@ sichergestellt werden. Die Tests wurden dabei mit dem Arrange-Act-Assert-Pattern
 übersichtliche Struktur und Einheitlichkeit garantieren.
 
 \section{Backend: Spiellogik und Matchmaking}
-Das Backend besteht aus zwei großen Aufgabenpaketen. Einerseits hat es die Aufgabe, die Informationen aller Spieler entgegenzunehmen, diese zu verarbeiten und sie danach an die jeweils anderen Spieler weiterzuleiten. Andererseits muss das Backend die Funktionalität des Matchmakings übernehmen. Dazu muss es den Spielern die Möglichkeit geben, eigene Spielräume zu erstellen oder vorhandenen Räumen beizutreten. Um diese Funktionen optimal abzudecken, wurde das Backend in zwei Teilbereiche getrennt, welche im Folgenden ausführlich beleuchtet werden.
+Das Backend besteht aus drei Aufgabenpaketen. Einerseits hat es die Aufgabe, die Informationen aller Spieler entgegenzunehmen, diese zu verarbeiten und sie danach an die jeweils anderen Spieler weiterzuleiten. Dies erfolgt nach dem \glqq Authoritative servers and dumb clients\grqq -Prinzip bei dem der Server immer den tatsächlichen Spielstatus hält und diesen an die Clients weitergibt. Andererseits muss das Backend die Funktionalität des Matchmakings übernehmen. Dazu muss es den Spielern die Möglichkeit geben, eigene Spielräume zu erstellen oder vorhandenen Räumen beizutreten. Die dritte Aufgabe des Backends ist es die nötigen Dateien für das Frontend auszuliefern. Um diese Funktionen optimal abzudecken, wurde das Backend in drei Teilbereiche getrennt, welche im Folgenden ausführlich beleuchtet werden.
+
 \subsection{Spiellogik}
-Das Paket der Spiellogik bildet das erste wichtige Bestandteil des Backends. Mit Spiellogik werden alle Abläufe, die im Hintergrund zu erfüllen sind, bezeichnet. So beispielsweise die Positionsbestimmung der Spieler nach einer Eingabe oder das Zählen eines Timers der Bomben. Zur Implementierung der Spiellogik wird ein Server mithilfe von Node.js innerhalb eines Docker Containers aufgebaut. Der Server verwaltet die Logik mit verschiedenen Klassen:
+Das Paket der Spiellogik bildet das erste wichtige Bestandteil des Backends. Mit Spiellogik werden alle Abläufe, die im Hintergrund zu erfüllen sind, bezeichnet. So beispielsweise die Positionsbestimmung der Spieler nach einer Eingabe oder das Zählen eines Timers der Bomben. Zur Realisierung der Spiellogik wird ein Server mithilfe von Node.js innerhalb eines Docker Containers aufgebaut. Der Server verwaltet die Logik mit verschiedenen Klassen:
 
 \begin{itemize}
     \item \textbf{Spieler}
-    Text, der den Spieler beschreibt
+    Die Spielerklasse enthält alle nötigen Informationen eines 	Spielers. Darunter dessen ID zur eindeutigen 					Identifizierung, seine Position auf dem Spielfeld, die 			Anzahl seiner Bomben und den ob dieser aktuell noch am 			Leben ist.
     \smallskip
     \item \textbf{Bombe} 
-    Text, der die Bombe beschreibt
+    Die Bombenklasse enthält ähnlich wie die Spielerklasse die 	Information ob über die Position des Bombenobjekt ihrer 		Explosionsstärke. Mithilfe eines Timers löst diese nach 		ablaufen desselben ein Explosionsevent aus, wodurch das 		Spielfeld angestoßen wird, die Explosion zu verarbeiten.
     \smallskip
     \item \textbf{Playground}
-    TExt, der den Playground beschreibt
+    Die Playgroundklasse spiegelt das Spielfeld wieder. Sie 
+    enthält ihre Größe sowie die Spieler und Bombenobjekte.
+    Zusätzlich werden die Positionen von Wänden und 
+    zerstörbaren Objekten gespeichert. Mithilfe der 
+    Playgroundklasse werden die Spielereingaben auf die
+   	umgesetzt und der Spielstatus aktualisiert. Bei der
+   	Explosion einer Bombe wird zusätzlich die Kollision 
+   	mit Objekten verarbeitet.
     \smallskip
     \item \textbf{Game}
-    Text, der das Game beschreibt
-    \smallskip
-    \subitem \textbf{Platzhalter}
-    Platzhalter für mehr falls nötig 
-    \smallskip
-    \item \textbf{Platzhalter}
-    Platzhalter für mehr falls nötig 
+    Die Gameklasse enthält die übergeordneten Funktionen für
+    Spiellogik. Sie erstellt den Playground und ruft die 
+    nötigen Daten für die Initialisierung des Frontends ab.
+    Zusätzlich leitet diese die Spielereingaben an das
+    Playgroundobjekt weiter.
+
 \end{itemize}
 
 Text zur Beschreibung der Kommunikation mit dem Frontend.
 
 \subsection{Matchmaking}
 Das zweite wichtige Paket für die Gesamtfunktion ist das Paket des Matchmakings. Darunter lassen sich alle Mechanismen zusammenfassen, die es den Spielern ermöglichen, einen Raum zu erstellen oder einem Raum beizutreten. Realisiert wird dies, indem ein zusätzlicher Matchmaking Server aufgesetzt wird. Dieser wird wie der Logikserver mit Node.js und Docker bereitgestellt. Die Spieler werden also bei Verbindungsaufbau zunächst mit dem Matchmakingserver verbunden. Dieser leitet sie dann entweder an einen neu erstellten Spielraum oder an einen bereits vorhandenen Raum weiter. Innerhalb eines Spielraumes übernimmt dann die Spiellogik die Verwaltung, indem sie die für sich relevanten Spieler mithilfe ihrer Socket-ID adressiert. Der Matchmakingserver kennt also alle aktuellen Spielräume mit ihren Spielerzahlen und kann bei Bedarf neue Spielräume erstellen. Wird die Anzahl dieser Räume irgendwann so groß, dass sie ein einzelner Server nicht mehr versorgen könnte, so wird ein neuer Server für die Spielräume in der Cloud-Infrastruktur hochgefahren und an den Matchmakingserver weitervermittelt.
+
+\subsection{File Server}
+Todo
 
 \subsection{Testing}
 Zum Testen der verschiedenen Klassen und Funktionen des Backends wurde mithilfe von Jest für jede Klasse ein Testfile angelegt. Darin enthalten sind mehrere Testfälle, die teilweise iterativ die einzelnen Komponenten des Systems prüfen. Die Verwendung von Jest ermöglicht zudem eine Coverage-Prüfung, mit der es möglich ist, die genauen Prozentwerte der Testabdeckung sowie nicht abgedeckte Zeilen zu ermitteln. Nach Korrekter Einrichtung der einzelnen Testfälle ist es dann möglich, durch einen einzelnen Befehl die Integrität des gesamten Programmcodes zu verifizieren.
