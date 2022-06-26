@@ -77,9 +77,7 @@ io.on('connection', function (socket) {   // io.on geht genauso
       playersList.get(roomToJoin).push(data); 
       console.log(playersList);
     }
-
-
-
+    
     callback(val);
   });
 
@@ -94,6 +92,14 @@ io.on('connection', function (socket) {   // io.on geht genauso
         object.splice(index,1);
       }
     });
+
+    // entferne Spiele/rooms, bei denen schon 4 Spieler beigetreten sind
+    rooms.forEach((item, index, object) => {
+      if(playersList.has(item) && (playersList.get(item).length > 3)){
+        object.splice(index,1);
+      }
+    });
+
 
     callback(rooms);
 
@@ -249,6 +255,10 @@ function validateJoinGame(game){
   else if (!playersList.has(game)){
     response.errorCode = -2,
     response.status = "Spiel nicht mehr vorhanden! Kein Beitritt möglich!";
+  }
+  else if (playersList.get(game).length>3){
+    response.errorCode = -3,
+    response.status = "Maximale Anzahl an Spieler erreicht!";
   }
   else {
     response.errorCode = 0;
