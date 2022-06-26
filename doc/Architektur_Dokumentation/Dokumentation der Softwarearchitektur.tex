@@ -54,7 +54,7 @@
 \begin{abstract}
 In diesem technischem Report wird die Softwarearchitektur des Projekts 
 Explosion Guy vorgestellt. Das Projekt wurde im Rahmen der Vorlesung Big Data und Cloud-basiertes Computing implementiert. Ziel der Implementierung ist es, 
-das allgemein bekannte Spiel "Bomberman" zu adaptieren und es mithilfe einer Cloud-Infrastruktur online spielbar zu machen.\\
+das allgemein bekannte Spiel \glqq Bomberman \grqq{} zu adaptieren und es mithilfe einer Cloud-Infrastruktur online spielbar zu machen.\\
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -309,29 +309,29 @@ Das zweite wichtige Paket für die Gesamtfunktion ist das Paket des Matchmakings
 
 \item Event: \textbf{joinGame}
 \begin{itemize}
-\item Beschreibung: Möchte ein Client in der Prelobby einem Spiel beitreten, drückt er dort auf das entsprechende Spiel und dieses Event wird ausgelöst. Wie bei createGame erfolgt eine Validierung. Die Spielerdaten mit Spieler-ID werden bei der playersList beim entsprechenden Spiel hinzugefügt.
+\item Beschreibung: Möchte ein Client in der Prelobby einem Spiel beitreten, wählt er dort das entsprechende Spiel aus und dieses Event wird ausgelöst. Wie bei createGame erfolgt eine Validierung. Die Spielerdaten mit Spieler-ID werden in der playersList beim entsprechenden Spiel hinzugefügt.
 \item Parameter \glqq room\grqq{} enthält den Spielnamen und \glqq playername\grqq{} den Spielername
 \item Callback: \glqq errorCode\grqq{}, \glqq status\grqq{} und \glqq playerId\grqq{} (wie bei createGame)
 \end{itemize}
 
 \item Event: \textbf{getGames}
 \begin{itemize}
-\item Beschreibung: Wenn der Client in der Prelobby die aktuell offenen Spiele aktualisieren möchte, drückt er dort den entsprechenden Button und dieses Event wird ausgelöst. Es werden die aktuell aktiven rooms (=Spielnamen) abgefragt. Dann werden die schon laufenden Spiele (runningGamesList) von der Liste entfernt und die Liste dem Client zurückgeliefert
+\item Beschreibung: Wenn der Client in der Prelobby die aktuell offenen Spiele aktualisieren möchte, drückt er dort den entsprechenden Button und dieses Event wird ausgelöst. Es werden die aktuell aktiven rooms (entsprechen Spielnamen) abgefragt. Dann werden die schon laufenden Spiele (runningGamesList) von der Liste entfernt und die Liste dem Client zurückgeliefert.
 \item Callback: \glqq rooms\grqq{} (Array mit Spielen, denen beigetreten werden kann)
 \end{itemize}
 
 \item Event: \textbf{joinRoom}
 \begin{itemize}
 \item Beschreibung: Hat ein Client erfolgreich in der Prelobby ein Spiel erstellt bzw. ist einem Spiel beigetreten, wird mit dem Routenwechsel zur Lobby bzw. zum Spiel dieses Event ausgelöst.
-Der Spielername übermittelt dabei den Spielnamen, seinen Spielernamen und seine Player-ID. Es wird überprüft, ob die Player-ID hinterlegt ist. Wenn ja wird der Client zum entsprechenden room hinzugefügt bzw. eröffnet diesen und der socket wird in die playersList eingetragen. Des Weiteren wird ein Event an den room ausgelöst, dass die aktuellen Spielernamen des Spiels liefert, damit diese beim Client automatisch aktualisiert werden.
+Der Client übermittelt dabei den Spielnamen, seinen Spielernamen und seine Player-ID. Es wird überprüft, ob die Player-ID hinterlegt ist. Wenn ja wird der Client zum entsprechenden room hinzugefügt bzw. eröffnet diesen und der socket wird in die playersList eingetragen. Des Weiteren wird ein Event an den room ausgelöst, dass die aktuellen Spielernamen des Spiels liefert, damit diese beim Client automatisch aktualisiert werden.
 \item Parameter \glqq room\grqq{}, \glqq playerId\grqq{} und \glqq playername\grqq{} 
 \item Callback: \glqq errorCode\grqq{} und \glqq status\grqq{} als Validierungsinformationen
 \end{itemize}
 
 \item Event: \textbf{startGame}
 \begin{itemize}
-\item Beschreibung: Drückt ein Spieler in der Lobby auf den Button um das Spiel zu starten, wird dieses Event ausgelöst. Nach erfolgreicher Validierung, dass das Spiel gestartet werden kann, wird Initialisierungs-Methode des Spiels aufgerufen. Dabei werden der room und die Spielerdaten (inklusive aller Client-Sockets des rooms) übergeben.
-Außerdem wird der room als aktives Spiel in der runningGamesList eingetragen.
+\item Beschreibung: Drückt ein Spieler in der Lobby auf den Button um das Spiel zu starten, wird dieses Event ausgelöst. Nach erfolgreicher Validierung, dass das Spiel gestartet werden kann, wird die Initialisierungs-Methode des Spiels aufgerufen. Dabei werden der room und die Spielerdaten (inklusive aller Client-Sockets des rooms) übergeben.
+Außerdem wird der room als aktives Spiel in die runningGamesList eingetragen.
 \item Parameter \glqq room\grqq{} mit room- bzw. Spielnamen 
 \item Callback: \glqq errorCode\grqq{} und \glqq status\grqq{} als Validierungsinformationen
 \end{itemize}
