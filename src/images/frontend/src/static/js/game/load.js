@@ -14,16 +14,16 @@ export default class Load extends Phaser.Scene {
         this.load.spritesheet("button", "assets/button.png",{frameWidth: 174,frameHeight: 57});
         this.load.image("bomb-icon", "assets/bomb_icon.png");
         this.load.spritesheet("bombicon-anim", "assets/bomb_outline.png", {frameWidth: 31.64,frameHeight: 29});
-
         this.load.bitmapFont('retrogames', 'assets/fonts/retro.png', 'assets/fonts/retro.xml');
-
     }
 
     create() {
         //Animationen
         //Bombe & Explosions Animation
         this.anims.create({key: 'bomb-idle',
+            // start und end beschreiben den Index des Spritesheets, aus dem kleinere Spritesheets geschnitten werden
             frames: this.anims.generateFrameNumbers('bomb', {start: 0,end: 1}),
+            // repeat : -1 -> Loope die Animation
             repeat: -1,
             frameRate: 2
         });

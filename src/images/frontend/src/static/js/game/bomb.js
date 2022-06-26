@@ -19,7 +19,7 @@ export default class Bomb extends Phaser.Physics.Arcade.Sprite {
             explosion.setPosition(coords[0], coords[1]);
         });
         console.log("Explosion")
-        this.destroyObj(this)
+        this.destroyObj(this);
     }
     destroyObj(obj){
         obj.setActive(false);

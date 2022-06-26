@@ -17,7 +17,7 @@ export default class MainLevel extends Phaser.Scene {
     }
     create ()
     {
-        // Objekte aus preload json beziehen
+        // Objekte aus Backend beziehen
         const data = this.gamedata
         const mWidth = data.mWidth + 1;
         const mHeight = data.mHeight + 1;
