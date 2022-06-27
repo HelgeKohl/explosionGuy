@@ -225,7 +225,9 @@ Positionen der Felder, die Explodieren
 \smallskip
 
 \subsection{Matchmaking}
-Das zweite wichtige Paket für die Gesamtfunktion ist das Paket des Matchmakings. Darunter lassen sich alle Mechanismen zusammenfassen, die es den Spielern ermöglichen, einen Raum zu erstellen oder einem Raum beizutreten. Die Spieler werden also bei Verbindungsaufbau zunächst mit dem Server verbunden. Dieser leitet sie dann entweder an einen neu erstellten Spielraum oder an einen bereits vorhandenen Raum weiter. Innerhalb eines Spielraumes übernimmt dann die Spiellogik die Verwaltung, indem sie die für sich relevanten Spieler mithilfe ihrer Socket-ID adressiert. Der Server kennt also alle aktuellen Spielräume mit ihren Spielerzahlen und kann bei Bedarf neue Spielräume erstellen. Wird die Anzahl dieser Räume irgendwann so groß, dass sie ein einzelner Server nicht mehr versorgen könnte, könnte theoretisch ein neuer Server für die Spielräume in der Cloud-Infrastruktur hochgefahren werden (wurde aber nicht mehr implementiert).
+Das zweite wichtige Paket für die Gesamtfunktion ist das Paket des Matchmakings. Darunter lassen sich alle Mechanismen zusammenfassen, die es den Spielern ermöglichen, einen Raum zu erstellen oder einem Raum beizutreten. Die Spieler werden also bei Verbindungsaufbau zunächst mit dem Server verbunden. Dieser leitet sie dann entweder an einen neu erstellten Spielraum oder an einen bereits vorhandenen Raum weiter. Innerhalb eines Spielraumes übernimmt dann die Spiellogik die Verwaltung, indem sie die für sich relevanten Spieler mithilfe ihrer Socket-ID adressiert. Der Server kennt also alle aktuellen Spielräume mit ihren Spielerzahlen und kann bei Bedarf neue Spielräume erstellen.\newline
+Zwecks der Skalierbarkeit wäre das Auslagern des Matchmakings auf einen extra Server, der die Clients dann auf die jeweiligen Spielserver weiterleitet, zu bevorzugen.
+Wäre die Anzahl der Räume eines Spielservers dann irgendwann so groß, dass sie ein einzelner Server nicht mehr versorgen kann, könnte theoretisch ein neuer Server für die Spielräume in der Cloud-Infrastruktur hochgefahren werden. (wurde aber aus zeitlichen Aspekten nicht mehr implementiert)
 
 \begin{itemize}
 
@@ -252,14 +254,14 @@ Das zweite wichtige Paket für die Gesamtfunktion ist das Paket des Matchmakings
 \item Event: \textbf{joinRoom}
 \begin{itemize}
 \item Beschreibung: Hat ein Client erfolgreich in der Prelobby ein Spiel erstellt bzw. ist einem Spiel beigetreten, wird mit dem Routenwechsel zur Lobby bzw. zum Spiel dieses Event ausgelöst.
-Der Client übermittelt dabei den Spielnamen, seinen Spielernamen und seine Player-ID. Es wird überprüft, ob die Player-ID hinterlegt ist. Wenn ja, wird der Client zum entsprechenden room hinzugefügt bzw. eröffnet diesen und der socket wird in die playersList eingetragen. Des Weiteren wird ein Event an den room ausgelöst, dass die aktuellen Spielernamen des Spiels liefert, damit diese beim Client automatisch aktualisiert werden.
+Der Client übermittelt dabei den Spielnamen, seinen Spielernamen und seine Player-ID. Es wird überprüft, ob die Player-ID hinterlegt ist. Wenn ja, wird der Client zum entsprechenden room hinzugefügt bzw. eröffnet diesen und der socket wird in die playersList eingetragen. Des Weiteren wird ein Event an den room ausgelöst, das die aktuellen Spielernamen des Spiels liefert, damit diese beim Client automatisch aktualisiert werden.
 \item Parameter \glqq room\grqq{}, \glqq playerId\grqq{} und \glqq playername\grqq{} 
 \item Callback: \glqq errorCode\grqq{} und \glqq status\grqq{} als Validierungsinformationen
 \end{itemize}
 
 \item Event: \textbf{startGame}
 \begin{itemize}
-\item Beschreibung: Drückt ein Spieler in der Lobby auf den Button um das Spiel zu starten, wird dieses Event ausgelöst. Nach erfolgreicher Validierung, dass das Spiel gestartet werden kann, wird die Initialisierungs-Methode des Spiels aufgerufen. Dabei werden der room und die Spielerdaten (inklusive aller Client-Sockets des rooms) übergeben.
+\item Beschreibung: Drückt ein Spieler in der Lobby auf den Button, um das Spiel zu starten, wird dieses Event ausgelöst. Nach erfolgreicher Validierung, dass das Spiel gestartet werden kann, wird die Initialisierungs-Methode des Spiels aufgerufen. Dabei werden der room und die Spielerdaten (inklusive aller Client-Sockets des rooms) übergeben.
 Außerdem wird der room als aktives Spiel in die runningGamesList eingetragen.
 \item Parameter \glqq room\grqq{} mit room- bzw. Spielnamen 
 \item Callback: \glqq errorCode\grqq{} und \glqq status\grqq{} als Validierungsinformationen
