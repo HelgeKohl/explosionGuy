@@ -10,7 +10,7 @@ const Bomb = class {
     this.interval = setInterval(function(){
       console.log("Exploding");
       self.explosionEmitter.emit('Explode', self);
-      clearInterval(interval)
+      clearInterval(self.interval)
     }, timer * 1000);
   }
 

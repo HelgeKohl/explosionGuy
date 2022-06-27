@@ -22,7 +22,7 @@ const Playground = class {
     
     for(let i = 0; i < playerList.length; i++) {
       console.log(playerList[i]);
-      this.Players[i] = new Player(playerList[i].Name, playerList[i].Id, playerPosList[i][0], playerPosList[i][1]);
+      this.Players[i] = new Player(playerList[i].Name, playerList[i].Id, playerPosList[i][0], playerPosList[i][1], explosionListener);
     }
 
     // add map borders
@@ -146,7 +146,11 @@ const Playground = class {
 
   explodeBomb(bomb) {
     var returnValue = {
-      "bomb": bomb,
+      "bomb": {
+        PosX: bomb.PosX,
+        PosY: bomb.PosY,
+        Strength: bomb.Strength
+      },
       "hitPlayers": [],
       "destroyedObstacles": [],
     };
@@ -268,7 +272,11 @@ const Playground = class {
       for(let j = 0; j < this.Players.length; j++) {
         if(this.Players[j].PosX == explosionPositions[i][0] && this.Players[j].PosY == explosionPositions[i][1]) {
           this.Players[j].IsAlive = false;
-          returnValue.hitPlayers.push(this.Players[j]);
+          let player = {
+            "Id": this.Players[j].Id,
+            "IsAlive": this.Players[j].IsAlive
+          }
+          returnValue.hitPlayers.push(player);
         }
       }
     }
@@ -352,6 +360,16 @@ const Playground = class {
       }
     });
     return index;
+  }
+
+  getAlivePlayers(){
+    let alivePlayers = [];
+    for(let i = 0; i < this.Players.length; i++) {
+      if (this.Players[i].IsAlive){
+        alivePlayers.push(this.Players[i].Id);
+      }
+    }
+    return alivePlayers; 
   }
 }
 

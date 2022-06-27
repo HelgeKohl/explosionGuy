@@ -21,14 +21,14 @@ const { v4: uuidv4, validate } = require('uuid');
  // "gamename"=>[ {playerId: playerId1, playername: "name", socket:".."},  ...], 
 const playersList = new Map();
 
+// Liste mit aktiven Spielen (diesen Spielen kann nicht beigetreten werden)
+var runningGamesList = [];
+
 // ===
 // Listen for Socket.IO Connections. Once connected, start the game logic.
 io.on('connection', function (socket) {   // io.on geht genauso
   console.log("connected");
   
-  // wird später verlegt
-  //explGuy.initGame(io, socket);
-
   // erstelle Spiel 
   socket.on('createGame', function(args, callback) {
     const newRoom = args.room;
@@ -59,85 +59,111 @@ io.on('connection', function (socket) {   // io.on geht genauso
     const roomToJoin = args.room;
     const playername = args.playername;
 
-    var val = { errorCode: undefined, 
-                status: undefined,
-                playerId: undefined
-              };    
 
-    // validate!
-    // To Do ...
-    val.errorCode = 0;
-    val.status = "success";
+    var val = validateJoinGame(roomToJoin);
+    val.playerId = undefined;
 
-    console.log("Join game: " + roomToJoin);
 
-    val.playerId = uuidv4();
-    console.log(val);
+    if (val.errorCode == 0){
+      console.log("Join game: " + roomToJoin);
 
-    var data ={ playerId: val.playerId, 
-                playername: playername, 
-                socket: undefined
-              };
-    playersList.get(roomToJoin).push(data); // val.playerId
-    console.log(playersList);
-
+      val.playerId = uuidv4();
+      console.log(val);
+  
+      var data ={ playerId: val.playerId, 
+                  playername: playername, 
+                  socket: undefined
+                };
+      playersList.get(roomToJoin).push(data); 
+      console.log(playersList);
+    }
+    
     callback(val);
   });
 
 
-
   // sende Games/Rooms zurück
   socket.on('getGames', function(callback) {
-    const rooms = getActiveRooms(io);
+    let rooms = getActiveRooms(io);
+
+    // entferne Spiele/rooms, die schon gestartet sind
+    rooms.forEach((item, index, object) => {
+      if(runningGamesList.includes(item)){
+        object.splice(index,1);
+      }
+    });
+
+    // entferne Spiele/rooms, bei denen schon 4 Spieler beigetreten sind
+    rooms.forEach((item, index, object) => {
+      if(playersList.has(item) && (playersList.get(item).length > 3)){
+        object.splice(index,1);
+      }
+    });
+
+
     callback(rooms);
+
+    // aktualisiere runningGamesList
+    refreshRunningGamesList(io);
+    // aktualisiere PlayersList
+    refreshPlayersList(io);
+
   });
 
 
   // === auf Lobby/Game -Seite === 
   socket.on('joinRoom', function(args, callback) {
     const playerData = args;
-    
-    // hole Liste mit SpielerDaten
-    var listPlayerData = playersList.get(playerData.room); 
+
     var response = {  errorCode: undefined, 
                       status: undefined
                   };
+    
+    // hole Liste mit SpielerDaten
+    if (playersList.has(playerData.room)){
 
-    for (var i = 0; i < listPlayerData.length; i++){
-      if (listPlayerData[i].playerId == playerData.playerId){
-
-        // Spieler wurde gefunden -> füge Socket-ID hinzu + join room
-        listPlayerData[i].socket = socket;
-        socket.join(playerData.room);
-        console.log(listPlayerData);
-
-        response.errorCode = 0;
-        response.status = "success";
+      var listPlayerData = playersList.get(playerData.room); 
+      for (var i = 0; i < listPlayerData.length; i++){
+        if (listPlayerData[i].playerId == playerData.playerId){
+  
+          // Spieler wurde gefunden -> füge Socket-ID hinzu + join room
+          listPlayerData[i].socket = socket;
+          socket.join(playerData.room);
+          console.log(listPlayerData);
+  
+          response.errorCode = 0;
+          response.status = "success";
+        }
+        else {
+          response.errorCode = -1;
+          response.status = "PlayerID nicht gefunden!";
+        };
       }
-      else {
-        response.errorCode = -1;
-        response.status = "PlayerID not found";
-      };
-    }
 
-    var playerList = getPlayerNamesFromRoom(io, playerData.room);
-    console.log(playerList);
-    console.log(getActiveRooms(io));
+      var playerList = getPlayerNamesFromRoom(io, playerData.room);
+      console.log(playerList);
+      console.log(getActiveRooms(io));
+
+      // sende bei "Join" Namen aller Spieler (im Room) zurück
+      io.to(playerData.room).emit("updatePlayerList", playerList);
+
+    }
+    else{
+      response.errorCode = -2;
+      response.status = "Fehler mit Spiel " + playerData.room + "!";
+    }
 
     callback(response);
 
-    // sende bei "Join" Namen aller Spieler (im Room) zurück
-    io.to(playerData.room).emit("updatePlayerList", playerList);
-  
   });
 
 
   socket.on('startGame', function(room, callback){
 
-    // Validate -> To-Do!!
-    let val = validateStartGame();
+    let val = validateStartGame(io, room);
 
     if (val.errorCode == 0){
+      runningGamesList.push(room); 
       explGuy.initGame(io, playersList.get(room), room); 
     }
 
@@ -181,21 +207,68 @@ function validateRoomName(roomname){
   return response;
 }
 
-function validateStartGame(){
+function validateStartGame(io, game){
   let response = {
     errorCode: undefined,
     status: undefined
   }
 
-  // To-Do!
-  response.errorCode = 0;
-  response.status = "success";
+  if (!io.sockets.adapter.rooms.has(game)){
+    response.errorCode = -1;
+    response.status = "Spiel nicht mehr gültig!";
+    return response;
+  }
+
+  if (runningGamesList.includes(game)){
+    response.errorCode = -2;
+    response.status = "Spiel bereits gestartet!";
+    return response;
+  }
+  
+  let num_players = Array.from(io.sockets.adapter.rooms.get(game)).length;
+
+  if (num_players < 2){
+    response.errorCode = -3;
+    response.status = "Mindestens 2 Spieler notwendig!";
+  }
+  else{
+    response.errorCode = 0;
+    response.status = "success";
+  }
+
   return response;
 
-  // check if number of activePlayer >1 in room
-  
 
 }
+
+
+function validateJoinGame(game){
+  let response = {
+    errorCode: undefined,
+    status: undefined
+  }
+
+  if (runningGamesList.includes(game)){
+    response.errorCode = -1,
+    response.status = "Spiel schon gestartet! Beitritt nicht mehr möglich!"
+  }
+  else if (!playersList.has(game)){
+    response.errorCode = -2,
+    response.status = "Spiel nicht mehr vorhanden! Kein Beitritt möglich!";
+  }
+  else if (playersList.get(game).length>3){
+    response.errorCode = -3,
+    response.status = "Maximale Anzahl an Spieler erreicht!";
+  }
+  else {
+    response.errorCode = 0;
+    response.status = "success";
+  }
+
+  return response
+
+}
+
 
 // === Funktion, um Liste mit Namen der aktuellen Rooms zu bekommen ===
 // https://simplernerd.com/js-socketio-active-rooms/
@@ -231,6 +304,31 @@ function getPlayerNamesFromRoom(io, roomName){
 
 }
 
+// RunningGamesList kann nur Spiele enthalten, deren rooms auch existent/aktiv sind
+function refreshRunningGamesList(io){
+  runningGamesList = runningGamesList.filter( function(el){
+    return getActiveRooms(io).includes(el);
+  });
+}
+
+
+// löscht Spiele, die nicht mehr aktiv sind (Socket wurde schon mal eingetragen) 
+// (Spiele, die gerade erstellt wurden (und noch keinen Socket bekommen haben) nicht löschen!)
+function refreshPlayersList(io){
+  
+  let activeRooms = getActiveRooms(io);
+
+  playersList.forEach((value, key) =>{
+    if(!activeRooms.includes(key)){
+      value.forEach(element => {
+        if(typeof element.socket !== "undefined"){
+          playersList.delete(key);
+        }
+      });
+    }
+  });
+  console.log(playersList.size);
+}
 
 
 httpServer.listen(5000);
