@@ -12,7 +12,7 @@ let ioServer;
  */
 beforeAll((done) => {
   httpServer = http.createServer().listen();
-  httpServerAddr = httpServer.listen().address();
+  httpServerAddr = httpServer.address();
   ioServer = ioBack(httpServer);
   done();
 });
@@ -56,7 +56,7 @@ afterEach((done) => {
 
 
 describe('basic socket.io example', () => {
-  test.skip('should communicate', (done) => {
+  test('should communicate', (done) => {
     // once connected, emit Hello World
     ioServer.emit('echo', 'Hello World');
     socket.once('echo', (message) => {
@@ -68,7 +68,7 @@ describe('basic socket.io example', () => {
       expect(mySocket).toBeDefined();
     });
   });
-  test.skip('should communicate with waiting for socket.io handshakes', (done) => {
+  test('should communicate with waiting for socket.io handshakes', (done) => {
     // Emit sth from Client do Server
     socket.emit('examlpe', 'some messages');
     // Use timeout to wait for socket.io server handshakes
