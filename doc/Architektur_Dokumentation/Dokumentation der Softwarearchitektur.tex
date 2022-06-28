@@ -78,7 +78,6 @@ Die Kommunikation der Teilsysteme wird durch Websockets\cite{socketio} angeboten
 Dadurch wird es möglich ein Echtzeiterlebnis mit zusätzlicher Überwachung aus dem Backend zu realisieren.
 Durch die Einbettung der verschiedenen Bestandteile in einen Cloud-Service ist es jederzeit möglich, ein neues Spiel zu starten, oder einem vorhandenen Spiel beizutreten, da durch die nahezu unbegrenzten Ressourcen des Cloud-Services auf Anfrage neue Spielserver erstellt und verwaltet werden können.
 
-\section{Architektur Allgemein}
 \begin{figure*}
     \centering
     \includegraphics[width=\textwidth]{Screenshotgame.jpg}
@@ -294,6 +293,9 @@ Das letzte Packet ist die File-Server-Funktionalität des Backends. Um das Spiel
 
 \subsection{Testing}
 Zum Testen der verschiedenen Klassen und Funktionen des Backends wurde mithilfe von Jest für jede Klasse ein Testfile angelegt. Darin enthalten sind mehrere Testfälle, die teilweise iterativ die einzelnen Komponenten des Systems prüfen. Die Verwendung von Jest\cite{jest} ermöglicht zudem eine Coverage-Prüfung, mit der es möglich ist, die genauen Prozentwerte der Testabdeckung sowie nicht abgedeckte Zeilen zu ermitteln. Nach korrekter Einrichtung der einzelnen Testfälle ist es dann möglich, durch einen einzelnen Befehl die Integrität des gesamten Programmcodes zu verifizieren. Die Tests wurden dabei mit dem Arrange-Act-Assert-Pattern\cite{aaa} entworfen. Dieses soll eine übersichtliche Struktur und Einheitlichkeit garantieren.
+
+\section{Lessons Learned}
+Im Verlauf des Projektes wurde deutlich, dass die Ziele, die wir uns gesetzt haben, eine skalierbare Gameserverarchitektur mit Echtzeitkommunikation via Websockets für die Cloud, den zeitlichen Rahmen sprengen. Dies lag an der fehlenden Erfahrung mit den verwendeten Technologien wie Websockets und dem Frontendframework Phaser. Für folgende Projekte mit ähnlichen Zielen würden wir eine deutlich einfachere Anwendung wählen, um mehr Zeit in die Entwicklung der skalierbaren Serverstruktur stecken zu können. Zusätzlich sollte bei der Wahl der Technologien darauf geachtet werden, dass bereits Grunderfahrung vorhanden ist auf die aufgebaut werden kann um auch hier Zeit zu gewinnen.
 
 \begin{thebibliography}{0}
 	\bibitem{phaser}Phaser [Online] \url{https://phaser.io/} (visited on Jun. 28, 2022)
