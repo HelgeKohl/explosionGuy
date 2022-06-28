@@ -1,4 +1,5 @@
 const player = require("../classes/game/player");
+const EventEmitter  = require('events');
 
 describe('Playertests', function () {
 test("set player position to 5,5", () => {
@@ -14,7 +15,8 @@ test("set player position to 5,5", () => {
 
 test("refresh player bomb count", () => {
     //arrange
-    const player1 = new player("Philipp", 115, 0, 0);
+    const explosionListener = new EventEmitter();
+    const player1 = new player("Philipp", 115, 0, 0, explosionListener);
     player1.interruptInterval();
     //act
     player1.BombCount = 0;
