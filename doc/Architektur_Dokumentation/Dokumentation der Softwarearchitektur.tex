@@ -70,12 +70,20 @@ Bei der Applikation Explosion Guy geht es darum, das Spiel \glqq Bomberman\grqq{
     \includegraphics[width=\textwidth]{architecture.jpeg}
     \caption{Übersicht Gesamtsystem}
 \end{figure*}
+
 Als Architektur wird ein Ansatz verfolgt, der sich an einer Client-Server Kommunikation, ähnlich wie in anderen Onlinespielen, orientiert.
 Dadurch wird eine abgeschlossene Logik von Front- und Backendkomponenten erreicht, die jeweils
 von einem Subteam entwickelt wird. Diese Einheiten werden jeweils als isolierte Applikation gekapselt. Während das Backend als Anwendung innerhalb der Containervisualisierung Docker\cite{docker} betrieben wird, wird das Frontend als allgemeine Webapplikation ausgeliefert. Durch eine zentrale Konfigurationsdatei des Containers kann dieser einfach zwischen den Teammitgliedern ausgetauscht und ausgeführt werden. Damit wird eine hohe Portabilität gewährleistet.
 Die Kommunikation der Teilsysteme wird durch Websockets\cite{socketio} angeboten. Der Informationsaustausch über Websockets ermöglicht es, durch die identitätsbasierten Verbindungen die Kommunikation zwischen den Spielern und der zugehörigen Partei im Backend effizient zu gestalten.
 Dadurch wird es möglich ein Echtzeiterlebnis mit zusätzlicher Überwachung aus dem Backend zu realisieren.
 Durch die Einbettung der verschiedenen Bestandteile in einen Cloud-Service ist es jederzeit möglich, ein neues Spiel zu starten, oder einem vorhandenen Spiel beizutreten, da durch die nahezu unbegrenzten Ressourcen des Cloud-Services auf Anfrage neue Spielserver erstellt und verwaltet werden können.
+
+\section{Architektur Allgemein}
+\begin{figure*}
+    \centering
+    \includegraphics[width=\textwidth]{Screenshotgame.jpg}
+    \caption{Screenshot aus dem Spiel Explosion Guy}
+\end{figure*}
 
 \section{Frontend: Spielinterface}
 % TODO:
@@ -218,6 +226,22 @@ Positionen der Felder, die Explodieren
 
 \end{itemize}
 \smallskip
+
+\begin{figure*}
+\centering
+\begin{minipage}{0.5\textwidth}
+  \centering
+  \includegraphics[width=0.9\linewidth]{winscreen.jpg}
+  \caption{Anzeige beim Gewinnen des Spiels}
+  \label{fig:test1}
+\end{minipage}%
+\begin{minipage}{0.5\textwidth}
+  \centering
+  \includegraphics[width=0.9\linewidth]{losescreen.jpg}
+  \caption{Anzeige beim Verlieren des Spiels}
+  \label{fig:test2}
+\end{minipage}
+\end{figure*}
 
 \subsection{Matchmaking}
 Das zweite wichtige Paket für die Gesamtfunktion ist das Paket des Matchmakings. Darunter lassen sich alle Mechanismen zusammenfassen, die es den Spielern ermöglichen, einen Raum\cite{rooms} zu erstellen oder einem Raum beizutreten. Die Spieler werden also bei Verbindungsaufbau zunächst mit dem Server verbunden. Dieser leitet sie dann entweder an einen neu erstellten Spielraum oder an einen bereits vorhandenen Raum weiter. Innerhalb eines Spielraumes übernimmt dann die Spiellogik die Verwaltung, indem sie die für sich relevanten Spieler mithilfe ihrer Socket-ID adressiert. Der Server kennt also alle aktuellen Spielräume mit ihren Spielerzahlen und kann bei Bedarf neue Spielräume erstellen.\newline

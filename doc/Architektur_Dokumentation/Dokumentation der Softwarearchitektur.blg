@@ -1,0 +1,5 @@
+[0] Config.pm:312> INFO - This is Biber 2.15
+[0] Config.pm:315> INFO - Logfile is 'Dokumentation der Softwarearchitektur.blg'
+[188] biber-MSWIN32:330> INFO - === 
+[1096] Utils.pm:411> ERROR - Cannot find 'Dokumentation der Softwarearchitektur.bcf'!
+[1096] Biber.pm:132> INFO - ERRORS: 1
