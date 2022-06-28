@@ -204,6 +204,10 @@ export default class MainLevel extends Phaser.Scene {
                         this.scene.launch('Ending', {isAlive: player.isAlive});
                     }
                 })
+
+                if(updateData.data.isGameOver && this.players[this.IO.playerId].isAlive){
+                    this.scene.launch('Ending', {isAlive: true});
+                }
                 
 
             }
