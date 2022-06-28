@@ -54,7 +54,7 @@
 \begin{abstract}
 In diesem technischem Report wird die Softwarearchitektur des Projekts 
 Explosion Guy vorgestellt. Das Projekt wurde im Rahmen der Vorlesung Big Data und Cloud-basiertes Computing implementiert. Ziel der Implementierung ist es, 
-das allgemein bekannte Spiel \glqq Bomberman \grqq{} zu adaptieren und es mithilfe einer Cloud-Infrastruktur online spielbar zu machen.\\
+das allgemein bekannte Spiel \glqq Bomberman\grqq{} zu adaptieren und es mithilfe einer Cloud-Infrastruktur online spielbar zu machen.\\
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -62,7 +62,7 @@ das allgemein bekannte Spiel \glqq Bomberman \grqq{} zu adaptieren und es mithil
 \end{IEEEkeywords}
 
 \section{Introduction}
-Bei der Applikation Explosion Guy geht es darum, das Spiel \glqq Bomberman\grqq{} zu adaptieren. Dabei werden dem Spieler mithilfe eines graphischen Web-Interfaces, basierend auf Phaser, anschauliche Informationen über den Verlauf des Spiels mitgeteilt. Das Interface dient auch dazu, die Eingaben des Spielers an das Backend weiterzureichen. Im Backend werden die Informationen aller Spieler verarbeitet und so ein Online-Spielerlebnis erzeugt.
+Bei der Applikation Explosion Guy geht es darum, das Spiel \glqq Bomberman\grqq{} zu adaptieren. Dabei werden dem Spieler mithilfe eines graphischen Web-Interfaces, basierend auf Phaser\cite{phaser}, anschauliche Informationen über den Verlauf des Spiels mitgeteilt. Das Interface dient auch dazu, die Eingaben des Spielers an das Backend weiterzureichen. Im Backend werden die Informationen aller Spieler verarbeitet und so ein Online-Spielerlebnis erzeugt.
 
 \section{Architektur Allgemein}
 \begin{figure*}
@@ -72,27 +72,27 @@ Bei der Applikation Explosion Guy geht es darum, das Spiel \glqq Bomberman\grqq{
 \end{figure*}
 Als Architektur wird ein Ansatz verfolgt, der sich an einer Client-Server Kommunikation, ähnlich wie in anderen Onlinespielen, orientiert.
 Dadurch wird eine abgeschlossene Logik von Front- und Backendkomponenten erreicht, die jeweils
-von einem Subteam entwickelt wird. Diese Einheiten werden jeweils als isolierte Applikation gekapselt. Während das Backend als Anwendung innerhalb der Containervisualisierung Docker betrieben wird, wird das Frontend als allgemeine Webapplikation ausgeliefert. Durch eine zentrale Konfigurationsdatei des Containers kann dieser einfach zwischen den Teammitgliedern ausgetauscht und ausgeführt werden. Damit wird eine hohe Portabilität gewährleistet.
-Die Kommunikation der Teilsysteme wird durch Websockets angeboten. Der Informationsaustausch über Websockets ermöglicht es, durch die identitätsbasierten Verbindungen die Kommunikation zwischen den Spielern und der zugehörigen Partei im Backend effizient zu gestalten.
+von einem Subteam entwickelt wird. Diese Einheiten werden jeweils als isolierte Applikation gekapselt. Während das Backend als Anwendung innerhalb der Containervisualisierung Docker\cite{docker} betrieben wird, wird das Frontend als allgemeine Webapplikation ausgeliefert. Durch eine zentrale Konfigurationsdatei des Containers kann dieser einfach zwischen den Teammitgliedern ausgetauscht und ausgeführt werden. Damit wird eine hohe Portabilität gewährleistet.
+Die Kommunikation der Teilsysteme wird durch Websockets\cite{socketio} angeboten. Der Informationsaustausch über Websockets ermöglicht es, durch die identitätsbasierten Verbindungen die Kommunikation zwischen den Spielern und der zugehörigen Partei im Backend effizient zu gestalten.
 Dadurch wird es möglich ein Echtzeiterlebnis mit zusätzlicher Überwachung aus dem Backend zu realisieren.
 Durch die Einbettung der verschiedenen Bestandteile in einen Cloud-Service ist es jederzeit möglich, ein neues Spiel zu starten, oder einem vorhandenen Spiel beizutreten, da durch die nahezu unbegrenzten Ressourcen des Cloud-Services auf Anfrage neue Spielserver erstellt und verwaltet werden können.
 
 \section{Frontend: Spielinterface}
 % TODO:
-Mithilfe des Web-Frameworks Phaser ist es möglich, ein graphisch ansprechendes Interface für das Spiel zu erstellen. Dabei werden nicht nur die Ausgangsinformationen in Form von Veränderungen des Spielfeldes für den Spieler bereitgestellt, sondern auch die Eingaben an das System vom Spieler erfasst. Diese Eingaben leitet das Frontend an das Backend weiter, von wo aus sie dann weiter verarbeitet werden können. Um ein möglichst flüssiges und ruckelfreies Spielerlebnis zu erzeugen, wurde das Frontend auch mit Teilen der Spiellogik ausgestattet. So können beispielsweise alle Bewegungen direkt nach Drücken der entsprechenden Eingabe ausgeführt werden, ohne die Antwort des Backends abzuwarten, um Verzögerungen zu vermeiden. Sollte der Server nach Kontrolle einen ungültigen Spielzug feststellen, so wird der Zug zurückgesetzt. Dies erfüllt neben der Aufwertung des Gameplays auch eine kleine Anti-Cheating-Rolle.
+Mithilfe des Web-Frameworks Phaser\cite{phaser} ist es möglich, ein graphisch ansprechendes Interface für das Spiel zu erstellen. Dabei werden nicht nur die Ausgangsinformationen in Form von Veränderungen des Spielfeldes für den Spieler bereitgestellt, sondern auch die Eingaben an das System vom Spieler erfasst. Diese Eingaben leitet das Frontend an das Backend weiter, von wo aus sie dann weiter verarbeitet werden können. Um ein möglichst flüssiges und ruckelfreies Spielerlebnis zu erzeugen, wurde das Frontend auch mit Teilen der Spiellogik ausgestattet. So können beispielsweise alle Bewegungen direkt nach Drücken der entsprechenden Eingabe ausgeführt werden, ohne die Antwort des Backends abzuwarten, um Verzögerungen zu vermeiden. Sollte der Server nach Kontrolle einen ungültigen Spielzug feststellen, so wird der Zug zurückgesetzt. Dies erfüllt neben der Aufwertung des Gameplays auch eine kleine Anti-Cheating-Rolle.
 \\
 \\
 Um die Funktionen des Frontends besser verwalten zu können, wurde es in folgende Klassen aufgeteilt:
 
 \begin{itemize}
     \item \textbf{Main}
-    Main stellt die Hauptverwaltungsklasse dar. In ihr werden die Objekte aus dem Backend übermittelt, wie etwa gamedata. Dies wird genutzt, um eine dynamische Erstellung des Spielfelds in der Create-Methode zu erlauben. Die Objekte bieten etwa Informationen über Größe und Breite des Spielfelds sowie die unterschiedlichen Blöcke auf dem Spielfeld, die die sogenannten 'Tiles' darstellen. Mit Hilfe der Informationen werden im Frontend Layer generiert, auf die anschließend mittels der addPropToLayer-Funktion die Blöcke erstellt werden mit Eigenschaften wie der Kollision. In der Update-Methode werden schließlich jeden Frame die Inputs des Spielers gecheckt. Die Bewegungsanweisungen werden über die entsprechende Pfeiltaste getriggert. Die Anweisungen werden zuerst an das Backend geschickt, jedoch auch sofort im Frontend verarbeitet, sodass es zu einer Überprüfung der Tiles kommt, um Lagging zuvorzukommen und ein Glitchen durch Wände zu verhindern. Zusätzlich werden passende Animationen abgespielt, die bei Nichteingabe pausiert werden. Die Informationen über gesetzte Bomben, Spielerpositionen sowie die isAlive-Abfrage werden aus dem Backend bezogen und auch hier verarbeitet.
+    Main stellt die Hauptverwaltungsklasse dar. In ihr werden die Objekte aus dem Backend übermittelt, wie etwa gamedata. Dies wird genutzt, um eine dynamische Erstellung des Spielfelds in der Create-Methode zu erlauben. Die Objekte bieten etwa Informationen über Größe und Breite des Spielfelds sowie die unterschiedlichen Blöcke auf dem Spielfeld, die die sogenannten 'Tiles' darstellen. Mit Hilfe der Informationen werden im Frontend Layer generiert, auf die anschließend mittels der addPropToLayer-Funktion die Blöcke erstellt werden mit Eigenschaften wie der Kollision. In der Update-Methode werden bei jedem Frame-Update die Inputs des Spielers überprüft. Die Bewegungsanweisungen werden über die entsprechende Pfeiltaste getriggert. Die Anweisungen werden zuerst an das Backend geschickt, jedoch auch sofort im Frontend verarbeitet, sodass es zu einer Überprüfung der Tiles kommt, um Lagging zuvorzukommen und ein Glitchen durch Wände zu verhindern. Zusätzlich werden passende Animationen abgespielt, die bei Nichteingabe pausiert werden. Die Informationen über gesetzte Bomben, Spielerpositionen sowie die isAlive-Abfrage werden aus dem Backend bezogen und auch hier verarbeitet.
     \smallskip
     \item \textbf{Player} 
-	In der Playerklasse werden über den Konstruktor zunächst wichtige Informationen wie die ID, den isAlive-Status sowie die Position festgelegt. Die bomboutLines stellen Sprites da, die für die momentane Anzahl der Bomben des Player stehen, sind jedoch noch nicht ganz funktionell und werden bei Zeit noch implementiert. Die Kill-Methode deaktiviert den Spieler wenn dieser von einer Bombe getroffen wird und setzt den visible-Status des Sprites auf false.
+	In der Playerklasse werden über den Konstruktor zunächst wichtige Informationen wie die ID, den isAlive-Status sowie die Position festgelegt. Die bomboutLines stellen Sprites da, die für die momentane Anzahl der Bomben des Player stehen. Die Kill-Methode deaktiviert den Spieler wenn dieser von einer Bombe getroffen wird und setzt den visible-Status des Sprites auf false.
     \smallskip
     \item \textbf{Explosion}
-    Die Explosion-Klasse ist für Visualisierung der Bombenexplosion zuständig und spielt beim Explodieren eine Animation ab und lässt per 'Kamera-Shake' das Spielfeld wackeln. Wenn die Animation angelaufen ist, wird diese wieder zerstört.
+    Die Explosion-Klasse ist für Visualisierung der Bombenexplosion zuständig und spielt beim Explodieren eine Animation ab und lässt per Kamera-Shake das Spielfeld wackeln. Wenn die Animation abgelaufen ist, wird diese wieder zerstört.
     \smallskip
     \item \textbf{Load}
     In der Load-Klasse werden im Preload jegliche Spritesheets sowie Bilder und Fonts geladen, die im Laufe des Spiels gebraucht werden, sodass diese während des Spiels nicht nachgeladen werden müssen. In der Create-Methode werden sodann die einzelnen Animationen aus den geladenen Spritesheets zugeordnet. Es wird die Framerate sowie die Wiederholungsrate bei Abspielen bestimmt.
@@ -105,16 +105,11 @@ Um die Funktionen des Frontends besser verwalten zu können, wurde es in folgend
 \end{itemize}
 \smallskip
 
-Um die vorgesehene Funktionalität gewährleisten zu können, wurden mithilfe von Jest, einem JavaScript Testframework, 
-Unit- und Integrationstests entworfen. Dadurch kann die interne Integrität, sowie die Anbindung an externe Systeme,
-sichergestellt werden. Die Tests wurden dabei mit dem Arrange-Act-Assert-Pattern entworfen. Dieses soll eine 
-übersichtliche Struktur und Einheitlichkeit garantieren.
-
 \section{Backend: Spiellogik und Matchmaking}
-Das Backend besteht aus drei Aufgabenpaketen. Einerseits hat es die Aufgabe, die Informationen aller Spieler entgegenzunehmen, diese zu verarbeiten und sie danach an die jeweils anderen Spieler weiterzuleiten. Dies erfolgt nach dem \glqq Authoritative servers and dumb clients\grqq -Prinzip bei dem der Server immer den tatsächlichen Spielstatus hält und diesen an die Clients weitergibt. Andererseits muss das Backend die Funktionalität des Matchmakings übernehmen. Dazu muss es den Spielern die Möglichkeit geben, eigene Spielräume zu erstellen oder vorhandenen Räumen beizutreten. Die dritte Aufgabe des Backends ist es die nötigen Dateien für das Frontend auszuliefern. Um diese Funktionen optimal abzudecken, wurde das Backend in drei Teilbereiche getrennt, welche im Folgenden ausführlich beleuchtet werden.
+Das Backend besteht aus drei Aufgabenpaketen. Einerseits hat es die Aufgabe, die Informationen aller Spieler entgegenzunehmen, diese zu verarbeiten und sie danach an die jeweils anderen Spieler weiterzuleiten. Dies erfolgt nach dem \glqq Authoritative servers and dumb clients\grqq -Prinzip\cite[p.~189]{html5dev} bei dem der Server immer den tatsächlichen Spielstatus hält und diesen an die Clients weitergibt. Andererseits muss das Backend die Funktionalität des Matchmakings übernehmen. Dazu muss es den Spielern die Möglichkeit geben, eigene Spielräume zu erstellen oder vorhandenen Räumen beizutreten. Die dritte Aufgabe des Backends ist es die nötigen Dateien für das Frontend auszuliefern. Um diese Funktionen optimal abzudecken, wurde das Backend in drei Teilbereiche getrennt, welche im Folgenden ausführlich beleuchtet werden.
 
 \subsection{Spiellogik}
-Das Paket der Spiellogik bildet den ersten wichtigen Bestandteil des Backends. Mit Spiellogik werden alle Abläufe, die im Hintergrund zu erfüllen sind, bezeichnet. So beispielsweise die Positionsbestimmung der Spieler nach einer Eingabe oder das Zählen eines Timers der Bomben. Zur Realisierung der Spiellogik wird ein Server mithilfe von Node.js innerhalb eines Docker Containers aufgebaut. Der Server verwaltet die Logik mit verschiedenen Klassen:
+Das Paket der Spiellogik bildet den ersten wichtigen Bestandteil des Backends. Mit Spiellogik werden alle Abläufe, die im Hintergrund zu erfüllen sind, bezeichnet. So beispielsweise die Positionsbestimmung der Spieler nach einer Eingabe oder das Zählen eines Timers der Bomben. Zur Realisierung der Spiellogik wird ein Server mithilfe von Node.js\cite{node} innerhalb eines Docker Containers aufgebaut. Der Server verwaltet die Logik mit verschiedenen Klassen:
 
 \begin{itemize}
     \item \textbf{Spieler}
@@ -225,9 +220,9 @@ Positionen der Felder, die Explodieren
 \smallskip
 
 \subsection{Matchmaking}
-Das zweite wichtige Paket für die Gesamtfunktion ist das Paket des Matchmakings. Darunter lassen sich alle Mechanismen zusammenfassen, die es den Spielern ermöglichen, einen Raum zu erstellen oder einem Raum beizutreten. Die Spieler werden also bei Verbindungsaufbau zunächst mit dem Server verbunden. Dieser leitet sie dann entweder an einen neu erstellten Spielraum oder an einen bereits vorhandenen Raum weiter. Innerhalb eines Spielraumes übernimmt dann die Spiellogik die Verwaltung, indem sie die für sich relevanten Spieler mithilfe ihrer Socket-ID adressiert. Der Server kennt also alle aktuellen Spielräume mit ihren Spielerzahlen und kann bei Bedarf neue Spielräume erstellen.\newline
+Das zweite wichtige Paket für die Gesamtfunktion ist das Paket des Matchmakings. Darunter lassen sich alle Mechanismen zusammenfassen, die es den Spielern ermöglichen, einen Raum\cite{rooms} zu erstellen oder einem Raum beizutreten. Die Spieler werden also bei Verbindungsaufbau zunächst mit dem Server verbunden. Dieser leitet sie dann entweder an einen neu erstellten Spielraum oder an einen bereits vorhandenen Raum weiter. Innerhalb eines Spielraumes übernimmt dann die Spiellogik die Verwaltung, indem sie die für sich relevanten Spieler mithilfe ihrer Socket-ID adressiert. Der Server kennt also alle aktuellen Spielräume mit ihren Spielerzahlen und kann bei Bedarf neue Spielräume erstellen.\newline
 Zwecks der Skalierbarkeit wäre das Auslagern des Matchmakings auf einen extra Server, der die Clients dann auf die jeweiligen Spielserver weiterleitet, zu bevorzugen.
-Wäre die Anzahl der Räume eines Spielservers dann irgendwann so groß, dass sie ein einzelner Server nicht mehr versorgen kann, könnte theoretisch ein neuer Server für die Spielräume in der Cloud-Infrastruktur hochgefahren werden. (wurde aber aus zeitlichen Aspekten nicht mehr implementiert)
+Wäre die Anzahl der Räume eines Spielservers dann irgendwann so groß, dass sie ein einzelner Server nicht mehr versorgen kann, könnte theoretisch ein neuer Server für die Spielräume in der Cloud-Infrastruktur hochgefahren werden.
 
 \begin{itemize}
 
@@ -274,24 +269,17 @@ Außerdem wird der room als aktives Spiel in die runningGamesList eingetragen.
 Das letzte Packet ist die File-Server-Funktionalität des Backends. Um das Spielen über den Browser des Nutzers zu ermöglichen, müssen die nötigen Dateien abrufbar sein. Hierfür wurde ein eigenständiger File-Server aufgesetzt, der die abgefragten Dateien ausliefert. Während der Entwicklung liegen diese Dateien auf dem Dateisystem des Entwicklers, im Live-Betrieb sollen diese in einem Amazon S3-Bucket abgelegt werden.
 
 \subsection{Testing}
-Zum Testen der verschiedenen Klassen und Funktionen des Backends wurde mithilfe von Jest für jede Klasse ein Testfile angelegt. Darin enthalten sind mehrere Testfälle, die teilweise iterativ die einzelnen Komponenten des Systems prüfen. Die Verwendung von Jest ermöglicht zudem eine Coverage-Prüfung, mit der es möglich ist, die genauen Prozentwerte der Testabdeckung sowie nicht abgedeckte Zeilen zu ermitteln. Nach korrekter Einrichtung der einzelnen Testfälle ist es dann möglich, durch einen einzelnen Befehl die Integrität des gesamten Programmcodes zu verifizieren.
-
-\begin{itemize}
-    \item \textbf{Snapshot-Tests:}
-    Die Snapshot-Tests erzeugen ein HTML-Dokument in welches die zu testende Komponente gerendert wird.
-    Anschließend wird die HTML-Datei mit einer Snapshot-Datei verglichen, um sicherzustellen, dass die Komponente wie erwartet dargestellt wird.
-    \item \textbf{Funktionstest:}
-    Bei den Funktionstests wird für jede Komponente eine Instanz mit dem Enzyme-Adapter erstellt.
-    Mit dieser Objektinstanz könne verschieden Funktionen der Klasse getestet werden und geprüft werden, ob Felder des Objekts richtig gesetzt werden.
-\end{itemize}
-
-
+Zum Testen der verschiedenen Klassen und Funktionen des Backends wurde mithilfe von Jest für jede Klasse ein Testfile angelegt. Darin enthalten sind mehrere Testfälle, die teilweise iterativ die einzelnen Komponenten des Systems prüfen. Die Verwendung von Jest\cite{jest} ermöglicht zudem eine Coverage-Prüfung, mit der es möglich ist, die genauen Prozentwerte der Testabdeckung sowie nicht abgedeckte Zeilen zu ermitteln. Nach korrekter Einrichtung der einzelnen Testfälle ist es dann möglich, durch einen einzelnen Befehl die Integrität des gesamten Programmcodes zu verifizieren. Die Tests wurden dabei mit dem Arrange-Act-Assert-Pattern\cite{aaa} entworfen. Dieses soll eine übersichtliche Struktur und Einheitlichkeit garantieren.
 
 \begin{thebibliography}{0}
-	\bibitem{axios}Axios [Online] \url{https://www.npmjs.com/package/axios} (visited on Jan. 7, 2022)
-    \bibitem{microservices}Microservice-Frontend-Architekturen [Online] \url{https://www.sigs-datacom.de/uploads/tx_dmjournals/attermeyer_OTS_Microservices_Docker_16.pdf} (visited on Jan. 7, 2022)
-    \bibitem{reactTest}React-Testing [Online] \url{https://testing-library.com/docs/react-testing-library/intro/} (visited on Jan. 7, 2022)
-    \bibitem{enzyme}Enzyme [Online] \url{https://www.npmjs.com/package/enzyme} (visited on Jan. 7, 2022)  
+	\bibitem{phaser}Phaser [Online] \url{https://phaser.io/} (visited on Jun. 28, 2022)
+    \bibitem{node}Node-js [Online] \url{https://nodejs.org/en/} (visited on Jun. 28, 2022)
+    \bibitem{jest}Jest [Online] \url{https://jestjs.io/} (visited on Jun. 28, 2022)
+    \bibitem{rooms}Game-Rooms [Online] \url{https://socket.io/docs/v4/rooms/} (visited on Jun. 28, 2022)
+    \bibitem{docker}Docker [Online] \url{https://www.docker.com/} (visited on Jun. 28, 2022)
+    \bibitem{socketio}Socket.io [Online] \url{https://socket.io/} (visited on Jun. 28, 2022)
+    \bibitem{aaa}Arrange/Act/Assert-Pattern [Online] \url{https://java-design-patterns.com/patterns/arrange-act-assert/} (visited on Jun. 28, 2022)
+    \bibitem{html5dev} Colt McAnlis, Peter Lubbers, Brandon Jones, Andrzej Mazur, Sean Bennett, Bruno Garcia, Shun Lin, Ivan Popelyshev, Jon Howard, Ian Ballantyne, Takuo Kihira, Jesse Freeman, Tyler Smith, Don Olmstead, Jason Gauci, John McCutchan, Chad Austin, Mario Andres Pagella, Florian dErfurth, Duncan Tebbs (2014), HTML5 Game Development Insights
 \end{thebibliography}
 
 \end{document}
