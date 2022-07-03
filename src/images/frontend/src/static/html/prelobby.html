@@ -1,42 +1,53 @@
 <!doctype html>
   <head>
-		<script src="./js/socket.io.js"></script>
-		<script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
-		<script src="./js/app.js" type="module"></script>
+	<script src="./js/socket.io.js"></script>
+	<script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
+	<script src="./js/app.js" type="module"></script>
 
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		<meta charset="utf-8">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, inital-scale=1.0">
+	<style>
+/*		@font-face {
+			font-family: 'RetroGaming', sans-serif;
+			src: url(./src/static/assets/fonts/retrogaming.ttf);
+		}
+		#ueberschrift{
+			font-family: 'RetroGaming', sans-serif;
+		}*/
+	</style>
   </head>
-  <body>
-
-	<div class="container mt-3">
+  <body class="bg-dark">
+	<div class="container mt-3 ">
+		<h1 id="ueberschrift" class=" RetroGaming-font text-light mt-5 mb-5 text-center display-3 :">EXPLOSION GUY</h1> <!--Won't override font family-->
 		<form>
-		  <div class="input-group mb-3">
-			<div class="form-floating">
-			  <input id="playername" type="text" class="form-control" placeholder="Spielername"/>
-			  <label for="playername">Spielername</label>
+		  <div class="input-group mb-3 justify-content-center">
+			<div class="form-floating w-50">
+				<label for="playername" class="text-muted ">Gib deinen Spielernamen ein:</label>
+			  	<input id="playername" type="text" class="form-control form-control-lg" placeholder="Spielername"/>
 			</div>
 		  </div>
-		  <div class="input-group mb-3">
-			<div class="form-floating flex-grow-1">
-			  <input id="gamename" type="text" class="form-control rounded-0 rounded-start" placeholder="Spielname"/>
-			  <label for="gamename">Spielname</label>
-			  </div>
-			<button id="createGame" type="button" class="btn btn-outline-primary" disabled="true">Spiel erstellen</button>
+		  <div class="input-group mb-3 justify-content-center">
+			<div class="form-floating flex-grow-1 w-50">
+				<h5 class="mt-4 text-light">Neues Spiel erstellen</h5>
+				<label for="gamename" class="text-muted ">Gib den Namen eines neuen Spiels ein:</label>
+				<input id="gamename" type="text" class="form-control form-control-lg" placeholder="Name des Spiels"/>
+			</div>
 		  </div>
-		  <div class="mb-3">
-			<button id="updateList" type="button" class="btn btn-primary">Spiele aktualisieren</button>
+			<div class="text-center">
+				<button id="createGame" type="button" class="btn btn-primary btn btn-success" disabled="true"> Neues Spiel erstellen</button>
+			</div>
+		  <div class="mb-3 mt-5">
+			  	<h3 class="mb-5 text-light">Vorhandenem Spiel beitreten</h3>
+				<button id="updateList" type="button" class="btn btn-outline-primary">Spiele aktualisieren</button>
 		  </div>
 		  <ul id="gamelist" class="list-group list-group-light">
-			<li class="list-group-item px-3 border-0" aria-current="true">
-			  Spiele:
-			</li>
+			  <li id="liste" class="list-group-item px-3 border-0" aria-current="true">
+			  	Spiele:
+			  </li>
 		  </ul>
-
 		</form>
 	</div>
-
 	<script src="./js/prelobby.js" type="module"></script>
-
   </body>
 </html>

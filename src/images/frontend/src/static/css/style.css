@@ -1,7 +1,7 @@
 
 /* Textfeld Spielname */ 
 input[type="text"] {
-    width: 200px;
+    width: 400px;
     height: 20px;
     padding-right: 50px;
 }
@@ -32,4 +32,11 @@ input[type="button"]:disabled{
     border: 15px solid rgb(0, 0, 0);
     padding: 50px;
     margin: 20px;
+}
+@font-face {
+    font-family: 'RetroGaming', sans-serif !important;
+    src: url(./src/static/assets/fonts/retrogaming.ttf);
+}
+#ueberschrift{
+    font-family: 'RetroGaming', sans-serif !important;
 }
