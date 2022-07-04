@@ -62,6 +62,7 @@ var IO = {
     },
 
     onNewGameCreated : function(args) {
+        document.getElementById("lobby").style.display = "none";
         console.log("New Game started")
 
         const config = {
@@ -74,7 +75,7 @@ var IO = {
             roundPixels: false,
             // Bildschirm ausfüllen
             scale: {
-                mode: Phaser.Scale.FIT
+                mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH
             },
             scene: [new Load(args), new MainLevel(IO, args), new Endgame(args)],
             physics: {
