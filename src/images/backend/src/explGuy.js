@@ -56,7 +56,7 @@ exports.initGame = function(sio, sockets, room){
     });
 
     explosionListener.on('Explode', bomb => {
-        explosionData = game.Playground.explodeBomb(bomb);
+        explosionData= game.Playground.explodeBomb(bomb); 
 
         let alivePlayers = game.Playground.getAlivePlayers();
         let isGameOver = (alivePlayers.length < 2);
@@ -68,7 +68,7 @@ exports.initGame = function(sio, sockets, room){
         if (isGameOver){
             // trennt Verbindung zu Sockets in room (und zerstört damit auch room)
             io.in(room).disconnectSockets(true);
-            game = undefined;
+            delete game;
         }
 
 
