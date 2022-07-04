@@ -23,6 +23,8 @@ export default class Endgame extends Phaser.Scene {
         this.boxY = this.centery - 200/2;
         this.box.fillRect(this.boxX,this.boxY,400,200);
 
+        this.victorysound = this.sound.add("victory", { loop: false });
+        this.losersound = this.sound.add("gameover", { loop: false });
 
         if(!this.isAlive){
             this.gameover();
@@ -38,6 +40,7 @@ export default class Endgame extends Phaser.Scene {
         var img  = this.add.sprite(this.centerx, this.centery, 'game-over');
         img.setScale(1.3, 1.3);
         img.play('game-over');
+        this.losersound.play();
         img.once('animationcomplete', ()=>  {
             img.destroy();
             this.openWindow(false);
@@ -46,6 +49,7 @@ export default class Endgame extends Phaser.Scene {
     }
     winner(){
         var img  = this.add.sprite(this.width/2, this.height/2, 'you-win');
+        this.victorysound.play();
         img.play('you-win');
         img.setScale(1.5, 1.5);
         img.once('animationcomplete', ()=>  {

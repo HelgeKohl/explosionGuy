@@ -17,6 +17,9 @@ export default class MainLevel extends Phaser.Scene {
     }
     create ()
     {
+        this.bmusic = this.sound.add("backgroundmusik", { loop: true });
+        this.bmusic.play();
+        this.bmusic.pauseOnBlur = true;
         // Objekte aus Backend beziehen
         const data = this.gamedata
         const mWidth = data.mWidth + 1;
@@ -200,12 +203,14 @@ export default class MainLevel extends Phaser.Scene {
                 updateData.data.hitPlayers.forEach(player => {
                     this.players[player.Id].isAlive = player.isAlive;
                     this.players[player.Id].kill();
+                    this.bmusic.stop();
                     if(player.Id == this.IO.playerId){
                         this.scene.launch('Ending', {isAlive: player.isAlive});
                     }
                 })
 
                 if(updateData.data.isGameOver && this.players[this.IO.playerId].isAlive){
+                    this.bmusic.stop();
                     this.scene.launch('Ending', {isAlive: true});
                 }
                 

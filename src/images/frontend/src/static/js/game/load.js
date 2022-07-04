@@ -3,7 +3,7 @@ export default class Load extends Phaser.Scene {
         super('Loading');
     }
     preload () {
-        //Daten aus erstellter JSON Tilemap beziehen
+        //Spites
         this.load.image("tiles", "assets/tilemaps/tileBild.png");
         this.load.image("player", "assets/player.png");
         this.load.spritesheet("player-movement", "assets/player_movement.png",{frameWidth: 32,frameHeight: 32})
@@ -15,6 +15,13 @@ export default class Load extends Phaser.Scene {
         this.load.image("bomb-icon", "assets/bomb_icon.png");
         this.load.spritesheet("bombicon-anim", "assets/bomb_outline.png", {frameWidth: 31.64,frameHeight: 29});
         this.load.bitmapFont('retrogames', 'assets/fonts/retro.png', 'assets/fonts/retro.xml');
+
+        //Audio
+        this.load.audio('backgroundmusik', 'assets/audio/game_music.mp3');
+        this.load.audio('explosion', 'assets/audio/explosion.mp3');
+        this.load.audio('victory', 'assets/audio/victory.mp3');
+        this.load.audio('gameover', 'assets/audio/dead.mp3');
+
     }
 
     create() {
@@ -33,7 +40,7 @@ export default class Load extends Phaser.Scene {
             repeat: 0,
             frameRate: 5
         });
-
+        //Player-Movement Animationen
         this.anims.create({key: 'go-left',
             frames: this.anims.generateFrameNumbers('player-movement', {start: 1,end: 2}),
             repeat: -1,
@@ -54,6 +61,7 @@ export default class Load extends Phaser.Scene {
             repeat: -1,
             frameRate: 5
         });
+        //Game-End Animationen
         this.anims.create({key: 'game-over',
             frames: this.anims.generateFrameNumbers('game-over', {start: 0,end: 8}),
             repeat: 0,
@@ -64,7 +72,7 @@ export default class Load extends Phaser.Scene {
             repeat: 0,
             frameRate: 3
         });
-
+        //Outline Animation
         this.anims.create({key: 'bomb-outline',
             frames: this.anims.generateFrameNumbers('bombicon-anim', {start: 0,end: 4}),
             repeat: 0,
