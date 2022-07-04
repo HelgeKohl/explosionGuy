@@ -49,9 +49,11 @@ export default class MainLevel extends Phaser.Scene {
         // Add text for the current bomb counter
         this.bombText = this.add.bitmapText(8, 8, 'retrogames', 'bombs:' + this.bombCount, 16)
 
+        let i = 1;
         for (const [id, data] of Object.entries(this.gamedata.player)) {
             let coords = this.translateCoordinates(data.pos);
-            this.players[id] = new Player(this, coords[0], coords[1], id);
+            this.players[id] = new Player(this, coords[0], coords[1], id, i);
+            i++;
         }
 
         this.cursors = this.input.keyboard.createCursorKeys();

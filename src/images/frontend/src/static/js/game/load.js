@@ -5,8 +5,14 @@ export default class Load extends Phaser.Scene {
     preload () {
         //Spites
         this.load.image("tiles", "assets/tilemaps/tileBild.png");
-        this.load.image("player", "assets/player.png");
-        this.load.spritesheet("player-movement", "assets/player_movement.png",{frameWidth: 32,frameHeight: 32})
+        this.load.image("player1", "assets/player.png");
+        this.load.image("player2", "assets/player2.png");
+        this.load.image("player3", "assets/player3.png");
+        this.load.image("player4", "assets/player4.png");
+        this.load.spritesheet("player-movement1", "assets/player_movement.png",{frameWidth: 32,frameHeight: 32})
+        this.load.spritesheet("player-movement2", "assets/player2_movement.png",{frameWidth: 32,frameHeight: 32})
+        this.load.spritesheet("player-movement3", "assets/player3_movement.png",{frameWidth: 32,frameHeight: 32})
+        this.load.spritesheet("player-movement4", "assets/player4_movement.png",{frameWidth: 32,frameHeight: 32})
         this.load.spritesheet("bomb", "assets/bomb.png",{frameWidth: 32,frameHeight: 32});
         this.load.spritesheet("explosion", "assets/explosion.png",{frameWidth: 32,frameHeight: 32});
         this.load.spritesheet("game-over", "assets/game_over.png",{frameWidth: 254,frameHeight: 106});
@@ -36,31 +42,37 @@ export default class Load extends Phaser.Scene {
         });
 
         this.anims.create({key: 'boom',
-            frames: this.anims.generateFrameNumbers('explosion', {start: 0,end: 7}),
-            repeat: 0,
-            frameRate: 5
+        frames: this.anims.generateFrameNumbers('explosion', {start: 0,end: 7}),
+        repeat: 0,
+        frameRate: 5
         });
+
         //Player-Movement Animationen
-        this.anims.create({key: 'go-left',
-            frames: this.anims.generateFrameNumbers('player-movement', {start: 1,end: 2}),
-            repeat: -1,
-            frameRate: 5
-        });
-        this.anims.create({key: 'go-right',
-            frames: this.anims.generateFrameNumbers('player-movement', {start: 3,end: 4}),
-            repeat: -1,
-            frameRate: 5
-        });
-        this.anims.create({key: 'go-down',
-            frames: this.anims.generateFrameNumbers('player-movement', {start: 5,end: 6}),
-            repeat: -1,
-            frameRate: 5
-        });
-        this.anims.create({key: 'go-up',
-            frames: this.anims.generateFrameNumbers('player-movement', {start: 7,end: 8}),
-            repeat: -1,
-            frameRate: 5
-        });
+        for(let i = 1; i < 3; i++){
+            this.anims.create({key: 'go-left' + i,
+                frames: this.anims.generateFrameNumbers('player-movement' + i, {start: 1,end: 2}),
+                repeat: -1,
+                frameRate: 5
+            });
+            this.anims.create({key: 'go-right' + i,
+                frames: this.anims.generateFrameNumbers('player-movement' + i, {start: 3,end: 4}),
+                repeat: -1,
+                frameRate: 5
+            });
+            this.anims.create({key: 'go-down' + i,
+                frames: this.anims.generateFrameNumbers('player-movement' + i, {start: 5,end: 6}),
+                repeat: -1,
+                frameRate: 5
+            });
+            this.anims.create({key: 'go-up' + i,
+                frames: this.anims.generateFrameNumbers('player-movement' + i, {start: 7,end: 8}),
+                repeat: -1,
+                frameRate: 5
+            });
+        }
+        
+
+
         //Game-End Animationen
         this.anims.create({key: 'game-over',
             frames: this.anims.generateFrameNumbers('game-over', {start: 0,end: 8}),

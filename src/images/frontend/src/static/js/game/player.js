@@ -2,7 +2,7 @@ import Bomb  from './bomb.js';
 import Explosion from './explosion.js';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite{
-    constructor(scene, x, y, id) {
+    constructor(scene, x, y, id, i) {
         super(scene, x, y);
         this.scene = scene;
         this.id = id;
@@ -13,7 +13,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite{
         this.scene.physics.add.existing(this);
 
         this.setPosition(x,y);
-        this.setTexture('player');
+        this.setTexture('player' + i);
         this.body.setCollideWorldBounds(true);
         this.setScale(1);
 
